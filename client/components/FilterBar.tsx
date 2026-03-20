@@ -10,7 +10,7 @@ function FilterBar({ filter, setFilter }: Props) {
     }`
 
   return (
-    <div className="py-12 flex flex-wrap justify-center gap-2">
+    <div className="p-12 flex flex-wrap gap-2">
       <button 
         onClick={() => setFilter('featured')}
         className={getButtonClass('featured')}
