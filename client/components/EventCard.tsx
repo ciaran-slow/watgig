@@ -1,7 +1,7 @@
 function EventCard() {
   return (
     <div 
-      className="relative p-6 rounded-xl h-[400px] shadow-slate-700 shadow-md border-4 text-white hover:scale-105 hover:border-4 hover:border-purple-500 transition ease-in-out cursor-pointer"
+      className="relative p-6 rounded-xl h-[600px] shadow-slate-700 shadow-md border-4 text-white hover:scale-105 hover:border-4 hover:border-purple-500 transition ease-in-out cursor-pointer"
       style={{backgroundImage: "url('https://picsum.photos/400/400')", backgroundSize: "cover", backgroundPosition: 'center'}}
     >
       <div className="absolute top-6 right-6 bg-purple-500 p-2 rounded-xl">
