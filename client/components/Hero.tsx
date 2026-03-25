@@ -1,18 +1,21 @@
-import herobg from '../public/hero.jpg'
+import herobg from '../public/hero.png'
+import logo from '../public/logo.png'
 
 function Hero() {
   return (
     <div 
       className="h-[500px] flex justify-center items-center"
       style={{
-        backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${herobg})`,
+        backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.9)), url(${herobg})`,
         backgroundSize: "cover",
         backgroundPosition: 'center'
       }}
     >
       <div className='flex flex-col items-center'>
+        <img src={logo} alt="WatGig Logo" className="h-60"/>
         <h1 className='text-white font-bold text-8xl'>WatGig</h1>
         <p  className='text-white text-4xl mt-2'>Find your next gig!</p>
+        <p  className='text-white text-2xl font-thin mt-2'>Whatever the genre</p>
       </div>
     </div>
   )
