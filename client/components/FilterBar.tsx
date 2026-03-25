@@ -9,7 +9,7 @@ function FilterBar({ filter, setFilter }: Props) {
   const [isOpen, setIsOpen] = useState(false)
 
   const getButtonClass = (value: string) =>
-    `py-2 px-4 rounded-xl text-white ${
+    `py-2 px-4 rounded-xl text-white hover:bg-purple-500 transition ${
       filter === value ? 'bg-purple-500' : 'bg-black'
     }`
 
@@ -42,7 +42,7 @@ function FilterBar({ filter, setFilter }: Props) {
       {/* Filters */}
       <div
         className={`
-          px-12 pb-6 flex flex-wrap gap-2
+          px-12 pb-6 flex flex-wrap gap-2 border-b-2
           ${isOpen ? 'flex' : 'hidden'} 
           md:flex
         `}
