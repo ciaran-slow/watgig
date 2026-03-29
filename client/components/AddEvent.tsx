@@ -134,7 +134,7 @@ function AddEvent() {
               type="submit"
               data-testid="submit"
               value="Submit"
-              className="bg-purple-500 text-white font-semibold px-6 py-2 rounded-lg hover:bg-purple-600 transition cursor-pointer"
+              className="bg-black text-white font-semibold px-6 py-2 rounded-lg hover:bg-purple-500 transition cursor-pointer"
             />
 
             <button

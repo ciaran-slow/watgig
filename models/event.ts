@@ -1,6 +1,7 @@
 export interface Event {
   date: string
   name: string
+  venue_name: string
   description: string
   artists: string
   start_time: string
