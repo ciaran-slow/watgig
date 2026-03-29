@@ -1,46 +1,12 @@
 import EventCard from "./EventCard"
+import { getHeaderForFilter } from "../utils/eventHelpers"
 
 type Props = {
   filter: string
 }
 
 function FilteredEvents({ filter }: Props) {
-  let header
-
-  switch (filter) {
-    case 'featured':
-      header = 'Featured Events'
-      break
-    case 'week':
-      header = 'This Week'
-      break
-    case 'month':
-      header = 'This Month'
-      break
-    case 'rock':
-      header = 'Rock / Indie'
-      break
-    case 'pop':
-      header = 'Pop'
-      break
-    case 'electronic':
-      header = 'Electronic / DJ'
-      break
-    case 'hiphop':
-      header = 'Hip-Hop / Rap'
-      break
-    case 'acoustic':
-      header = 'Acoustic'
-      break
-    case 'jazz':
-      header = 'Jazz / Blues'
-      break
-    case 'metal':
-      header = 'Metal / Punk'
-      break
-    default:
-      header = 'All Events'
-  }
+  const header = getHeaderForFilter(filter)
 
   return (
       <section className="p-12">
