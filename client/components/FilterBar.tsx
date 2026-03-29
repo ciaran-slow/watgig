@@ -9,8 +9,8 @@ function FilterBar({ filter, setFilter }: Props) {
   const [isOpen, setIsOpen] = useState(false)
 
   const getButtonClass = (value: string) =>
-    `py-2 px-4 rounded-xl text-white hover:bg-purple-500 transition ${
-      filter === value ? 'bg-purple-500' : 'bg-black'
+    `py-2 px-4 rounded-xl text-white hover:bg-purple-800 transition ${
+      filter === value ? 'bg-purple-800' : 'bg-black'
     }`
 
   const handleFilterClick = (value: string) => {
