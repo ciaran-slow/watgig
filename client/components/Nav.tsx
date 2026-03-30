@@ -1,6 +1,6 @@
 import { useAuth0 } from "@auth0/auth0-react"
 import { useNavigate } from "react-router"
-import logo from '../public/logo.png'
+import logo from '../public/logo.webp'
 
 function Nav() {
   const navigate = useNavigate()
@@ -26,7 +26,7 @@ function Nav() {
       <div className="flex gap-2 items-center">
         <img src={logo} alt="WatGig Logo" className="h-14"/>
       <h2 
-        className="text-3xl hover:text-purple-500 font-bold cursor-pointer"
+        className="text-3xl hover:text-purple-800 font-bold cursor-pointer"
         onClick={() => handleClick('/')}
       >WatGig</h2>
       </div>
