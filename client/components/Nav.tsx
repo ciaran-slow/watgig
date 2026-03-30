@@ -36,7 +36,7 @@ function Nav() {
         ) : (
           <>
             <button 
-          className="font-bold px-4 py-2 bg-black hover:bg-purple-500 transition rounded-xl text-white"
+          className="font-bold px-4 py-2 bg-black hover:bg-purple-500 transition rounded-xl text-white focus:outline-none focus:ring-4 focus:ring-purple-500"
           onClick={() => handleClick('/add-event')}
         >+ Event</button>
           <p className="hover:text-purple-500 transition cursor-pointer" onClick={handleSignOut}>Logout</p>
