@@ -5,24 +5,23 @@ import { RouterProvider } from 'react-router/dom'
 import { createBrowserRouter } from 'react-router'
 import routes from './routes.tsx'
 import { Auth0Provider } from '@auth0/auth0-react'
+import { Toaster } from 'react-hot-toast'
 
 const router = createBrowserRouter(routes)
 const queryClient = new QueryClient()
 
 document.addEventListener('DOMContentLoaded', () => {
   createRoot(document.getElementById('app') as HTMLElement).render(
-    /**
-     * TODO: replace domain, clientId, and audience
-     */
     <Auth0Provider
-      domain="raumati-2026-ciaran.au.auth0.com"
-      clientId="QMI3EB1SZmvBNfBRtZ9HAw6ZLzcnrRO8"
+      domain={import.meta.env.VITE_AUTH0_DOMAIN}
+      clientId={import.meta.env.VITE_AUTH0_CLIENT_ID}
       authorizationParams={{
         redirect_uri: window.location.origin,
-        audience: 'https://watgig/api',
+        audience: import.meta.env.VITE_AUTH0_AUDIENCE,
       }}
     >
       <QueryClientProvider client={queryClient}>
+        <Toaster position="top-center" />
         <RouterProvider router={router} />
         <ReactQueryDevtools />
       </QueryClientProvider>

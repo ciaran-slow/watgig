@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'vitest'
 import db from './connection'
-import { getEvents } from './events'
+import { getEvents, addEvent } from './events'
 
 beforeAll(async () => {
   await db.migrate.latest()
@@ -30,5 +30,30 @@ describe('getEvents', () => {
     expect(firstEvent).toHaveProperty('name')
     expect(firstEvent).toHaveProperty('date')
     expect(firstEvent).toHaveProperty('venue_name')
+  })
+})
+
+describe('addEvent', () => {
+  it('adds a new event to the database', async () => {
+    const newEvent = {
+      name: 'Test Event',
+      description: 'Test Description',
+      venue_name: 'Test Venue',
+      date: '2026-04-07',
+      start_time: '12:00',
+      artists: 'Test Artist',
+      image_url: 'http://example.com/image.jpg',
+      ticket_link: 'http://example.com/tickets',
+      featured: false,
+      created_by: '1',
+    }
+
+    const [newId] = await addEvent(newEvent)
+    const events = await getEvents()
+    const addedEvent = events.find((e) => e.id === newId)
+
+    expect(addedEvent).toBeDefined()
+    expect(addedEvent?.name).toBe('Test Event')
+    expect(addedEvent?.venue_name).toBe('Test Venue')
   })
 })
