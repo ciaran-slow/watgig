@@ -10,7 +10,7 @@ beforeAll(async () => {
 
 beforeEach(async () => {
   await db.seed.run()
-  vi.clearAllMocks()
+  vi.restoreAllMocks()
 })
 
 afterAll(async () => {
@@ -31,6 +31,46 @@ describe('GET /api/v1/events', () => {
     vi.spyOn(dbMethods, 'getEvents').mockRejectedValue(new Error('Database error'))
     
     const response = await request(server).get('/api/v1/events')
+    expect(response.status).toBe(500)
+    expect(response.body.message).toBe('Something went wrong')
+  })
+})
+
+describe('POST /api/v1/events', () => {
+  it('adds a new event and returns 201', async () => {
+    const newEvent = {
+      name: 'Test Event',
+      description: 'Test Description',
+      venue_name: 'Test Venue',
+      date: '2026-04-07',
+      start_time: '12:00',
+      artists: 'Test Artist',
+      image_url: 'http://example.com/image.jpg',
+      ticket_link: 'http://example.com/tickets',
+      featured: false,
+      created_by: '1',
+    }
+
+    const response = await request(server)
+      .post('/api/v1/events')
+      .send(newEvent)
+
+    expect(response.status).toBe(201)
+
+    // Check if the event was actually added
+    const eventsResponse = await request(server).get('/api/v1/events')
+    const addedEvent = eventsResponse.body.find((e: any) => e.name === 'Test Event')
+    expect(addedEvent).toBeDefined()
+    expect(addedEvent.venue_name).toBe('Test Venue')
+  })
+
+  it('handles database errors gracefully during creation', async () => {
+    vi.spyOn(dbMethods, 'addEvent').mockRejectedValue(new Error('Database error'))
+    
+    const response = await request(server)
+      .post('/api/v1/events')
+      .send({})
+
     expect(response.status).toBe(500)
     expect(response.body.message).toBe('Something went wrong')
   })
