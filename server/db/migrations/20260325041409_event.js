@@ -1,6 +1,6 @@
 export async function up(knex) {
   return knex.schema.createTable('event', (table) => {
-    table.increments('id').primary()
+    table.integer('id').primary()
 
     table.date('date')
     table.string('name')
