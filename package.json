@@ -36,6 +36,7 @@
     "jsonwebtoken": "^9.0.2",
     "jwks-rsa": "^2.1.5",
     "knex": "^2.5.1",
+    "pg": "^8.20.0",
     "react-hot-toast": "^2.6.0",
     "sqlite3": "^5.1.7",
     "superagent": "^10.2.2"
