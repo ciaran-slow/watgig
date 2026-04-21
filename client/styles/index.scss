@@ -2,8 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  html, body {
+    @apply bg-[#0a0a0a] text-gray-100;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
 #app {
   display: grid;
   min-height: 100vh;
   grid-template-rows: auto 1fr auto;
+  @apply bg-[#0a0a0a];
 }

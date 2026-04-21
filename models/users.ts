@@ -1,8 +1,15 @@
-export interface User {
-  auth0Id: number
-  favouriteFruit: string
+export interface User extends UserData {
+  auth0Id: string
 }
 
 export interface UserData {
-  favouriteFruit: string
+  id?: number
+  name: string
+  email: string
+  role: string
+  profile_image: string
+  bio?: string
+  genre?: string
+  members?: string
+  address?: string
 }

@@ -39,6 +39,7 @@ describe('addEvent', () => {
       name: 'Test Event',
       description: 'Test Description',
       venue_name: 'Test Venue',
+      genre: 'rock',
       date: '2026-04-07',
       start_time: '12:00',
       artists: 'Test Artist',
@@ -48,7 +49,8 @@ describe('addEvent', () => {
       created_by: '1',
     }
 
-    const [newId] = await addEvent(newEvent)
+    const addedEventResult = await addEvent(newEvent)
+    const newId = addedEventResult.id
     const events = await getEvents()
     const addedEvent = events.find((e) => e.id === newId)
 

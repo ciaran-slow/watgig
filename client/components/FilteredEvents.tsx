@@ -13,8 +13,9 @@ function FilteredEvents({ filter }: Props) {
   if (isLoading) return <p className="p-12">Loading events...</p>
   if (isError) return <p className="p-12 text-red-500">Error loading events: {error.message}</p>
 
-  // Reference date: April 7, 2026
-  const now = new Date('2026-04-07')
+  // Use the actual current date
+  const now = new Date()
+  now.setHours(0, 0, 0, 0)
   
   const filteredEvents = events
     ?.filter(event => {
@@ -36,7 +37,10 @@ function FilteredEvents({ filter }: Props) {
         case 'acoustic':
         case 'jazz':
         case 'metal':
-          return event.genre === filter
+        case 'other':
+          return event.genre?.toLowerCase() === filter.toLowerCase()
+        case 'all':
+          return true
         default:
           return true
       }
@@ -45,8 +49,8 @@ function FilteredEvents({ filter }: Props) {
 
   return (
       <section className="p-12">
-        <h2 className="text-6xl font-bold mb-6">{header}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-20">
+        <h2 className="text-7xl font-black mb-12 tracking-tighter uppercase leading-none text-white border-l-8 border-purple-600 pl-8">{header}</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-20">
           {filteredEvents?.map(event => (
             <EventCard key={event.id} event={event} />
           ))}

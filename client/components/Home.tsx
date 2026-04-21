@@ -7,7 +7,7 @@ import FilteredEvents from "./FilteredEvents"
 function Home() {
   const [filter, setFilter] = useState('featured')
   return (
-    <main>
+    <main className="bg-[#0a0a0a] min-h-screen">
       <Hero/>
       <FilterBar filter={filter} setFilter={setFilter}/>
 

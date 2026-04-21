@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router'
 
 // import { useAuth0 } from '@auth0/auth0-react'
 import { useUser } from '../hooks/users'
-import { IfAuthenticated, IfNotAuthenticated } from './Authenticated'
+import { IfAuthenticated } from './Authenticated'
 
 import Hero from './Hero'
 
@@ -24,7 +24,7 @@ declare global {
 }
 
 interface FormState {
-  username: string
+  name: string // Changed from username to name
   role: string
   profile_image: string
   bio: string
@@ -34,7 +34,7 @@ interface FormState {
 }
 
 const defaultFormState: FormState = {
-  username: '',
+  name: '', // Changed from username to name
   role: '',
   profile_image: '',
   bio: '',
@@ -55,6 +55,9 @@ interface FormFieldProps {
   ) => void
   rows?: number
   options?: { value: string; label: string }[]
+  placeholder?: string
+  maxLength?: number
+  required?: boolean
 }
 
 function FormField({
@@ -65,14 +68,17 @@ function FormField({
   onChange,
   rows,
   options,
+  placeholder,
+  maxLength,
+  required,
 }: FormFieldProps) {
   const commonClasses =
-    'border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500'
+    'border border-white/10 rounded-lg px-4 py-3 bg-white/5 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300 placeholder:text-gray-600'
 
   return (
     <div className="flex flex-col gap-2">
-      <label htmlFor={name} className="font-semibold">
-        {label}
+      <label htmlFor={name} className="font-black text-xs uppercase tracking-widest text-gray-500 ml-1">
+        {label} {required && <span className="text-red-500">*</span>}
       </label>
 
       {type === 'textarea' ? (
@@ -82,6 +88,9 @@ function FormField({
           rows={rows || 4}
           value={value}
           onChange={onChange}
+          placeholder={placeholder}
+          maxLength={maxLength}
+          required={required}
           className={`${commonClasses} resize-none`}
         />
       ) : type === 'select' ? (
@@ -90,10 +99,11 @@ function FormField({
           name={name}
           value={value}
           onChange={onChange}
-          className={commonClasses}
+          required={required}
+          className={`${commonClasses} appearance-none cursor-pointer`}
         >
           {options?.map((option) => (
-            <option key={option.value} value={option.value}>
+            <option key={option.value} value={option.value} className="bg-[#1a1a1a] text-white">
               {option.label}
             </option>
           ))}
@@ -105,6 +115,9 @@ function FormField({
           name={name}
           value={value}
           onChange={onChange}
+          placeholder={placeholder}
+          maxLength={maxLength}
+          required={required}
           className={commonClasses}
         />
       )}
@@ -115,17 +128,46 @@ function FormField({
 function Register() {
   const user = useUser()
   const [formData, setFormData] = useState<FormState>(defaultFormState)
+  const [nameAvailable, setNameAvailable] = useState<boolean | null>(null)
+  const [nameSuggestions, setNameSuggestions] = useState<string[]>([])
+  const [isCheckingName, setIsCheckingName] = useState(false)
   const navigate = useNavigate()
 
   useEffect(() => {
     if (user.data) navigate('/')
   }, [user.data, navigate])
 
+  // Debounce name check
+  useEffect(() => {
+    const timer = setTimeout(async () => {
+      if (formData.name.trim().length > 0) {
+        setIsCheckingName(true)
+        try {
+          const result = await user.checkName(formData.name)
+          if (result) {
+            setNameAvailable(result.available)
+            setNameSuggestions(result.suggestions || [])
+          }
+        } catch (error) {
+          console.error('Error checking name:', error)
+        } finally {
+          setIsCheckingName(false)
+        }
+      } else {
+        setNameAvailable(null)
+        setNameSuggestions([])
+      }
+    }, 500)
+
+    return () => clearTimeout(timer)
+  }, [formData.name])
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    // We will eventually get the token from Auth0, but for now we'll just log
-    console.log('Form submitted:', formData)
-    // user.add.mutate({ newUser: formData, token: 'fake-token' }) 
+    if (nameAvailable === false) return
+    // Call the addUser mutation, passing the form data.
+    // The email is handled in the useUser hook.
+    user.add.mutate(formData) 
   }
 
   const handleChange = (
@@ -140,8 +182,36 @@ function Register() {
     }))
   }
 
+  const handleSuggestionClick = (suggestion: string) => {
+    setFormData(prev => ({ ...prev, name: suggestion }))
+  }
+
   const handleReset = () => {
     setFormData(defaultFormState)
+    setNameAvailable(null)
+    setNameSuggestions([])
+  }
+
+  const getNamePlaceholder = () => {
+    switch (formData.role) {
+      case 'band':
+        return 'Enter your band name'
+      case 'venue':
+        return 'Enter your venue name'
+      default:
+        return 'Enter your full name'
+    }
+  }
+
+  const getBioPlaceholder = () => {
+    switch (formData.role) {
+      case 'band':
+        return 'Tell us about your band, your music, and your journey...'
+      case 'venue':
+        return 'Tell us about your venue, the kind of events you host...'
+      default:
+        return 'Tell us about yourself, your musical interests, etc.'
+    }
   }
 
   const handleUpload = () => {
@@ -195,22 +265,52 @@ function Register() {
         <IfAuthenticated>
           <Hero />
 
-          <section className="p-12 pt-0 flex">
+          <section className="p-12 pt-0 flex bg-[#0a0a0a] min-h-screen">
             <div className="w-full">
-              <h2 className="text-5xl font-bold my-6">Create Profile</h2>
+              <h2 className="text-7xl font-black my-12 tracking-tighter uppercase leading-none text-white border-l-8 border-purple-600 pl-8">Create Profile</h2>
 
               <form
                 data-testid="form"
                 onSubmit={handleSubmit}
                 onReset={handleReset}
-                className="flex flex-col gap-6 bg-white p-8 rounded-xl shadow-md border"
+                className="flex flex-col gap-8 bg-white/[0.02] p-10 rounded-3xl shadow-2xl border border-white/5 backdrop-blur-sm"
               >
-                <FormField
-                  label="Username"
-                  name="username"
-                  value={formData.username}
-                  onChange={handleChange}
-                />
+                <div className="flex flex-col gap-1">
+                  <FormField
+                    label="Name" // Changed label from Username to Name
+                    name="name" // Changed name attribute from username to name
+                    value={formData.name} // Changed value from formData.username to formData.name
+                    onChange={handleChange}
+                    placeholder={getNamePlaceholder()}
+                    required
+                  />
+                  {isCheckingName && (
+                    <span className="text-xs text-blue-500 italic">Checking availability...</span>
+                  )}
+                  {nameAvailable === true && formData.name.trim() !== '' && (
+                    <span className="text-xs text-green-600 font-semibold">✓ Name is available</span>
+                  )}
+                  {nameAvailable === false && (
+                    <div className="flex flex-col gap-1">
+                      <span className="text-xs text-red-500 font-semibold">✗ This name is already taken</span>
+                      {nameSuggestions.length > 0 && (
+                        <div className="flex flex-wrap gap-2 items-center">
+                          <span className="text-xs text-gray-600 italic">Try:</span>
+                          {nameSuggestions.map((suggestion) => (
+                            <button
+                              key={suggestion}
+                              type="button"
+                              onClick={() => handleSuggestionClick(suggestion)}
+                              className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded hover:bg-purple-200 transition font-semibold"
+                            >
+                              {suggestion}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
 
                 <FormField
                   label="Role"
@@ -219,6 +319,7 @@ function Register() {
                   value={formData.role}
                   options={roleOptions}
                   onChange={handleChange}
+                  required
                 />
 
                 {formData.role === 'band' && (
@@ -230,6 +331,7 @@ function Register() {
                       value={formData.genre}
                       options={genreOptions}
                       onChange={handleChange}
+                      required
                     />
 
                     <FormField
@@ -238,6 +340,8 @@ function Register() {
                       type="text"
                       value={formData.members}
                       onChange={handleChange}
+                      placeholder="e.g. John Doe, Jane Smith, Alex Jones"
+                      required
                     />
                   </>
                 )}
@@ -246,26 +350,31 @@ function Register() {
                   <FormField
                     label="Address"
                     name="address"
-                    type="text"
+                    type="textarea"
+                    rows={2}
                     value={formData.address}
                     onChange={handleChange}
+                    placeholder="123 Music St, Sound Town"
+                    required
                   />
                 )}
 
                 <div className="flex flex-col gap-2">
-                  <label className="font-semibold">Profile Image</label>
+                  <label className="font-black text-xs uppercase tracking-widest text-gray-500 ml-1">
+                    Profile Image <span className="text-red-500">*</span>
+                  </label>
                   <div className="flex flex-col gap-4">
                     {formData.profile_image ? (
-                      <div className="relative w-32 h-32">
+                      <div className="relative w-40 h-40">
                         <img 
                           src={formData.profile_image} 
                           alt="Profile Preview" 
-                          className="w-full h-full rounded-xl object-cover border-4 border-purple-800 shadow-md"
+                          className="w-full h-full rounded-2xl object-cover border-4 border-purple-500 shadow-xl"
                         />
                         <button
                           type="button"
                           onClick={() => setFormData(prev => ({ ...prev, profile_image: '' }))}
-                          className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-700 transition shadow-lg"
+                          className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1.5 hover:bg-red-700 transition shadow-lg z-10"
                           title="Remove image"
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
@@ -274,12 +383,12 @@ function Register() {
                         </button>
                       </div>
                     ) : (
-                      <div className="w-32 h-32 border-4 border-dashed border-gray-300 rounded-xl flex items-center justify-center text-gray-400 bg-gray-50">
+                      <div className="w-40 h-40 border-4 border-dashed border-white/10 rounded-2xl flex items-center justify-center text-gray-600 bg-white/[0.02]">
                         <div className="flex flex-col items-center">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                           </svg>
-                          <span className="text-xs font-semibold">No Image</span>
+                          <span className="text-[10px] font-black uppercase tracking-widest">No Image</span>
                         </div>
                       </div>
                     )}
@@ -287,34 +396,44 @@ function Register() {
                     <button
                       type="button"
                       onClick={handleUpload}
-                      className="bg-purple-800 text-white px-6 py-2 rounded-lg hover:bg-purple-500 transition focus:outline-none focus:ring-4 focus:ring-purple-500 w-fit font-semibold"
+                      className="bg-purple-600 text-white px-8 py-3 rounded-xl hover:bg-purple-500 transition shadow-lg shadow-purple-900/20 w-fit font-black text-xs uppercase tracking-widest active:scale-95"
                     >
                       {formData.profile_image ? 'Change Image' : 'Upload Image'}
                     </button>
                   </div>
-                  <p className="text-xs text-gray-500 italic">Images are securely stored on Cloudinary</p>
+                  <p className="text-[10px] text-gray-600 uppercase tracking-wider font-bold">Images are securely stored on Cloudinary</p>
                 </div>
 
-                <FormField
-                  label="Bio"
-                  name="bio"
-                  type="textarea"
-                  value={formData.bio}
-                  onChange={handleChange}
-                />
+                <div className="flex flex-col gap-1">
+                  <FormField
+                    label="Bio"
+                    name="bio"
+                    type="textarea"
+                    value={formData.bio}
+                    onChange={handleChange}
+                    placeholder={getBioPlaceholder()}
+                    maxLength={200}
+                    required
+                  />
+                  <div className="flex justify-end">
+                    <span className={`text-xs ${formData.bio.length >= 200 ? 'text-red-500 font-bold' : 'text-gray-500'}`}>
+                      {formData.bio.length} / 200 characters
+                    </span>
+                  </div>
+                </div>
 
-                <div className="flex gap-4 pt-2">
+                <div className="flex gap-4 pt-4 border-t border-white/5">
                   <input
                     type="submit"
                     data-testid="submit"
-                    value="Submit"
-                    className="bg-black text-white font-semibold px-6 py-2 rounded-lg hover:bg-purple-500 transition cursor-pointer focus:outline-none focus:ring-4 focus:ring-purple-500"
+                    value="Submit Profile"
+                    className="bg-purple-600 text-white font-black text-xs uppercase tracking-[0.2em] px-10 py-4 rounded-xl hover:bg-purple-500 transition cursor-pointer shadow-lg shadow-purple-900/20 active:scale-95"
                   />
 
                   <button
                     type="reset"
                     data-testid="reset"
-                    className="border border-gray-300 px-6 py-2 rounded-lg hover:bg-gray-100 transition focus:outline-none focus:ring-4 focus:ring-purple-500"
+                    className="border border-white/10 text-gray-400 px-10 py-4 rounded-xl hover:bg-white/5 transition font-black text-xs uppercase tracking-[0.2em] active:scale-95"
                   >
                     Reset
                   </button>
@@ -323,10 +442,6 @@ function Register() {
             </div>
           </section>
         </IfAuthenticated>
-
-        <IfNotAuthenticated>
-          <h1>Please sign in</h1>
-        </IfNotAuthenticated>
       </div>
     </div>
   )
