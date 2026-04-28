@@ -20,6 +20,8 @@ export function getHeaderForFilter(filter: string): string {
       return 'Jazz / Blues'
     case 'metal':
       return 'Metal / Punk'
+    case 'other':
+      return 'Other'
     default:
       return 'All Events'
   }

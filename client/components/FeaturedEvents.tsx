@@ -7,15 +7,22 @@ function FeaturedEvents() {
   if (isLoading) return <p className="p-12">Loading events...</p>
   if (isError) return <p className="p-12 text-red-500">Error loading events: {error.message}</p>
 
+  const now = new Date()
+  now.setHours(0, 0, 0, 0)
+
   const featuredEvents = events
-    ?.filter(event => !!event.featured)
+    ?.filter(event => {
+      const eventDate = new Date(event.date)
+      eventDate.setHours(0, 0, 0, 0)
+      return !!event.featured && eventDate >= now
+    })
     .sort((a, b) => b.id - a.id) // Sort by ID descending so latest shows first
 
   return (
     <>
-      <section className="p-12">
-        <h2 className="text-6xl font-bold mb-6">Featured Events</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-20">
+      <section className="p-6 md:p-12 w-full overflow-hidden">
+        <h2 className="text-4xl md:text-7xl font-black mb-8 md:mb-12 tracking-tighter uppercase leading-none text-white border-l-8 border-purple-600 pl-6 md:pl-8">Featured Events</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 mb-20">
           {featuredEvents?.map(event => (
             <EventCard key={event.id} event={event} />
           ))}

@@ -4,11 +4,13 @@ import Footer from './Footer.tsx'
 
 function App() {
   return (
-    <>
+    <div className="min-h-screen flex flex-col">
       <Nav/>
-      <Outlet/>
+      <div className="flex-1">
+        <Outlet/>
+      </div>
       <Footer/>
-    </>
+    </div>
   )
 }
 

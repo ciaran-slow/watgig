@@ -10,6 +10,22 @@ export function useEvents() {
   })
 }
 
+export function useEvent(id: number) {
+  return useQuery({
+    queryKey: ['event', id],
+    queryFn: () => api.getEventById(id),
+    enabled: !!id,
+  })
+}
+
+export function useUserEvents(userId: string) {
+  return useQuery({
+    queryKey: ['events', 'user', userId],
+    queryFn: () => api.getEventsByUser(userId),
+    enabled: !!userId,
+  })
+}
+
 export function useAddEvent() {
   const queryClient = useQueryClient()
   return useMutation({
@@ -25,6 +41,22 @@ export function useAddEvent() {
     },
     onError: (err) => {
       toast.error(`Failed to add event: ${err.message}`)
+    },
+  })
+}
+
+export function useUpdateEvent() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ id, updatedEvent }: { id: number, updatedEvent: Partial<Event> }) => 
+      api.updateEvent(id, updatedEvent),
+    onSuccess: (_, variables) => {
+      toast.success('Event updated successfully!')
+      queryClient.invalidateQueries({ queryKey: ['events'] })
+      queryClient.invalidateQueries({ queryKey: ['event', variables.id] })
+    },
+    onError: (err) => {
+      toast.error(`Failed to update event: ${err.message}`)
     },
   })
 }

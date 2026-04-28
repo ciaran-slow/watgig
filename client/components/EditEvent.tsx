@@ -1,24 +1,8 @@
-import { useState } from "react"
-import { useNavigate } from "react-router"
+import { useState, useEffect } from "react"
+import { useNavigate, useParams } from "react-router"
 import Hero from "./Hero"
-import { useAddEvent } from "../hooks/events"
+import { useEvent, useUpdateEvent } from "../hooks/events"
 import { useUser } from "../hooks/users"
-
-// Type for Cloudinary widget
-declare global {
-  interface Window {
-    cloudinary: {
-      createUploadWidget: (
-        options: {
-          cloudName: string
-          uploadPreset: string
-          [key: string]: string | number | boolean | object
-        },
-        callback: (error: Error | null, result: { event: string; info: { secure_url: string } }) => void
-      ) => { open: () => void }
-    }
-  }
-}
 
 interface FormState {
   name: string
@@ -32,20 +16,6 @@ interface FormState {
   ticket_link: string
   genre: string
   featured: boolean
-}
-
-const defaultFormState: FormState = {
-  name: '',
-  description: '',
-  venue: '',
-  address: '',
-  date: '',
-  time: '',
-  artists: '',
-  image_url: '',
-  ticket_link: '',
-  genre: 'rock',
-  featured: false,
 }
 
 interface FormFieldProps {
@@ -139,70 +109,79 @@ function FormCheckbox({ label, name, checked, onChange }: FormFieldProps) {
   )
 }
 
-function AddEvent() {
-  const [formData, setFormData] = useState<FormState>(defaultFormState)
-  const addEvent = useAddEvent()
-  const { data: currentUser } = useUser()
+function EditEvent() {
+  const { id } = useParams()
   const navigate = useNavigate()
+  const { data: event, isLoading, isError } = useEvent(Number(id))
+  const updateEvent = useUpdateEvent()
+  const { data: currentUser } = useUser()
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
+  const [formData, setFormData] = useState<FormState | null>(null)
+
+  useEffect(() => {
+    if (event) {
+      setFormData({
+        name: event.name || '',
+        description: event.description || '',
+        venue: event.venue_name || '',
+        address: event.address || '',
+        date: event.date || '',
+        time: event.start_time || '',
+        artists: event.artists || '',
+        image_url: event.image_url || '',
+        ticket_link: event.ticket_link || '',
+        genre: event.genre || 'rock',
+        featured: !!event.featured,
+      })
+    }
+  }, [event])
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    if (!formData || !id) return
     
-    const newEvent = {
+    const updatedEvent = {
       ...formData,
       venue_name: formData.venue,
       start_time: formData.time,
-      created_by: currentUser?.auth0Id || '1', 
     }
 
-    // Remove the temporary form state fields that don't match the model
-    const { venue, time, ...eventData } = newEvent
+    // @ts-ignore
+    const { venue, time, ...cleanUpdatedEvent } = updatedEvent
     
     try {
-      await addEvent.mutateAsync(eventData)
-      navigate('/')
+      await updateEvent.mutateAsync({ id: Number(id), updatedEvent: cleanUpdatedEvent })
+      navigate(`/event/${id}`)
     } catch (err) {
-      console.error('Failed to add event:', err)
+      console.error('Failed to update event:', err)
     }
   }
 
   const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
-    const { name, value, type } = event.target
-    const finalValue = type === 'checkbox' ? (event.target as HTMLInputElement).checked : value
+    const { name, value, type } = e.target
+    const finalValue = type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
     
-    setFormData((prev) => ({
+    setFormData((prev) => prev ? ({
       ...prev,
       [name]: finalValue,
-    }))
-  }
-
-
-  const handleReset = () => {
-    setFormData(defaultFormState)
+    }) : null)
   }
 
   const handleUpload = () => {
-    const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
-    const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
-
-    if (!cloudName || !uploadPreset || cloudName === 'YOUR_CLOUD_NAME') {
-      console.warn('Cloudinary cloud name or upload preset is not configured.')
-      return
-    }
-
+    // @ts-ignore
     const widget = window.cloudinary.createUploadWidget(
       {
-        cloudName: cloudName,
-        uploadPreset: uploadPreset,
+        cloudName: import.meta.env.VITE_CLOUDINARY_CLOUD_NAME,
+        uploadPreset: import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
       },
-      (error, result) => {
+      (error: any, result: any) => {
         if (!error && result && result.event === 'success') {
-          setFormData((prev) => ({
+          setFormData((prev) => prev ? ({
             ...prev,
             image_url: result.info.secure_url,
-          }))
+          }) : null)
         }
       }
     )
@@ -220,17 +199,31 @@ function AddEvent() {
     { value: 'other', label: 'Other' },
   ]
 
+  if (isLoading) return <div className="p-12 text-center text-white">Loading event...</div>
+  if (isError || !event) return <div className="p-12 text-center text-red-500">Event not found.</div>
+  if (!formData) return null
+
+  // Security check: Only owner can edit (comparing integer database IDs)
+  const isOwner = currentUser?.id === event.created_by
+  if (!isLoading && currentUser && !isOwner) {
+    return (
+      <div className="p-24 text-center bg-[#0a0a0a] min-h-screen">
+        <h2 className="text-7xl font-black text-white uppercase tracking-tighter mb-4">Unauthorized</h2>
+        <p className="text-gray-500 font-bold uppercase tracking-widest text-xs">You do not have permission to edit this event.</p>
+        <button onClick={() => navigate(-1)} className="mt-8 text-purple-400 font-black text-xs uppercase tracking-widest hover:text-purple-300 transition-colors">Go Back</button>
+      </div>
+    )
+  }
+
   return (
     <>
       <Hero />
       <section className="p-6 md:p-12 pt-0 flex bg-[#0a0a0a] min-h-screen">
         <div className="w-full">
-          <h2 className="text-5xl md:text-7xl font-black my-8 md:my-12 tracking-tighter uppercase leading-none text-white border-l-8 border-purple-600 pl-6 md:pl-8">Add Event</h2>
+          <h2 className="text-5xl md:text-7xl font-black my-8 md:my-12 tracking-tighter uppercase leading-none text-white border-l-8 border-purple-600 pl-6 md:pl-8">Edit Event</h2>
 
           <form
-            data-testid="form"
             onSubmit={handleSubmit}
-            onReset={handleReset}
             className="flex flex-col gap-8 bg-white/[0.02] p-6 md:p-10 rounded-3xl shadow-2xl border border-white/5 backdrop-blur-sm"
           >
             <FormField 
@@ -306,9 +299,8 @@ function AddEvent() {
                     />
                     <button
                       type="button"
-                      onClick={() => setFormData(prev => ({ ...prev, image_url: '' }))}
+                      onClick={() => setFormData(prev => prev ? ({ ...prev, image_url: '' }) : null)}
                       className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-2 hover:bg-red-700 transition shadow-lg z-10"
-                      title="Remove image"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
@@ -331,10 +323,9 @@ function AddEvent() {
                   onClick={handleUpload}
                   className="bg-purple-600 text-white px-8 py-3 rounded-xl hover:bg-purple-500 transition shadow-lg shadow-purple-900/20 w-fit font-black text-xs uppercase tracking-widest active:scale-95"
                 >
-                  {formData.image_url ? 'Change Image' : 'Upload Image'}
+                  Change Image
                 </button>
               </div>
-              <p className="text-[10px] text-gray-600 uppercase tracking-wider font-bold">Images are securely stored on Cloudinary</p>
             </div>
 
             <FormField 
@@ -354,21 +345,22 @@ function AddEvent() {
             <div className="flex flex-col sm:flex-row gap-4 pt-4 border-t border-white/5">
               <button
                 type="submit"
-                disabled={addEvent.isPending}
+                disabled={updateEvent.isPending}
                 className="bg-purple-600 text-white font-black text-xs uppercase tracking-[0.2em] px-6 md:px-10 py-4 rounded-xl hover:bg-purple-500 transition cursor-pointer shadow-lg shadow-purple-900/20 active:scale-95 disabled:bg-gray-800 disabled:text-gray-500 flex-1 sm:flex-none"
               >
-                {addEvent.isPending ? 'Submitting...' : 'Submit Event'}
+                {updateEvent.isPending ? 'Updating...' : 'Update Event'}
               </button>
 
               <button
-                type="reset"
-                className="border border-white/10 text-gray-400 px-6 md:px-10 py-4 rounded-xl hover:bg-white/5 transition font-black text-xs uppercase tracking-[0.2em] active:scale-95 flex-1 sm:flex-none"
+                type="button"
+                onClick={() => navigate(-1)}
+                className="border border-white/10 text-gray-400 px-6 md:px-10 py-4 rounded-xl hover:bg-white/5 transition font-black text-xs uppercase tracking-[0.2em] active:scale-95 flex-1 sm:flex-none text-center"
               >
-                Reset
+                Cancel
               </button>
             </div>
-            {addEvent.isError && (
-              <p className="text-red-500 text-xs font-bold uppercase tracking-wider">Error adding event: {addEvent.error.message}</p>
+            {updateEvent.isError && (
+              <p className="text-red-500 text-xs font-bold uppercase tracking-wider">Error updating event: {updateEvent.error.message}</p>
             )}
           </form>
         </div>
@@ -377,4 +369,4 @@ function AddEvent() {
   )
 }
 
-export default AddEvent
+export default EditEvent

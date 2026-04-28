@@ -3,6 +3,9 @@ export interface Event {
   name: string
   genre: string
   venue_name: string
+  address?: string
+  lat?: number
+  lng?: number
   description: string
   artists: string
   start_time: string
