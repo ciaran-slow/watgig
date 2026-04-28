@@ -13,14 +13,19 @@ function FilteredEvents({ filter }: Props) {
   if (isLoading) return <p className="p-12">Loading events...</p>
   if (isError) return <p className="p-12 text-red-500">Error loading events: {error.message}</p>
 
-  // Use the actual current date
+  // Use the actual current date set to midnight for fair comparison
   const now = new Date()
   now.setHours(0, 0, 0, 0)
   
   const filteredEvents = events
     ?.filter(event => {
+      // Parse the event date string (YYYY-MM-DD)
       const eventDate = new Date(event.date)
+      eventDate.setHours(0, 0, 0, 0)
       
+      // Filter out past events
+      if (eventDate < now) return false
+
       switch (filter) {
         case 'week': {
           const diffTime = eventDate.getTime() - now.getTime()
@@ -48,9 +53,9 @@ function FilteredEvents({ filter }: Props) {
     .sort((a, b) => b.id - a.id) // Sort by ID descending so latest shows first
 
   return (
-      <section className="p-12">
-        <h2 className="text-7xl font-black mb-12 tracking-tighter uppercase leading-none text-white border-l-8 border-purple-600 pl-8">{header}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-20">
+      <section className="p-6 md:p-12 w-full overflow-hidden">
+        <h2 className="text-4xl md:text-7xl font-black mb-8 md:mb-12 tracking-tighter uppercase leading-none text-white border-l-8 border-purple-600 pl-6 md:pl-8">{header}</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 mb-20">
           {filteredEvents?.map(event => (
             <EventCard key={event.id} event={event} />
           ))}

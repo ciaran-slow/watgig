@@ -5,11 +5,11 @@ export async function getEvents(): Promise<EventWithId[]> {
     return db('event').select()
 }
 
-export async function getEventById(id: number): Promise<EventWithId & { creator_name?: string }> {
+export async function getEventById(id: number): Promise<EventWithId & { creator_name?: string, creator_image?: string }> {
     return db('event')
         .join('users', 'event.created_by', 'users.id')
         .where('event.id', id)
-        .select('event.*', 'users.name as creator_name')
+        .select('event.*', 'users.name as creator_name', 'users.profile_image as creator_image')
         .first()
 }
 

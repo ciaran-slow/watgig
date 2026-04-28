@@ -72,7 +72,7 @@ function EventCard({ event, showAdminActions = false }: Props) {
 
   return (
     <div 
-      className="relative group h-[650px] w-full rounded-3xl overflow-hidden shadow-2xl transition-all duration-500 hover:scale-[1.02] cursor-pointer bg-black border border-gray-800 isolate"
+      className="relative group h-[500px] md:h-[650px] w-full rounded-3xl overflow-hidden shadow-2xl transition-all duration-500 hover:scale-[1.02] cursor-pointer bg-black border border-gray-800 isolate"
       style={{ maskImage: 'linear-gradient(white, white)' }} // Fix for rounded corners overflow in some browsers
       onClick={handleCardClick}
     >
@@ -148,9 +148,9 @@ function EventCard({ event, showAdminActions = false }: Props) {
       </div>
 
       {/* Content Area */}
-      <div className="absolute bottom-0 left-0 right-0 p-8 z-20 flex flex-col gap-4">
+      <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 z-20 flex flex-col gap-4">
         {/* Date & Time Row */}
-        <div className="flex items-center gap-4 text-purple-400 font-bold text-sm">
+        <div className="flex items-center gap-4 text-purple-400 font-bold text-[10px] md:text-sm">
           <div className="flex items-center gap-1.5 bg-black/40 backdrop-blur-sm px-3 py-1 rounded-lg border border-white/10">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -167,10 +167,10 @@ function EventCard({ event, showAdminActions = false }: Props) {
 
         {/* Name and Artists */}
         <div className="flex flex-col gap-1">
-          <h2 className="text-4xl font-black text-white leading-none tracking-tight group-hover:text-purple-400 transition-colors duration-300">
+          <h2 className="text-3xl md:text-4xl font-black text-white leading-none tracking-tight group-hover:text-purple-400 transition-colors duration-300 uppercase">
             {event.name}
           </h2>
-          <p className="text-lg font-medium text-gray-300 italic line-clamp-1">
+          <p className="text-base md:text-lg font-medium text-gray-300 italic line-clamp-1">
             {event.artists}
           </p>
         </div>

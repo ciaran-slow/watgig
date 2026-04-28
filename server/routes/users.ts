@@ -79,6 +79,35 @@ router.post('/', checkJwt, async (req: JwtRequest, res) => {
   }
 })
 
+router.patch('/', checkJwt, async (req: JwtRequest, res) => {
+  try {
+    const auth0Id = req.auth?.sub
+    const updatedUser = req.body
+    const user = await db.getUserById(auth0Id as string)
+    if (!user) return res.status(404).send('User not found')
+
+    await db.updateUser(user.id, updatedUser)
+    res.sendStatus(200)
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Something went wrong')
+  }
+})
+
+router.delete('/', checkJwt, async (req: JwtRequest, res) => {
+  try {
+    const auth0Id = req.auth?.sub
+    const user = await db.getUserById(auth0Id as string)
+    if (!user) return res.status(404).send('User not found')
+
+    await db.deleteUser(user.id)
+    res.sendStatus(200)
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Something went wrong')
+  }
+})
+
 // Saved Events
 router.get('/saved', checkJwt, async (req: JwtRequest, res) => {
   try {
@@ -117,6 +146,51 @@ router.delete('/saved/:eventId', checkJwt, async (req: JwtRequest, res) => {
     if (!user) return res.status(404).send('User not found')
 
     await dbEvents.unfollowEvent(user.id, eventId)
+    res.sendStatus(200)
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Something went wrong')
+  }
+})
+
+// User Following
+router.get('/following', checkJwt, async (req: JwtRequest, res) => {
+  try {
+    const auth0Id = req.auth?.sub
+    const user = await db.getUserById(auth0Id as string)
+    if (!user) return res.status(404).send('User not found')
+
+    const following = await db.getFollowing(user.id)
+    res.json(following)
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Something went wrong')
+  }
+})
+
+router.post('/follow/:userId', checkJwt, async (req: JwtRequest, res) => {
+  try {
+    const auth0Id = req.auth?.sub
+    const followedId = Number(req.params.userId)
+    const user = await db.getUserById(auth0Id as string)
+    if (!user) return res.status(404).send('User not found')
+
+    await db.followUser(user.id, followedId)
+    res.sendStatus(201)
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Something went wrong')
+  }
+})
+
+router.delete('/follow/:userId', checkJwt, async (req: JwtRequest, res) => {
+  try {
+    const auth0Id = req.auth?.sub
+    const followedId = Number(req.params.userId)
+    const user = await db.getUserById(auth0Id as string)
+    if (!user) return res.status(404).send('User not found')
+
+    await db.unfollowUser(user.id, followedId)
     res.sendStatus(200)
   } catch (error) {
     console.error(error)

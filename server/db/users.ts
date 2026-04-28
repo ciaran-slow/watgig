@@ -12,7 +12,15 @@ export async function getUserDetailsById(
   id: number,
   db = connection,
 ): Promise<UserData> {
-  return db('users').where('id', id).select().first()
+  return db('users')
+    .where('id', id)
+    .select('*', 
+      db('user_following')
+        .count('*')
+        .whereRaw('user_following.followed_id = users.id')
+        .as('follower_count')
+    )
+    .first()
 }
 
 export async function getUserByName(
@@ -30,4 +38,28 @@ export async function addUser(
     .insert(newUser)
     .returning('*')
   return addedUser
+}
+
+// User Following
+export async function followUser(followerId: number, followedId: number, db = connection) {
+  return db('user_following').insert({ follower_id: followerId, followed_id: followedId })
+}
+
+export async function unfollowUser(followerId: number, followedId: number, db = connection) {
+  return db('user_following').where({ follower_id: followerId, followed_id: followedId }).delete()
+}
+
+export async function getFollowing(followerId: number, db = connection): Promise<UserData[]> {
+  return db('users')
+    .join('user_following', 'users.id', 'user_following.followed_id')
+    .where('user_following.follower_id', followerId)
+    .select('users.*')
+}
+
+export async function deleteUser(id: number, db = connection): Promise<number> {
+  return db('users').where('id', id).delete()
+}
+
+export async function updateUser(id: number, updatedUser: Partial<UserData>, db = connection): Promise<number> {
+  return db('users').where('id', id).update(updatedUser)
 }

@@ -38,6 +38,21 @@ export async function addUser({
     .catch((error) => console.log(error))
 }
 
+export async function updateUser(updatedUser: Partial<UserData>, token: string) {
+  return request
+    .patch(`${rootURL}/users`)
+    .set('Authorization', `Bearer ${token}`)
+    .send(updatedUser)
+    .then((res) => res.body)
+}
+
+export async function deleteUser(token: string) {
+  return request
+    .delete(`${rootURL}/users`)
+    .set('Authorization', `Bearer ${token}`)
+    .then((res) => res.body)
+}
+
 interface CheckNameFunction {
   name: string
   token: string
@@ -70,6 +85,27 @@ export async function saveEvent(eventId: number, token: string) {
 export async function unsaveEvent(eventId: number, token: string) {
   return request
     .delete(`${rootURL}/users/saved/${eventId}`)
+    .set('Authorization', `Bearer ${token}`)
+    .then((res) => res.body)
+}
+
+export async function getFollowing(token: string) {
+  return request
+    .get(`${rootURL}/users/following`)
+    .set('Authorization', `Bearer ${token}`)
+    .then((res) => res.body)
+}
+
+export async function followUser(userId: number, token: string) {
+  return request
+    .post(`${rootURL}/users/follow/${userId}`)
+    .set('Authorization', `Bearer ${token}`)
+    .then((res) => res.body)
+}
+
+export async function unfollowUser(userId: number, token: string) {
+  return request
+    .delete(`${rootURL}/users/follow/${userId}`)
     .set('Authorization', `Bearer ${token}`)
     .then((res) => res.body)
 }

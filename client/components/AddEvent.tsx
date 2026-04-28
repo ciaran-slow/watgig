@@ -223,15 +223,15 @@ function AddEvent() {
   return (
     <>
       <Hero />
-      <section className="p-12 pt-0 flex bg-[#0a0a0a] min-h-screen">
+      <section className="p-6 md:p-12 pt-0 flex bg-[#0a0a0a] min-h-screen">
         <div className="w-full">
-          <h2 className="text-7xl font-black my-12 tracking-tighter uppercase leading-none text-white border-l-8 border-purple-600 pl-8">Add Event</h2>
+          <h2 className="text-5xl md:text-7xl font-black my-8 md:my-12 tracking-tighter uppercase leading-none text-white border-l-8 border-purple-600 pl-6 md:pl-8">Add Event</h2>
 
           <form
             data-testid="form"
             onSubmit={handleSubmit}
             onReset={handleReset}
-            className="flex flex-col gap-8 bg-white/[0.02] p-10 rounded-3xl shadow-2xl border border-white/5 backdrop-blur-sm"
+            className="flex flex-col gap-8 bg-white/[0.02] p-6 md:p-10 rounded-3xl shadow-2xl border border-white/5 backdrop-blur-sm"
           >
             <FormField 
               label="Event Name" 
@@ -351,18 +351,18 @@ function AddEvent() {
               onChange={handleChange}
             />
 
-            <div className="flex gap-4 pt-4 border-t border-white/5">
+            <div className="flex flex-col sm:flex-row gap-4 pt-4 border-t border-white/5">
               <button
                 type="submit"
                 disabled={addEvent.isPending}
-                className="bg-purple-600 text-white font-black text-xs uppercase tracking-[0.2em] px-10 py-4 rounded-xl hover:bg-purple-500 transition cursor-pointer shadow-lg shadow-purple-900/20 active:scale-95 disabled:bg-gray-800 disabled:text-gray-500"
+                className="bg-purple-600 text-white font-black text-xs uppercase tracking-[0.2em] px-6 md:px-10 py-4 rounded-xl hover:bg-purple-500 transition cursor-pointer shadow-lg shadow-purple-900/20 active:scale-95 disabled:bg-gray-800 disabled:text-gray-500 flex-1 sm:flex-none"
               >
                 {addEvent.isPending ? 'Submitting...' : 'Submit Event'}
               </button>
 
               <button
                 type="reset"
-                className="border border-white/10 text-gray-400 px-10 py-4 rounded-xl hover:bg-white/5 transition font-black text-xs uppercase tracking-[0.2em] active:scale-95"
+                className="border border-white/10 text-gray-400 px-6 md:px-10 py-4 rounded-xl hover:bg-white/5 transition font-black text-xs uppercase tracking-[0.2em] active:scale-95 flex-1 sm:flex-none"
               >
                 Reset
               </button>

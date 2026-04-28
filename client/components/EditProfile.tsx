@@ -1,10 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
-
-// import { useAuth0 } from '@auth0/auth0-react'
 import { useUser } from '../hooks/users'
 import { IfAuthenticated } from './Authenticated'
-
 import Hero from './Hero'
 
 // Type for Cloudinary widget
@@ -24,23 +21,13 @@ declare global {
 }
 
 interface FormState {
-  name: string // Changed from username to name
+  name: string
   role: string
   profile_image: string
   bio: string
   genre: string
   members: string
   address: string
-}
-
-const defaultFormState: FormState = {
-  name: '', // Changed from username to name
-  role: '',
-  profile_image: '',
-  bio: '',
-  genre: 'rock',
-  members: '',
-  address: '',
 }
 
 interface FormFieldProps {
@@ -125,20 +112,35 @@ function FormField({
   )
 }
 
-function Register() {
+function EditProfile() {
   const user = useUser()
-  const [formData, setFormData] = useState<FormState>(defaultFormState)
+  const [formData, setFormData] = useState<FormState | null>(null)
   const [nameAvailable, setNameAvailable] = useState<boolean | null>(null)
   const [nameSuggestions, setNameSuggestions] = useState<string[]>([])
   const [isCheckingName, setIsCheckingName] = useState(false)
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (user.data) navigate('/')
-  }, [user.data, navigate])
+    if (user.data && !formData) {
+      setFormData({
+        name: user.data.name || '',
+        role: user.data.role || '',
+        profile_image: user.data.profile_image || '',
+        bio: user.data.bio || '',
+        genre: user.data.genre || 'rock',
+        members: user.data.members || '',
+        address: user.data.address || '',
+      })
+    }
+  }, [user.data, formData])
 
-  // Debounce name check
+  // Debounce name check only if name changed
   useEffect(() => {
+    if (!formData || formData.name === user.data?.name) {
+        setNameAvailable(true)
+        return
+    }
+
     const timer = setTimeout(async () => {
       if (formData.name.trim().length > 0) {
         setIsCheckingName(true)
@@ -160,14 +162,18 @@ function Register() {
     }, 500)
 
     return () => clearTimeout(timer)
-  }, [formData.name])
+  }, [formData?.name, user.data?.name])
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    if (nameAvailable === false) return
-    // Call the addUser mutation, passing the form data.
-    // The email is handled in the useUser hook.
-    user.add.mutate(formData) 
+    if (nameAvailable === false || !formData) return
+    
+    try {
+        await user.update.mutateAsync(formData)
+        navigate(`/profile/${user.data?.id}`)
+    } catch (err) {
+        console.error(err)
+    }
   }
 
   const handleChange = (
@@ -176,42 +182,14 @@ function Register() {
     >
   ) => {
     const { name, value } = event.target
-    setFormData((prev) => ({
+    setFormData((prev) => prev ? ({
       ...prev,
       [name]: value,
-    }))
+    }) : null)
   }
 
   const handleSuggestionClick = (suggestion: string) => {
-    setFormData(prev => ({ ...prev, name: suggestion }))
-  }
-
-  const handleReset = () => {
-    setFormData(defaultFormState)
-    setNameAvailable(null)
-    setNameSuggestions([])
-  }
-
-  const getNamePlaceholder = () => {
-    switch (formData.role) {
-      case 'band':
-        return 'Enter your band name'
-      case 'venue':
-        return 'Enter your venue name'
-      default:
-        return 'Enter your full name'
-    }
-  }
-
-  const getBioPlaceholder = () => {
-    switch (formData.role) {
-      case 'band':
-        return 'Tell us about your band, your music, and your journey...'
-      case 'venue':
-        return 'Tell us about your venue, the kind of events you host...'
-      default:
-        return 'Tell us about yourself, your musical interests, etc.'
-    }
+    setFormData(prev => prev ? ({ ...prev, name: suggestion }) : null)
   }
 
   const handleUpload = () => {
@@ -230,11 +208,10 @@ function Register() {
       },
       (error, result) => {
         if (!error && result && result.event === 'success') {
-          console.log('Done! Here is the image info: ', result.info)
-          setFormData((prev) => ({
+          setFormData((prev) => prev ? ({
             ...prev,
             profile_image: result.info.secure_url,
-          }))
+          }) : null)
         }
       }
     )
@@ -259,6 +236,8 @@ function Register() {
     { value: 'other', label: 'Other' },
   ]
 
+  if (!formData) return <div className="p-12 text-center text-white">Loading...</div>
+
   return (
     <div>
       <div>
@@ -267,27 +246,24 @@ function Register() {
 
           <section className="p-6 md:p-12 pt-0 flex bg-[#0a0a0a] min-h-screen">
             <div className="w-full">
-              <h2 className="text-5xl md:text-7xl font-black my-8 md:my-12 tracking-tighter uppercase leading-none text-white border-l-8 border-purple-600 pl-6 md:pl-8">Create Profile</h2>
+              <h2 className="text-5xl md:text-7xl font-black my-8 md:my-12 tracking-tighter uppercase leading-none text-white border-l-8 border-purple-600 pl-6 md:pl-8">Edit Profile</h2>
 
               <form
-                data-testid="form"
                 onSubmit={handleSubmit}
-                onReset={handleReset}
                 className="flex flex-col gap-8 bg-white/[0.02] p-6 md:p-10 rounded-3xl shadow-2xl border border-white/5 backdrop-blur-sm"
               >
                 <div className="flex flex-col gap-1">
                   <FormField
-                    label="Name" // Changed label from Username to Name
-                    name="name" // Changed name attribute from username to name
-                    value={formData.name} // Changed value from formData.username to formData.name
+                    label="Name"
+                    name="name"
+                    value={formData.name}
                     onChange={handleChange}
-                    placeholder={getNamePlaceholder()}
                     required
                   />
                   {isCheckingName && (
                     <span className="text-xs text-blue-500 italic">Checking availability...</span>
                   )}
-                  {nameAvailable === true && formData.name.trim() !== '' && (
+                  {nameAvailable === true && formData.name.trim() !== '' && formData.name !== user.data?.name && (
                     <span className="text-xs text-green-600 font-semibold">✓ Name is available</span>
                   )}
                   {nameAvailable === false && (
@@ -340,7 +316,6 @@ function Register() {
                       type="text"
                       value={formData.members}
                       onChange={handleChange}
-                      placeholder="e.g. John Doe, Jane Smith, Alex Jones"
                       required
                     />
                   </>
@@ -354,7 +329,6 @@ function Register() {
                     rows={2}
                     value={formData.address}
                     onChange={handleChange}
-                    placeholder="123 Music St, Sound Town"
                     required
                   />
                 )}
@@ -373,9 +347,8 @@ function Register() {
                         />
                         <button
                           type="button"
-                          onClick={() => setFormData(prev => ({ ...prev, profile_image: '' }))}
+                          onClick={() => setFormData(prev => prev ? ({ ...prev, profile_image: '' }) : null)}
                           className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1.5 hover:bg-red-700 transition shadow-lg z-10"
-                          title="Remove image"
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                             <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
@@ -398,46 +371,41 @@ function Register() {
                       onClick={handleUpload}
                       className="bg-purple-600 text-white px-8 py-3 rounded-xl hover:bg-purple-500 transition shadow-lg shadow-purple-900/20 w-fit font-black text-xs uppercase tracking-widest active:scale-95"
                     >
-                      {formData.profile_image ? 'Change Image' : 'Upload Image'}
+                      Change Image
                     </button>
                   </div>
-                  <p className="text-[10px] text-gray-600 uppercase tracking-wider font-bold">Images are securely stored on Cloudinary</p>
                 </div>
 
-                <div className="flex flex-col gap-1">
-                  <FormField
-                    label="Bio"
-                    name="bio"
-                    type="textarea"
-                    value={formData.bio}
-                    onChange={handleChange}
-                    placeholder={getBioPlaceholder()}
-                    maxLength={200}
-                    required
-                  />
-                  <div className="flex justify-end">
-                    <span className={`text-xs ${formData.bio.length >= 200 ? 'text-red-500 font-bold' : 'text-gray-500'}`}>
-                      {formData.bio.length} / 200 characters
-                    </span>
-                  </div>
-                </div>
+                <FormField
+                  label="Bio"
+                  name="bio"
+                  type="textarea"
+                  value={formData.bio}
+                  onChange={handleChange}
+                  maxLength={200}
+                  required
+                />
 
                 <div className="flex flex-col sm:flex-row gap-4 pt-4 border-t border-white/5">
-                  <input
+                  <button
                     type="submit"
-                    data-testid="submit"
-                    value="Submit Profile"
+                    disabled={user.update.isPending}
                     className="bg-purple-600 text-white font-black text-xs uppercase tracking-[0.2em] px-6 md:px-10 py-4 rounded-xl hover:bg-purple-500 transition cursor-pointer shadow-lg shadow-purple-900/20 active:scale-95 flex-1 sm:flex-none"
-                  />
+                  >
+                    {user.update.isPending ? 'Updating...' : 'Update Profile'}
+                  </button>
 
                   <button
-                    type="reset"
-                    data-testid="reset"
-                    className="border border-white/10 text-gray-400 px-6 md:px-10 py-4 rounded-xl hover:bg-white/5 transition font-black text-xs uppercase tracking-[0.2em] active:scale-95 flex-1 sm:flex-none"
+                    type="button"
+                    onClick={() => navigate(-1)}
+                    className="border border-white/10 text-gray-400 px-6 md:px-10 py-4 rounded-xl hover:bg-white/5 transition font-black text-xs uppercase tracking-[0.2em] active:scale-95 flex-1 sm:flex-none text-center"
                   >
-                    Reset
+                    Cancel
                   </button>
                 </div>
+                {user.update.isError && (
+                  <p className="text-red-500 text-xs font-bold uppercase tracking-wider">Error updating profile: {user.update.error.message}</p>
+                )}
               </form>
             </div>
           </section>
@@ -447,4 +415,4 @@ function Register() {
   )
 }
 
-export default Register
+export default EditProfile

@@ -12,4 +12,5 @@ export interface UserData {
   genre?: string
   members?: string
   address?: string
+  follower_count?: number
 }

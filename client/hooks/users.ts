@@ -37,9 +37,42 @@ export function useUser() {
     },
   })
 
+  // Update user mutation
+  const updateUserMutation = useMutation({
+    mutationFn: async (updatedUser: Partial<UserData>) => {
+      const token = await getAccessTokenSilently()
+      return API.updateUser(updatedUser, token)
+    },
+    onSuccess: () => {
+      toast.success('Profile updated successfully!')
+      queryClient.invalidateQueries({ queryKey: ['user'] })
+    },
+    onError: (err: any) => {
+      toast.error(`Error: ${err.message || 'Something went wrong'}`)
+    },
+  })
+
+  // Delete user mutation
+  const deleteUserMutation = useMutation({
+    mutationFn: async () => {
+      const token = await getAccessTokenSilently()
+      return API.deleteUser(token)
+    },
+    onSuccess: () => {
+      toast.success('Account deleted successfully.')
+      queryClient.setQueryData(['user'], null)
+      queryClient.invalidateQueries({ queryKey: ['events'] })
+    },
+    onError: (err: any) => {
+      toast.error(`Error: ${err.message || 'Something went wrong'}`)
+    },
+  })
+
   return {
     ...query,
     add: addUserMutation, // Return the mutation
+    update: updateUserMutation,
+    delete: deleteUserMutation,
     checkName: async (name: string) => {
       const token = await getAccessTokenSilently()
       return API.checkName({ name, token })
@@ -82,6 +115,40 @@ export function useToggleSaveEvent() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['saved-events'] })
+    },
+    onError: (err: any) => {
+      toast.error(`Error: ${err.message || 'Something went wrong'}`)
+    },
+  })
+}
+
+export function useFollowing() {
+  const { getAccessTokenSilently, isAuthenticated } = useAuth0()
+  return useQuery({
+    queryKey: ['following'],
+    queryFn: async () => {
+      const token = await getAccessTokenSilently()
+      return API.getFollowing(token)
+    },
+    enabled: isAuthenticated,
+  })
+}
+
+export function useToggleFollowUser() {
+  const { getAccessTokenSilently } = useAuth0()
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({ userId, isFollowing }: { userId: number; isFollowing: boolean }) => {
+      const token = await getAccessTokenSilently()
+      if (isFollowing) {
+        return API.unfollowUser(userId, token)
+      } else {
+        return API.followUser(userId, token)
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['following'] })
     },
     onError: (err: any) => {
       toast.error(`Error: ${err.message || 'Something went wrong'}`)

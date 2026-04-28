@@ -53,12 +53,12 @@ function FilterBar({ filter, setFilter }: Props) {
   }
 
   return (
-    <div className="bg-black/60 backdrop-blur-xl sticky top-0 z-40 border-b border-white/5">
+    <div className="bg-black/60 backdrop-blur-xl sticky top-[97px] z-40 border-b border-white/5">
       <div className="max-w-screen-2xl mx-auto px-6 md:px-12 py-6">
         <div className="flex flex-col gap-6">
           {/* Mobile Header */}
           <div className="flex justify-between items-center md:hidden">
-            <h2 className="font-black text-2xl tracking-tight text-white uppercase">Discover</h2>
+            <h2 className="font-black text-2xl tracking-tight text-white uppercase">Filters</h2>
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="p-2 bg-white/5 rounded-lg text-gray-400"
@@ -82,9 +82,9 @@ function FilterBar({ filter, setFilter }: Props) {
             md:flex md:items-center
           `}>
             
-            {/* Top Row: Discover/Categories */}
+            {/* Top Row: Time & Status */}
             <div className="flex flex-col items-center gap-3">
-              <h2 className="font-black text-xs tracking-[0.2em] text-gray-400 uppercase hidden md:block">Time & Status</h2>
+              <h2 className="font-black text-[9px] md:text-xs tracking-[0.3em] text-gray-500 uppercase">Time & Status</h2>
               <div className="flex flex-wrap justify-center gap-2">
                 {categories.map((cat) => (
                   <button 
@@ -99,9 +99,9 @@ function FilterBar({ filter, setFilter }: Props) {
               </div>
             </div>
 
-            {/* Bottom Row: Genres */}
-            <div className="flex flex-col items-center gap-3">
-              <h2 className="font-black text-xs tracking-[0.2em] text-gray-400 uppercase">Music Genres</h2>
+            {/* Bottom Row: Music Genres */}
+            <div className="flex flex-col items-center gap-3 w-full">
+              <h2 className="font-black text-[9px] md:text-xs tracking-[0.3em] text-gray-500 uppercase">Music Genres</h2>
               <div className="flex flex-wrap justify-center gap-2 max-w-4xl">
                 {genres.map((genre) => (
                   <button 
