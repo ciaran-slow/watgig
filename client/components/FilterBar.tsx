@@ -53,7 +53,7 @@ function FilterBar({ filter, setFilter }: Props) {
   }
 
   return (
-    <div className="bg-black/60 backdrop-blur-xl sticky top-[97px] z-40 border-b border-white/5">
+    <div className="bg-black/60 backdrop-blur-xl sticky top-0 z-40 border-b border-white/5">
       <div className="max-w-screen-2xl mx-auto px-6 md:px-12 py-6">
         <div className="flex flex-col gap-6">
           {/* Mobile Header */}

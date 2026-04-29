@@ -22,6 +22,7 @@ function EventCard({ event, showAdminActions = false }: Props) {
 
   // Format date using date-fns
   const formattedDate = event.date ? format(parseISO(event.date), 'EEE d MMM') : ''
+  const isHistorical = event.date ? new Date(event.date) < new Date(new Date().setHours(0, 0, 0, 0)) : false
 
   const isOwner = dbUser.data?.id === event.created_by
   const isSaved = savedEvents?.some((e: EventWithId) => e.id === event.id)
@@ -91,6 +92,14 @@ function EventCard({ event, showAdminActions = false }: Props) {
         <div className="bg-white/10 backdrop-blur-md border border-white/20 px-3 py-1 rounded-full text-xs font-bold text-white uppercase tracking-wider shadow-lg">
           {event.genre}
         </div>
+        {isHistorical && (
+          <div className="bg-amber-600 px-3 py-1 rounded-full text-xs font-bold text-white uppercase tracking-wider shadow-lg flex items-center gap-1">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+            </svg>
+            Historical
+          </div>
+        )}
         {!!event.featured && (
           <div className="bg-purple-600 px-3 py-1 rounded-full text-xs font-bold text-white uppercase tracking-wider shadow-lg flex items-center gap-1">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">

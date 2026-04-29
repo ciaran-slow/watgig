@@ -52,7 +52,7 @@ function Nav() {
 
   return (
     <>
-      <nav className="p-6 flex justify-between items-center border-b border-white/5 bg-[#0a0a0a]/80 backdrop-blur-xl sticky top-0 z-[60]">
+      <nav className="p-6 flex justify-between items-center absolute top-0 left-0 right-0 z-[60] bg-transparent">
         <div className="flex gap-2 items-center">
           <img src={logo} alt="WatGig Logo" className="h-14" />
           <h2
@@ -112,21 +112,21 @@ function Nav() {
       {/* Actual Hamburger Button - Absolute positioned to stay on top of everything */}
       <button
         onClick={toggleMenu}
-        className="lg:hidden fixed top-8 right-6 flex flex-col justify-center items-center w-10 h-10 gap-1.5 focus:outline-none z-[110]"
+        className="lg:hidden fixed top-7 right-6 flex flex-col justify-center items-center w-12 h-12 gap-1.5 focus:outline-none z-[110] bg-purple-600 rounded-full shadow-2xl border border-purple-500/50"
         aria-label="Toggle Menu"
       >
         <span
-          className={`h-0.5 w-8 bg-white transition-all duration-300 transform origin-center ${
+          className={`h-0.5 w-6 bg-white transition-all duration-300 transform origin-center ${
             isMenuOpen ? "rotate-45 translate-y-2" : ""
           }`}
         />
         <span
-          className={`h-0.5 w-8 bg-white transition-all duration-300 ${
+          className={`h-0.5 w-6 bg-white transition-all duration-300 ${
             isMenuOpen ? "opacity-0" : "opacity-100"
           }`}
         />
         <span
-          className={`h-0.5 w-8 bg-white transition-all duration-300 transform origin-center ${
+          className={`h-0.5 w-6 bg-white transition-all duration-300 transform origin-center ${
             isMenuOpen ? "-rotate-45 -translate-y-2" : ""
           }`}
         />

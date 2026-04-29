@@ -18,6 +18,7 @@ function EventDetails() {
 
   const backgroundImage = event.image_url ? `url(${event.image_url})` : `url(${eventbg})`
   const formattedDate = event.date ? format(parseISO(event.date), 'EEEE d MMMM yyyy') : ''
+  const isHistorical = event.date ? new Date(event.date) < new Date(new Date().setHours(0, 0, 0, 0)) : false
   // @ts-ignore
   const createdAt = event.created_at ? format(parseISO(event.created_at), 'd MMM yyyy') : ''
 
@@ -26,7 +27,7 @@ function EventDetails() {
       <Hero 
         title={event.name}
         subtitle={`Live at ${event.venue_name}`}
-        tag={event.genre}
+        tag={isHistorical ? `${event.genre} (HISTORICAL)` : event.genre}
         image={event.image_url}
       />
       
@@ -57,7 +58,9 @@ function EventDetails() {
               </div>
 
               <h2 className="text-3xl font-black text-white uppercase tracking-tighter mb-2 leading-none">{event.name}</h2>
-              <p className="text-purple-400 font-bold text-xs uppercase tracking-widest mb-6">Live Event</p>
+              <p className={`${isHistorical ? 'text-amber-500' : 'text-purple-400'} font-bold text-xs uppercase tracking-widest mb-6`}>
+                {isHistorical ? 'Historical Event' : 'Live Event'}
+              </p>
               
               <div className="flex flex-col gap-4 border-t border-white/5 pt-6">
                 <div>

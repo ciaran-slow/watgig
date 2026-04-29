@@ -4,6 +4,7 @@ import { useUserEvents, useDeleteEvent } from "../hooks/events"
 import { format, parseISO } from "date-fns"
 import Hero from "./Hero"
 import EventCard from "./EventCard"
+import SavedEventsCalendar from "./SavedEventsCalendar"
 import toast from "react-hot-toast"
 import { useState } from "react"
 import { useAuth0 } from "@auth0/auth0-react"
@@ -22,7 +23,7 @@ function Profile() {
 
   const [sections, setSections] = useState({
     events: false,
-    saved: false,
+    saved: true,
     following: false
   })
 
@@ -218,6 +219,37 @@ function Profile() {
 
           {/* Main: User Events */}
           <div className="lg:col-span-2 flex flex-col gap-8">
+            {/* Saved Events Section */}
+            {isOwnProfile && (
+              <div className="bg-white/[0.02] border border-white/5 rounded-3xl overflow-hidden">
+                <button 
+                  onClick={() => toggleSection('saved')}
+                  className="w-full p-8 flex justify-between items-center hover:bg-white/[0.02] transition-colors group text-left"
+                >
+                  <h2 className="text-4xl font-black text-white uppercase tracking-tighter border-l-4 border-red-500 pl-6">
+                    Saved Events
+                  </h2>
+                  <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    className={`h-8 w-8 text-gray-500 transition-transform duration-300 ${sections.saved ? 'rotate-180' : ''}`} 
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                {sections.saved && (
+                  <div className="p-8 pt-0">
+                    {savedLoading ? (
+                      <div className="text-gray-500 italic">Loading saved events...</div>
+                    ) : (
+                      <SavedEventsCalendar events={savedEvents || []} />
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+
             {/* My Events / Events Section */}
             <div className="bg-white/[0.02] border border-white/5 rounded-3xl overflow-hidden">
               {isOwnProfile ? (
@@ -326,59 +358,6 @@ function Profile() {
                 </div>
               )}
             </div>
-
-            {/* Saved Events Section */}
-            {isOwnProfile && (
-              <div className="bg-white/[0.02] border border-white/5 rounded-3xl overflow-hidden">
-                <button 
-                  onClick={() => toggleSection('saved')}
-                  className="w-full p-8 flex justify-between items-center hover:bg-white/[0.02] transition-colors group text-left"
-                >
-                  <h2 className="text-4xl font-black text-white uppercase tracking-tighter border-l-4 border-red-500 pl-6">
-                    Saved Events
-                  </h2>
-                  <svg 
-                    xmlns="http://www.w3.org/2000/svg" 
-                    className={`h-8 w-8 text-gray-500 transition-transform duration-300 ${sections.saved ? 'rotate-180' : ''}`} 
-                    fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-
-                {sections.saved && (
-                  <div className="p-8 pt-0">
-                    {savedLoading ? (
-                      <div className="text-gray-500 italic">Loading saved events...</div>
-                    ) : (() => {
-                      const now = new Date()
-                      now.setHours(0, 0, 0, 0)
-                      const upcomingSavedEvents = savedEvents?.filter((event: any) => {
-                        const eventDate = new Date(event.date)
-                        eventDate.setHours(0, 0, 0, 0)
-                        return eventDate >= now
-                      })
-
-                      return upcomingSavedEvents && upcomingSavedEvents.length > 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          {upcomingSavedEvents.map((event: any) => (
-                            <EventCard 
-                              key={event.id} 
-                              event={event} 
-                              showAdminActions={false}
-                            />
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="bg-white/[0.02] border border-dashed border-white/10 p-12 rounded-2xl text-center">
-                          <p className="text-gray-500 font-bold uppercase tracking-widest text-xs">No upcoming saved events.</p>
-                        </div>
-                      )
-                    })()}
-                  </div>
-                )}
-              </div>
-            )}
             {/* Following Section */}
             {isOwnProfile && (
               <div className="bg-white/[0.02] border border-white/5 rounded-3xl overflow-hidden">
