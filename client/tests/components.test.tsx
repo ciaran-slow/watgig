@@ -5,7 +5,7 @@ import Footer from '../components/Footer'
 import Nav from '../components/Nav'
 import { MemoryRouter } from 'react-router'
 import { useAuth0 } from '@auth0/auth0-react'
-import { useUser } from '../hooks/users'
+import { useUser, useNotifications } from '../hooks/users'
 import React from 'react'
 
 vi.mock('@auth0/auth0-react')
@@ -28,6 +28,7 @@ describe('Nav', () => {
       logout: vi.fn(),
     } as any)
     vi.mocked(useUser).mockReturnValue({ data: null } as any)
+    vi.mocked(useNotifications).mockReturnValue({ data: [] } as any)
 
     render(
       <MemoryRouter>
@@ -48,6 +49,7 @@ describe('Nav', () => {
     vi.mocked(useUser).mockReturnValue({
       data: { id: 1, name: 'Test User', profile_image: '' }
     } as any)
+    vi.mocked(useNotifications).mockReturnValue({ data: [] } as any)
 
     render(
       <MemoryRouter>

@@ -2,6 +2,7 @@ import { Router } from 'express'
 
 import * as db from '../db/events.ts'
 import * as dbUsers from '../db/users.ts'
+import * as dbNotif from '../db/notifications.ts'
 
 const router = Router()
 
@@ -80,6 +81,19 @@ router.post('/', async (req, res) => {
       lat,
       lng
     })
+
+    // Notify followers
+    if (user) {
+      try {
+        const followers = await dbUsers.getFollowers(user.id)
+        for (const follower of followers) {
+          await dbNotif.createNotification(follower.id, addedEvent.id)
+        }
+      } catch (notifError) {
+        console.error('Failed to process notifications:', notifError)
+      }
+    }
+
     res.status(201).json(addedEvent)
   } catch (error) {
     console.log(error)

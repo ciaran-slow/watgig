@@ -56,6 +56,13 @@ export async function getFollowing(followerId: number, db = connection): Promise
     .select('users.*')
 }
 
+export async function getFollowers(followedId: number, db = connection): Promise<UserData[]> {
+  return db('users')
+    .join('user_following', 'users.id', 'user_following.follower_id')
+    .where('user_following.followed_id', followedId)
+    .select('users.*')
+}
+
 export async function deleteUser(id: number, db = connection): Promise<number> {
   return db('users').where('id', id).delete()
 }

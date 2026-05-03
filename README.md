@@ -15,6 +15,7 @@ WatGig is a full-stack platform for discovering, saving, and managing live music
 - **Interactive Maps**: View event locations using integrated Leaflet maps.
 
 ### User Experience
+- **Notification System**: In-app alerts when a followed user creates a new event.
 - **Personal Event Calendar**: A custom monthly calendar for users to view and manage their saved events.
 - **Responsive Design**: Fully optimized for mobile with a custom purple hamburger menu and fullscreen overlay.
 - **Smooth Navigation**: Global scroll-to-top behavior ensuring a seamless transition between views.

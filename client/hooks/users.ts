@@ -155,3 +155,39 @@ export function useToggleFollowUser() {
     },
   })
 }
+
+export function useNotifications() {
+  const { getAccessTokenSilently, isAuthenticated } = useAuth0()
+  const queryClient = useQueryClient()
+
+  const query = useQuery({
+    queryKey: ['notifications'],
+    queryFn: async () => {
+      const token = await getAccessTokenSilently()
+      return API.getNotifications(token)
+    },
+    enabled: isAuthenticated,
+  })
+
+  const markAsRead = useMutation({
+    mutationFn: async (id: number) => {
+      const token = await getAccessTokenSilently()
+      return API.markNotificationAsRead(id, token)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['notifications'] })
+    },
+  })
+
+  const deleteNotif = useMutation({
+    mutationFn: async (id: number) => {
+      const token = await getAccessTokenSilently()
+      return API.deleteNotification(id, token)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['notifications'] })
+    },
+  })
+
+  return { ...query, markAsRead, deleteNotif }
+}
