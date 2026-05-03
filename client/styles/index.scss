@@ -6,6 +6,27 @@
   html, body {
     @apply bg-[#0a0a0a] text-gray-100;
     font-family: 'Inter', sans-serif;
+    color-scheme: dark;
+  }
+
+  /* Customizing the native date/time picker icon color */
+  input[type="date"],
+  input[type="time"] {
+    accent-color: #9333ea;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="time"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator:hover,
+  input[type="time"]::-webkit-calendar-picker-indicator:hover {
+    background-color: rgba(147, 51, 234, 0.1);
+    transform: scale(1.1);
   }
 }
 

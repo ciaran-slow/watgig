@@ -184,10 +184,6 @@ function Profile() {
               )}
 
               <div className="flex flex-col gap-4 border-t border-white/5 pt-6">
-                <div>
-                  <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-1">Email</h3>
-                  <p className="text-gray-300 font-medium">{profileUser.email}</p>
-                </div>
                 {profileUser.address && (
                   <div>
                     <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-1">Location</h3>

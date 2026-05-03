@@ -109,3 +109,24 @@ export async function unfollowUser(userId: number, token: string) {
     .set('Authorization', `Bearer ${token}`)
     .then((res) => res.body)
 }
+
+export async function getNotifications(token: string) {
+  return request
+    .get(`${rootURL}/users/notifications`)
+    .set('Authorization', `Bearer ${token}`)
+    .then((res) => res.body)
+}
+
+export async function markNotificationAsRead(id: number, token: string) {
+  return request
+    .patch(`${rootURL}/users/notifications/${id}`)
+    .set('Authorization', `Bearer ${token}`)
+    .then((res) => res.body)
+}
+
+export async function deleteNotification(id: number, token: string) {
+  return request
+    .delete(`${rootURL}/users/notifications/${id}`)
+    .set('Authorization', `Bearer ${token}`)
+    .then((res) => res.body)
+}

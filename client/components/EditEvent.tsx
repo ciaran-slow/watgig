@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react"
 import { useNavigate, useParams } from "react-router"
-import Hero from "./Hero"
 import { useEvent, useUpdateEvent } from "../hooks/events"
 import { useUser } from "../hooks/users"
 
@@ -53,6 +52,7 @@ function FormField({ label, name, type = 'text', value, onChange, rows }: FormFi
           value={value}
           onChange={onChange}
           className={commonClasses}
+          style={{ colorScheme: 'dark' }}
         />
       )}
     </div>
@@ -217,10 +217,9 @@ function EditEvent() {
 
   return (
     <>
-      <Hero />
-      <section className="p-6 md:p-12 pt-0 flex bg-[#0a0a0a] min-h-screen">
+      <section className="p-6 md:p-12 pt-28 md:pt-44 flex bg-[#0a0a0a] min-h-screen">
         <div className="w-full">
-          <h2 className="text-5xl md:text-7xl font-black my-8 md:my-12 tracking-tighter uppercase leading-none text-white border-l-8 border-purple-600 pl-6 md:pl-8">Edit Event</h2>
+          <h2 className="text-5xl md:text-7xl font-black mt-4 mb-8 md:mb-12 tracking-tighter uppercase leading-none text-white border-l-8 border-purple-600 pl-6 md:pl-8">Edit Event</h2>
 
           <form
             onSubmit={handleSubmit}
