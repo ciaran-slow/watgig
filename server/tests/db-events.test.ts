@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'vitest'
-import db from './connection'
-import { getEvents, addEvent } from './events'
+import db from '../db/connection'
+import { getEvents, addEvent } from '../db/events'
 
 beforeAll(async () => {
   await db.migrate.latest()

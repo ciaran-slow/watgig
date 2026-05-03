@@ -1,7 +1,7 @@
 import request from 'superagent'
 import { User, UserData } from '../../models/users.ts'
 
-const rootURL = new URL(`/api/v1`, document.baseURI)
+const rootURL = '/api/v1'
 
 interface GetUserFunction {
   token: string

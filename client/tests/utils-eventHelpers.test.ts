@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { getHeaderForFilter } from './eventHelpers'
+import { getHeaderForFilter } from '../utils/eventHelpers'
 
 describe('getHeaderForFilter', () => {
   it('returns "Featured Events" for "featured"', () => {
