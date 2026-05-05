@@ -13,8 +13,14 @@ router.get('/', checkJwt, async (req: JwtRequest, res) => {
   try {
     const auth0Id = req.auth?.sub
     const user = await db.getUserById(auth0Id as string)
-    console.log(user)
-    res.json({ user })
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' })
+    }
+
+    // Sanitize user object for response
+    const { email, auth0Id: _, ...safeUser } = user
+    res.json({ user: safeUser })
   } catch (error) {
     console.error(error)
     res.status(500).send('Something went wrong')
@@ -28,7 +34,10 @@ router.get('/details/:id', async (req, res) => {
     if (!user) {
       return res.status(404).send('User not found')
     }
-    res.json(user)
+
+    // Sanitize user details
+    const { email, auth0Id, ...safeUser } = user
+    res.json(safeUser)
   } catch (error) {
     console.error(error)
     res.status(500).send('Something went wrong')

@@ -1,11 +1,20 @@
 import express from 'express'
 import * as Path from 'node:path'
+import { rateLimit } from 'express-rate-limit'
 
 import eventRoutes from './routes/events.ts'
 import userRoutes from './routes/users.ts'
 
 const server = express()
 
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  limit: 100, // Limit each IP to 100 requests per `window`
+  standardHeaders: 'draft-7',
+  legacyHeaders: false,
+})
+
+server.use(limiter)
 server.use(express.json())
 
 server.use('/api/v1/events', eventRoutes)
