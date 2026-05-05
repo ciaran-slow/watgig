@@ -14,7 +14,15 @@ export async function getUserDetailsById(
 ): Promise<UserData> {
   return db('users')
     .where('id', id)
-    .select('*', 
+    .select(
+      'id',
+      'name',
+      'role',
+      'profile_image',
+      'bio',
+      'genre',
+      'members',
+      'address',
       db('user_following')
         .count('*')
         .whereRaw('user_following.followed_id = users.id')

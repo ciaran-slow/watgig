@@ -4,8 +4,8 @@ import { ParamsDictionary } from 'express-serve-static-core'
 import { JwtPayload } from 'jsonwebtoken'
 import jwks from 'jwks-rsa'
 
-const domain = 'https://raumati-2026-ciaran.au.auth0.com'
-const audience = 'https://watgig/api'
+const domain = process.env.VITE_AUTH0_DOMAIN || 'https://raumati-2026-ciaran.au.auth0.com'
+const audience = process.env.VITE_AUTH0_AUDIENCE || 'https://watgig/api'
 
 const checkJwt = jwt({
   secret: jwks.expressJwtSecret({

@@ -4,6 +4,14 @@ import server from '../server'
 import db from '../db/connection'
 import * as dbMethods from '../db/events'
 
+// Mock Auth0 to bypass authentication
+vi.mock('../auth0', () => ({
+  default: (req: any, res: any, next: any) => {
+    req.auth = { sub: 'auth0|1' } // Sub for Admin User
+    next()
+  }
+}))
+
 beforeAll(async () => {
   await db.migrate.latest()
 })
@@ -11,6 +19,8 @@ beforeAll(async () => {
 beforeEach(async () => {
   await db.seed.run()
   vi.restoreAllMocks()
+  // Ensure Admin User has the auth0Id we are mocking
+  await db('users').where({ id: 1 }).update({ auth0Id: 'auth0|1' })
 })
 
 afterAll(async () => {
@@ -48,11 +58,11 @@ describe('POST /api/v1/events', () => {
       image_url: 'http://example.com/image.jpg',
       ticket_link: 'http://example.com/tickets',
       featured: false,
-      created_by: '1',
     }
 
     const response = await request(server)
       .post('/api/v1/events')
+      .set('Authorization', 'Bearer token')
       .send(newEvent)
 
     expect(response.status).toBe(201)
@@ -62,6 +72,7 @@ describe('POST /api/v1/events', () => {
     const addedEvent = eventsResponse.body.find((e: any) => e.name === 'Test Event')
     expect(addedEvent).toBeDefined()
     expect(addedEvent.venue_name).toBe('Test Venue')
+    expect(addedEvent.created_by).toBe(1)
   })
 
   it('handles database errors gracefully during creation', async () => {
@@ -69,6 +80,7 @@ describe('POST /api/v1/events', () => {
     
     const response = await request(server)
       .post('/api/v1/events')
+      .set('Authorization', 'Bearer token')
       .send({})
 
     expect(response.status).toBe(500)

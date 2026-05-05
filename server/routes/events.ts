@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import checkJwt, { JwtRequest } from '../auth0.ts'
 
 import * as db from '../db/events.ts'
 import * as dbUsers from '../db/users.ts'
@@ -42,11 +43,19 @@ router.get('/user/:userId', async (req, res) => {
   }
 })
 
-router.post('/', async (req, res) => {
+router.post('/', checkJwt, async (req: JwtRequest, res) => {
   try {
     const newEvent = req.body
-    const auth0Id = newEvent.created_by
+    const auth0Id = req.auth?.sub
+
+    if (!auth0Id) {
+      return res.status(401).json({ message: 'Unauthorized' })
+    }
+
     const user = await dbUsers.getUserById(auth0Id)
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' })
+    }
 
     // Geocode address if provided
     let lat = newEvent.lat
@@ -71,27 +80,24 @@ router.post('/', async (req, res) => {
         }
       } catch (geoError) {
         console.error('Background geocoding failed:', geoError)
-        // We continue anyway, the map will just handle the missing coords
       }
     }
 
     const addedEvent = await db.addEvent({
       ...newEvent,
-      created_by: user?.id || 1,
+      created_by: user.id,
       lat,
       lng
     })
 
     // Notify followers
-    if (user) {
-      try {
-        const followers = await dbUsers.getFollowers(user.id)
-        for (const follower of followers) {
-          await dbNotif.createNotification(follower.id, addedEvent.id)
-        }
-      } catch (notifError) {
-        console.error('Failed to process notifications:', notifError)
+    try {
+      const followers = await dbUsers.getFollowers(user.id)
+      for (const follower of followers) {
+        await dbNotif.createNotification(follower.id, addedEvent.id)
       }
+    } catch (notifError) {
+      console.error('Failed to process notifications:', notifError)
     }
 
     res.status(201).json(addedEvent)
@@ -101,10 +107,18 @@ router.post('/', async (req, res) => {
   }
 })
 
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', checkJwt, async (req: JwtRequest, res) => {
   try {
     const id = Number(req.params.id)
     const updatedEvent = req.body
+    const auth0Id = req.auth?.sub
+
+    const user = await dbUsers.getUserById(auth0Id as string)
+    const event = await db.getEventById(id)
+
+    if (!event || !user || event.created_by !== user.id) {
+      return res.status(403).json({ message: 'Unauthorized' })
+    }
 
     // Geocode if address is being updated
     if (updatedEvent.address && (!updatedEvent.lat || !updatedEvent.lng)) {
@@ -137,9 +151,18 @@ router.patch('/:id', async (req, res) => {
   }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', checkJwt, async (req: JwtRequest, res) => {
   try {
     const id = Number(req.params.id)
+    const auth0Id = req.auth?.sub
+
+    const user = await dbUsers.getUserById(auth0Id as string)
+    const event = await db.getEventById(id)
+
+    if (!event || !user || event.created_by !== user.id) {
+      return res.status(403).json({ message: 'Unauthorized' })
+    }
+
     await db.deleteEvent(id)
     res.sendStatus(200)
   } catch (error) {
