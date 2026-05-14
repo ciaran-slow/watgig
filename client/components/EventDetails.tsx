@@ -90,6 +90,41 @@ function EventDetails() {
                     </svg>
                 </a>
               )}
+
+              <button 
+                onClick={async () => {
+                  const url = window.location.href
+                  const title = `Check out ${event.name} on WatGig!`
+                  const text = `${event.name} live at ${event.venue_name}. Join me!`
+
+                  if (navigator.share) {
+                    try {
+                      await navigator.share({
+                        title: title,
+                        text: text,
+                        url: url,
+                      })
+                    } catch (err) {
+                      // Silently handle cancellation or minor errors
+                    }
+                  } else {
+                    try {
+                      await navigator.clipboard.writeText(url)
+                      import('react-hot-toast').then(module => {
+                        module.default.success('Link copied to clipboard!')
+                      })
+                    } catch (err) {
+                      // Fallback for copy failure
+                    }
+                  }
+                }}
+                className="w-full bg-white/5 border border-white/10 hover:bg-white/10 text-white font-black text-[10px] uppercase tracking-[0.2em] py-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 mt-4 active:scale-[0.98] group shadow-xl"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 transform transition-transform group-hover:rotate-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                </svg>
+                Share Event
+              </button>
             </div>
 
             <div className="bg-white/[0.02] border border-white/5 p-8 rounded-3xl backdrop-blur-md">

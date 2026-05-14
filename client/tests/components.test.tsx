@@ -6,10 +6,22 @@ import Nav from '../components/Nav'
 import { MemoryRouter } from 'react-router'
 import { useAuth0 } from '@auth0/auth0-react'
 import { useUser, useNotifications } from '../hooks/users'
+import { useEvents } from '../hooks/events'
+import { LocationProvider } from '../components/LocationContext'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import React from 'react'
 
 vi.mock('@auth0/auth0-react')
 vi.mock('../hooks/users')
+vi.mock('../hooks/events')
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+})
 
 describe('Footer', () => {
   it('renders the copyright notice', () => {
@@ -29,11 +41,16 @@ describe('Nav', () => {
     } as any)
     vi.mocked(useUser).mockReturnValue({ data: null } as any)
     vi.mocked(useNotifications).mockReturnValue({ data: [] } as any)
+    vi.mocked(useEvents).mockReturnValue({ data: [] } as any)
 
     render(
-      <MemoryRouter>
-        <Nav />
-      </MemoryRouter>
+      <QueryClientProvider client={queryClient}>
+        <LocationProvider>
+          <MemoryRouter>
+            <Nav />
+          </MemoryRouter>
+        </LocationProvider>
+      </QueryClientProvider>
     )
 
     expect(screen.getAllByText(/Login\/Sign Up/i)).toBeDefined()
@@ -50,11 +67,16 @@ describe('Nav', () => {
       data: { id: 1, name: 'Test User', profile_image: '' }
     } as any)
     vi.mocked(useNotifications).mockReturnValue({ data: [] } as any)
+    vi.mocked(useEvents).mockReturnValue({ data: [] } as any)
 
     render(
-      <MemoryRouter>
-        <Nav />
-      </MemoryRouter>
+      <QueryClientProvider client={queryClient}>
+        <LocationProvider>
+          <MemoryRouter>
+            <Nav />
+          </MemoryRouter>
+        </LocationProvider>
+      </QueryClientProvider>
     )
 
     expect(screen.getAllByText(/Test User/i)).toBeDefined()
