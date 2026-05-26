@@ -23,17 +23,18 @@ interface FormFieldProps {
   type?: string
   value?: string
   checked?: boolean
+  required?: boolean
   onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void
   rows?: number
 }
 
-function FormField({ label, name, type = 'text', value, onChange, rows }: FormFieldProps) {
+function FormField({ label, name, type = 'text', value, onChange, rows, required = false }: FormFieldProps) {
   const commonClasses = "border border-white/10 rounded-lg px-4 py-3 bg-white/5 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300 w-full placeholder:text-gray-600"
 
   return (
     <div className="flex flex-col gap-2">
       <label htmlFor={name} className="font-black text-xs uppercase tracking-widest text-gray-500 ml-1">
-        {label}
+        {label} {required ? <span className="text-purple-500">(Required)</span> : <span className="text-gray-600">(Optional)</span>}
       </label>
       {type === 'textarea' ? (
         <textarea
@@ -42,6 +43,7 @@ function FormField({ label, name, type = 'text', value, onChange, rows }: FormFi
           rows={rows || 4}
           value={value}
           onChange={onChange}
+          required={required}
           className={`${commonClasses} resize-none`}
         />
       ) : (
@@ -51,6 +53,7 @@ function FormField({ label, name, type = 'text', value, onChange, rows }: FormFi
           name={name}
           value={value}
           onChange={onChange}
+          required={required}
           className={commonClasses}
           style={{ colorScheme: 'dark' }}
         />
@@ -59,19 +62,20 @@ function FormField({ label, name, type = 'text', value, onChange, rows }: FormFi
   )
 }
 
-function FormSelect({ label, name, value, onChange, options }: FormFieldProps & { options: { value: string, label: string }[] }) {
+function FormSelect({ label, name, value, onChange, options, required = false }: FormFieldProps & { options: { value: string, label: string }[] }) {
   const commonClasses = "border border-white/10 rounded-lg px-4 py-3 bg-white/5 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300 w-full"
 
   return (
     <div className="flex flex-col gap-2">
       <label htmlFor={name} className="font-black text-xs uppercase tracking-widest text-gray-500 ml-1">
-        {label}
+        {label} <span className="text-purple-500">(Required)</span>
       </label>
       <select
         id={name}
         name={name}
         value={value}
         onChange={onChange}
+        required={required}
         className={`${commonClasses} appearance-none cursor-pointer`}
       >
         {options.map(option => (
@@ -139,6 +143,11 @@ function EditEvent() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!formData || !id) return
+
+    if (!formData.image_url) {
+      alert('Please upload an image for the event.')
+      return
+    }
     
     const updatedEvent = {
       ...formData,
@@ -230,6 +239,7 @@ function EditEvent() {
               name="name" 
               value={formData.name} 
               onChange={handleChange} 
+              required
             />
 
             <FormSelect
@@ -238,6 +248,7 @@ function EditEvent() {
               value={formData.genre}
               onChange={handleChange}
               options={genreOptions}
+              required
             />
 
             <FormField 
@@ -246,6 +257,7 @@ function EditEvent() {
               type="textarea" 
               value={formData.description} 
               onChange={handleChange} 
+              required
             />
 
             <FormField 
@@ -253,6 +265,7 @@ function EditEvent() {
               name="venue" 
               value={formData.venue} 
               onChange={handleChange} 
+              required
             />
 
             <FormField 
@@ -260,6 +273,7 @@ function EditEvent() {
               name="address" 
               value={formData.address} 
               onChange={handleChange} 
+              required
             />
 
             <FormField 
@@ -268,6 +282,7 @@ function EditEvent() {
               type="date" 
               value={formData.date} 
               onChange={handleChange} 
+              required
             />
 
             <FormField 
@@ -276,6 +291,7 @@ function EditEvent() {
               type="time" 
               value={formData.time} 
               onChange={handleChange} 
+              required
             />
 
             <FormField 
@@ -284,10 +300,11 @@ function EditEvent() {
               type="textarea" 
               value={formData.artists} 
               onChange={handleChange} 
+              required
             />
 
             <div className="flex flex-col gap-4">
-              <label className="font-black text-xs uppercase tracking-widest text-gray-500 ml-1">Event Image</label>
+              <label className="font-black text-xs uppercase tracking-widest text-gray-500 ml-1">Event Image <span className="text-purple-500">(Required)</span></label>
               <div className="flex flex-col gap-4">
                 {formData.image_url ? (
                   <div className="relative w-full h-64 rounded-2xl overflow-hidden border-4 border-purple-500 shadow-xl">

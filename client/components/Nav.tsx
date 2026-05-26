@@ -4,15 +4,22 @@ import { useState, useEffect } from "react"
 import logo from '../public/logo.webp'
 import { useUser } from "../hooks/users"
 import NotificationBell from "./NotificationBell"
+import { useLocationContext } from "./LocationContext"
+import { useEvents } from "../hooks/events"
+import { getUniqueCities } from "../utils/eventHelpers"
 
 function Nav() {
   const navigate = useNavigate()
   const auth = useAuth0()
   const dbUser = useUser()
+  const { data: events } = useEvents()
+  const { selectedCity, setSelectedCity } = useLocationContext()
   const authUser = auth.user
   const logout = auth.logout
   const loginWithRedirect = auth.loginWithRedirect
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+  const cities = getUniqueCities(events)
 
   // Prevent background scrolling when menu is open
   useEffect(() => {
@@ -53,7 +60,7 @@ function Nav() {
 
   return (
     <>
-      <nav className="p-6 flex justify-between items-center fixed top-0 left-0 right-0 z-[60] bg-black/10 backdrop-blur-md transition-all duration-300">
+      <nav className="p-6 flex justify-between items-center fixed top-0 left-0 right-0 z-[60] bg-[#0a0a0a] border-b border-white/5 transition-all duration-300">
         <div className="flex gap-2 items-center">
           <img src={logo} alt="WatGig Logo" className="h-14" />
           <h2
@@ -62,6 +69,27 @@ function Nav() {
           >
             WatGig
           </h2>
+        </div>
+
+        {/* Location Selector */}
+        <div className="hidden md:flex items-center bg-white/5 border border-white/10 rounded-full px-4 py-2 hover:border-purple-500/50 transition-colors ml-4 mr-auto">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-purple-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          <select 
+            value={selectedCity}
+            onChange={(e) => {
+              setSelectedCity(e.target.value)
+              navigate('/')
+            }}
+            className="bg-transparent text-xs font-black uppercase tracking-widest text-white outline-none cursor-pointer"
+          >
+            <option value="All Cities" className="bg-[#0a0a0a]">All Locations</option>
+            {cities.map(city => (
+              <option key={city} value={city} className="bg-[#0a0a0a]">{city}</option>
+            ))}
+          </select>
         </div>
 
         {/* Desktop Menu */}
@@ -148,6 +176,27 @@ function Nav() {
         }`}
       >
         <div className="flex flex-col items-center gap-10 w-full px-8">
+          {/* Mobile Location Selector */}
+          <div className="flex flex-col items-center gap-3 w-full mb-4">
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-purple-500">Select Location</span>
+            <div className="flex items-center bg-white/5 border border-white/10 rounded-2xl px-6 py-4 w-full justify-center">
+              <select 
+                value={selectedCity}
+                onChange={(e) => {
+                  setSelectedCity(e.target.value)
+                  setIsMenuOpen(false)
+                  navigate('/')
+                }}
+                className="bg-transparent text-xl font-black uppercase tracking-[0.2em] text-white outline-none cursor-pointer text-center w-full"
+              >
+                <option value="All Cities" className="bg-[#0a0a0a]">All Locations</option>
+                {cities.map(city => (
+                  <option key={city} value={city} className="bg-[#0a0a0a]">{city}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
           {!authUser ? (
             <p
               className="text-3xl font-black uppercase tracking-[0.2em] text-white hover:text-purple-500 transition cursor-pointer"

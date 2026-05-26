@@ -40,7 +40,7 @@
     "jwks-rsa": "^2.1.5",
     "knex": "^2.5.1",
     "leaflet": "^1.9.4",
-    "pg": "^8.20.0",
+    "pg": "^8.21.0",
     "react-hot-toast": "^2.6.0",
     "react-leaflet": "^4.2.1",
     "sqlite3": "^5.1.7",

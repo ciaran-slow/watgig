@@ -6,7 +6,7 @@ type Props = {
 }
 
 function FilterBar({ filter, setFilter }: Props) {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(true)
 
   const categories = [
     { id: 'featured', label: 'Featured', icon: (
@@ -53,16 +53,19 @@ function FilterBar({ filter, setFilter }: Props) {
   }
 
   return (
-    <div className="bg-black/60 backdrop-blur-xl sticky top-0 z-40 border-b border-white/5">
+    <div className="bg-[#0a0a0a] sticky top-[104px] z-40 border-b border-white/5">
       <div className="max-w-screen-2xl mx-auto px-6 md:px-12 py-6">
         <div className="flex flex-col gap-6">
-          {/* Mobile Header */}
-          <div className="flex justify-between items-center md:hidden">
+          {/* Filters Header */}
+          <div className="flex justify-between items-center">
             <h2 className="font-black text-2xl tracking-tight text-white uppercase">Filters</h2>
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="p-2 bg-white/5 rounded-lg text-gray-400"
+              className="p-2 bg-white/5 rounded-lg text-gray-400 flex items-center gap-2 hover:bg-white/10 transition-colors group"
             >
+              <span className="text-[10px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity hidden md:block">
+                {isOpen ? 'Hide Filters' : 'Show Filters'}
+              </span>
               <svg 
                 xmlns="http://www.w3.org/2000/svg" 
                 className={`h-6 w-6 transform transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} 
@@ -79,7 +82,7 @@ function FilterBar({ filter, setFilter }: Props) {
           <div className={`
             flex-col gap-8
             ${isOpen ? 'flex' : 'hidden'} 
-            md:flex md:items-center
+            md:items-center
           `}>
             
             {/* Top Row: Time & Status */}

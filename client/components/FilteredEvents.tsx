@@ -1,6 +1,7 @@
 import EventCard from "./EventCard"
-import { getHeaderForFilter } from "../utils/eventHelpers"
+import { getHeaderForFilter, extractCity } from "../utils/eventHelpers"
 import { useEvents } from "../hooks/events"
+import { useLocationContext } from "./LocationContext"
 
 type Props = {
   filter: string
@@ -8,6 +9,7 @@ type Props = {
 
 function FilteredEvents({ filter }: Props) {
   const { data: events, isLoading, isError, error } = useEvents()
+  const { selectedCity } = useLocationContext()
   const header = getHeaderForFilter(filter)
 
   if (isLoading) return <p className="p-12">Loading events...</p>
@@ -19,6 +21,10 @@ function FilteredEvents({ filter }: Props) {
   
   const filteredEvents = events
     ?.filter(event => {
+      // Location Filter
+      const cityMatch = selectedCity === 'All Cities' || extractCity(event.address) === selectedCity
+      if (!cityMatch) return false
+
       // Parse the event date string (YYYY-MM-DD)
       const eventDate = new Date(event.date)
       eventDate.setHours(0, 0, 0, 0)
