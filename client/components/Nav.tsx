@@ -60,7 +60,7 @@ function Nav() {
 
   return (
     <>
-      <nav className="p-6 flex justify-between items-center fixed top-0 left-0 right-0 z-[60] bg-black/10 backdrop-blur-md transition-all duration-300">
+      <nav className="p-6 flex justify-between items-center fixed top-0 left-0 right-0 z-[60] bg-[#0a0a0a] border-b border-white/5 transition-all duration-300">
         <div className="flex gap-2 items-center">
           <img src={logo} alt="WatGig Logo" className="h-14" />
           <h2

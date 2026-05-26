@@ -13,7 +13,7 @@ function Footer() {
           <span className="font-black text-xs uppercase tracking-[0.4em] text-purple-500">Connect With Us</span>
           <div className="flex gap-6">
             <a 
-              href="https://facebook.com/watgig" 
+              href="https://www.facebook.com/profile.php?id=61583645578816" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="p-3 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-purple-600 hover:border-purple-600 transition-all active:scale-90 group"
@@ -24,7 +24,7 @@ function Footer() {
               </svg>
             </a>
             <a 
-              href="https://instagram.com/watgig" 
+              href="https://instagram.com/watgignz" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="p-3 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-purple-600 hover:border-purple-600 transition-all active:scale-90 group"
