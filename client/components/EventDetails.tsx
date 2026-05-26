@@ -1,6 +1,7 @@
 import { useParams, useNavigate, Link } from "react-router"
 import { useEvent } from "../hooks/events"
 import { format, parseISO } from "date-fns"
+import toast from "react-hot-toast"
 import Hero from "./Hero"
 import eventbg from '../public/eventbg.webp'
 import EventMap from "./EventMap"
@@ -110,9 +111,7 @@ function EventDetails() {
                   } else {
                     try {
                       await navigator.clipboard.writeText(url)
-                      import('react-hot-toast').then(module => {
-                        module.default.success('Link copied to clipboard!')
-                      })
+                      toast.success('Link copied to clipboard!')
                     } catch (err) {
                       // Fallback for copy failure
                     }
