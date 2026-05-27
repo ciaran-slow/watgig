@@ -11,7 +11,7 @@ const checkJwt = jwt({
   secret: jwks.expressJwtSecret({
     cache: true,
     rateLimit: true,
-    jwksRequestsPerMinute: 5,
+    jwksRequestsPerMinute: 20, // Increased from 5
     jwksUri: `${domain}/.well-known/jwks.json`,
   }) as GetVerificationKey,
   audience: audience,
