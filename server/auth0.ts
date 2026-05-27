@@ -4,14 +4,20 @@ import { ParamsDictionary } from 'express-serve-static-core'
 import { JwtPayload } from 'jsonwebtoken'
 import jwks from 'jwks-rsa'
 
-const domain = process.env.VITE_AUTH0_DOMAIN || 'https://raumati-2026-ciaran.au.auth0.com'
+let domain = process.env.VITE_AUTH0_DOMAIN || 'https://raumati-2026-ciaran.au.auth0.com'
 const audience = process.env.VITE_AUTH0_AUDIENCE || 'https://watgig/api'
+
+// Ensure domain starts with https:// and doesn't end with a slash
+if (!domain.startsWith('http')) {
+  domain = `https://${domain}`
+}
+domain = domain.replace(/\/$/, '')
 
 const checkJwt = jwt({
   secret: jwks.expressJwtSecret({
     cache: true,
     rateLimit: true,
-    jwksRequestsPerMinute: 20, // Increased from 5
+    jwksRequestsPerMinute: 20,
     jwksUri: `${domain}/.well-known/jwks.json`,
   }) as GetVerificationKey,
   audience: audience,
