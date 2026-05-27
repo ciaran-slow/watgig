@@ -18,15 +18,23 @@ export async function getEventsByUser(userId: string): Promise<EventWithId[]> {
   return res.body
 }
 
-export async function addEvent(newEvent: Event): Promise<EventWithId> {
-  const res = await request.post(`${rootURL}/events`).send(newEvent)
+export async function addEvent(newEvent: Event, token: string): Promise<EventWithId> {
+  const res = await request
+    .post(`${rootURL}/events`)
+    .set('Authorization', `Bearer ${token}`)
+    .send(newEvent)
   return res.body
 }
 
-export async function updateEvent(id: number, updatedEvent: Partial<Event>): Promise<void> {
-  await request.patch(`${rootURL}/events/${id}`).send(updatedEvent)
+export async function updateEvent(id: number, updatedEvent: Partial<Event>, token: string): Promise<void> {
+  await request
+    .patch(`${rootURL}/events/${id}`)
+    .set('Authorization', `Bearer ${token}`)
+    .send(updatedEvent)
 }
 
-export async function deleteEvent(id: number): Promise<void> {
-  await request.delete(`${rootURL}/events/${id}`)
+export async function deleteEvent(id: number, token: string): Promise<void> {
+  await request
+    .delete(`${rootURL}/events/${id}`)
+    .set('Authorization', `Bearer ${token}`)
 }

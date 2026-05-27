@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 import * as api from '../apis/events.ts'
 import { Event, EventWithId } from '../../models/event.ts'
+import { useAuth0 } from '@auth0/auth0-react'
 
 export function useEvents() {
   return useQuery({
@@ -28,8 +29,13 @@ export function useUserEvents(userId: string) {
 
 export function useAddEvent() {
   const queryClient = useQueryClient()
+  const { getAccessTokenSilently } = useAuth0()
+
   return useMutation({
-    mutationFn: (newEvent: Event) => api.addEvent(newEvent),
+    mutationFn: async (newEvent: Event) => {
+      const token = await getAccessTokenSilently()
+      return api.addEvent(newEvent, token)
+    },
     onSuccess: (addedEvent) => {
       toast.success('Event added successfully!')
       // Manually update the cache for an immediate, reliable update
@@ -47,9 +53,13 @@ export function useAddEvent() {
 
 export function useUpdateEvent() {
   const queryClient = useQueryClient()
+  const { getAccessTokenSilently } = useAuth0()
+
   return useMutation({
-    mutationFn: ({ id, updatedEvent }: { id: number, updatedEvent: Partial<Event> }) => 
-      api.updateEvent(id, updatedEvent),
+    mutationFn: async ({ id, updatedEvent }: { id: number, updatedEvent: Partial<Event> }) => {
+      const token = await getAccessTokenSilently()
+      return api.updateEvent(id, updatedEvent, token)
+    },
     onSuccess: (_, variables) => {
       toast.success('Event updated successfully!')
       queryClient.invalidateQueries({ queryKey: ['events'] })
@@ -63,8 +73,13 @@ export function useUpdateEvent() {
 
 export function useDeleteEvent() {
   const queryClient = useQueryClient()
+  const { getAccessTokenSilently } = useAuth0()
+
   return useMutation({
-    mutationFn: (id: number) => api.deleteEvent(id),
+    mutationFn: async (id: number) => {
+      const token = await getAccessTokenSilently()
+      return api.deleteEvent(id, token)
+    },
     onSuccess: () => {
       toast.success('Event deleted successfully!')
       return queryClient.invalidateQueries({ queryKey: ['events'] })
