@@ -147,7 +147,7 @@ function Register() {
             setNameSuggestions(result.suggestions || [])
           }
         } catch (error) {
-          console.error('Error checking name:', error)
+          // Silent fail
         } finally {
           setIsCheckingName(false)
         }
@@ -217,7 +217,6 @@ function Register() {
     const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
 
     if (!cloudName || !uploadPreset || cloudName === 'YOUR_CLOUD_NAME') {
-      console.warn('Cloudinary cloud name or upload preset is not configured.')
       return
     }
 
@@ -228,7 +227,6 @@ function Register() {
       },
       (error, result) => {
         if (!error && result && result.event === 'success') {
-          console.log('Done! Here is the image info: ', result.info)
           setFormData((prev) => ({
             ...prev,
             profile_image: result.info.secure_url,

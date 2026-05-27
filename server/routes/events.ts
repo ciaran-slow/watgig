@@ -13,7 +13,6 @@ router.get('/', async (req, res) => {
 
     res.json(events)
   } catch (error) {
-    console.log(error)
     res.status(500).json({ message: 'Something went wrong' })
   }
 })
@@ -27,7 +26,6 @@ router.get('/:id', async (req, res) => {
     }
     res.json(event)
   } catch (error) {
-    console.log(error)
     res.status(500).json({ message: 'Something went wrong' })
   }
 })
@@ -38,7 +36,6 @@ router.get('/user/:userId', async (req, res) => {
     const events = await db.getEventsByUserId(userId)
     res.json(events)
   } catch (error) {
-    console.log(error)
     res.status(500).json({ message: 'Something went wrong' })
   }
 })
@@ -79,7 +76,7 @@ router.post('/', checkJwt, async (req: JwtRequest, res) => {
           lng = parseFloat(data[0].lon)
         }
       } catch (geoError) {
-        console.error('Background geocoding failed:', geoError)
+        // Silent fail for background tasks
       }
     }
 
@@ -97,12 +94,11 @@ router.post('/', checkJwt, async (req: JwtRequest, res) => {
         await dbNotif.createNotification(follower.id, addedEvent.id)
       }
     } catch (notifError) {
-      console.error('Failed to process notifications:', notifError)
+      // Silent fail for background tasks
     }
 
     res.status(201).json(addedEvent)
   } catch (error) {
-    console.log(error)
     res.status(500).json({ message: 'Something went wrong' })
   }
 })
@@ -139,14 +135,13 @@ router.patch('/:id', checkJwt, async (req: JwtRequest, res) => {
           updatedEvent.lng = parseFloat(data[0].lon)
         }
       } catch (geoError) {
-        console.error('Background geocoding failed during update:', geoError)
+        // Silent fail for background tasks
       }
     }
 
     await db.updateEvent(id, updatedEvent)
     res.sendStatus(200)
   } catch (error) {
-    console.log(error)
     res.status(500).json({ message: 'Something went wrong' })
   }
 })
@@ -166,7 +161,6 @@ router.delete('/:id', checkJwt, async (req: JwtRequest, res) => {
     await db.deleteEvent(id)
     res.sendStatus(200)
   } catch (error) {
-    console.log(error)
     res.status(500).json({ message: 'Something went wrong' })
   }
 })

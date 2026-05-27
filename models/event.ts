@@ -19,3 +19,9 @@ export interface Event {
 export interface EventWithId extends Event {
   id: number
 }
+
+export interface DetailedEvent extends EventWithId {
+  creator_name?: string
+  creator_image?: string
+  created_at?: string
+}

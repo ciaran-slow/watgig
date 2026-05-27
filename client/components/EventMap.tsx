@@ -54,7 +54,6 @@ function EventMap({ venueName, address, lat, lng }: Props) {
           setError('Location not found')
         }
       } catch (err) {
-        console.error('Geocoding error:', err)
         setError('Failed to load map')
       } finally {
         setLoading(false)

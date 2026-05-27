@@ -1,5 +1,5 @@
 import request from 'superagent'
-import { Event, EventWithId } from '../../models/event.ts'
+import { Event, EventWithId, DetailedEvent } from '../../models/event.ts'
 
 const rootURL = '/api/v1'
 
@@ -8,7 +8,7 @@ export async function getEvents(): Promise<EventWithId[]> {
   return res.body
 }
 
-export async function getEventById(id: number): Promise<EventWithId> {
+export async function getEventById(id: number): Promise<DetailedEvent> {
   const res = await request.get(`${rootURL}/events/${id}`)
   return res.body
 }

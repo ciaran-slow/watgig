@@ -10,17 +10,15 @@ import RelatedEvents from "./RelatedEvents"
 function EventDetails() {
   const { id } = useParams()
   const navigate = useNavigate()
-  // @ts-ignore
   const { data: event, isLoading, isError, error } = useEvent(Number(id))
 
   if (isLoading) return <div className="p-12 text-center text-white">Loading event...</div>
-  if (isError) return <div className="p-12 text-center text-red-500">Error: {error.message}</div>
+  if (isError) return <div className="p-12 text-center text-red-500">Error: {(error as Error).message}</div>
   if (!event) return <div className="p-12 text-center text-white">Event not found.</div>
 
   const backgroundImage = event.image_url ? `url(${event.image_url})` : `url(${eventbg})`
   const formattedDate = event.date ? format(parseISO(event.date), 'EEEE d MMMM yyyy') : ''
   const isHistorical = event.date ? new Date(event.date) < new Date(new Date().setHours(0, 0, 0, 0)) : false
-  // @ts-ignore
   const createdAt = event.created_at ? format(parseISO(event.created_at), 'd MMM yyyy') : ''
 
   return (
@@ -132,18 +130,14 @@ function EventDetails() {
                 to={`/profile/${event.created_by}`}
                 className="flex flex-col items-center gap-3 p-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all group"
               >
-                {/* @ts-ignore */}
                 {event.creator_image && (
                     <img 
-                        /* @ts-ignore */
                         src={event.creator_image} 
-                        /* @ts-ignore */
                         alt={event.creator_name} 
                         className="w-16 h-16 rounded-full object-cover border-2 border-purple-500 group-hover:scale-105 transition-transform shadow-lg"
                     />
                 )}
                 <span className="text-sm font-bold text-white uppercase tracking-wider text-center line-clamp-1">
-                    {/* @ts-ignore */}
                     {event.creator_name || "Unknown"}
                 </span>
               </Link>

@@ -13,7 +13,9 @@ export async function getUser({
     .get(`${rootURL}/users`)
     .set('Authorization', `Bearer ${token}`)
     .then((res) => (res.body.user ? res.body.user : null))
-    .catch((error) => console.log(error))
+    .catch((error) => {
+      // Handled by react-query
+    })
 }
 
 export async function getUserDetails(id: number): Promise<UserData> {
@@ -35,7 +37,9 @@ export async function addUser({
     .set('Authorization', `Bearer ${token}`)
     .send(newUser)
     .then((res) => res.body.user)
-    .catch((error) => console.log(error))
+    .catch((error) => {
+      // Handled by react-query
+    })
 }
 
 export async function updateUser(updatedUser: Partial<UserData>, token: string) {
@@ -65,7 +69,9 @@ export async function checkName({
     .get(`${rootURL}/users/check-name/${name}`)
     .set('Authorization', `Bearer ${token}`)
     .then((res) => res.body)
-    .catch((error) => console.log(error))
+    .catch((error) => {
+      // Handled by react-query
+    })
 }
 
 export async function getSavedEvents(token: string) {

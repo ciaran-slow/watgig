@@ -25,11 +25,9 @@ server.use('/api/v1/users', userRoutes)
 // Global Error Handler
 server.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
   if (err.name === 'UnauthorizedError') {
-    console.error('Auth0 Error:', err.message)
     return res.status(401).json({ message: 'Invalid token' })
   }
   
-  console.error('Unhandled Error:', err)
   res.status(500).json({ 
     message: 'Internal Server Error',
     error: process.env.NODE_ENV === 'production' ? {} : err 

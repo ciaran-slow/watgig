@@ -171,7 +171,7 @@ function AddEvent() {
       await addEvent.mutateAsync(eventData)
       navigate('/')
     } catch (err) {
-      console.error('Failed to add event:', err)
+      // Handled by react-query error state
     }
   }
 
@@ -197,7 +197,6 @@ function AddEvent() {
     const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
 
     if (!cloudName || !uploadPreset || cloudName === 'YOUR_CLOUD_NAME') {
-      console.warn('Cloudinary cloud name or upload preset is not configured.')
       return
     }
 

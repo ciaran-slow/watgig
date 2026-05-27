@@ -22,7 +22,6 @@ router.get('/', checkJwt, async (req: JwtRequest, res) => {
     const { email, auth0Id: _, ...safeUser } = user
     res.json({ user: safeUser })
   } catch (error) {
-    console.error(error)
     res.status(500).send('Something went wrong')
   }
 })
@@ -39,7 +38,6 @@ router.get('/details/:id', async (req, res) => {
     const { email, auth0Id, ...safeUser } = user
     res.json(safeUser)
   } catch (error) {
-    console.error(error)
     res.status(500).send('Something went wrong')
   }
 })
@@ -67,7 +65,6 @@ router.get('/check-name/:name', checkJwt, async (req: JwtRequest, res) => {
 
     res.json({ available: false, suggestions })
   } catch (error) {
-    console.error(error)
     res.status(500).send('Something went wrong')
   }
 })
@@ -84,7 +81,6 @@ router.post('/', checkJwt, async (req: JwtRequest, res) => {
 
     res.json({ user })
   } catch (error) {
-    console.error(error)
     res.status(500).send('Something went wrong')
   }
 })
@@ -99,7 +95,6 @@ router.patch('/', checkJwt, async (req: JwtRequest, res) => {
     await db.updateUser(user.id, updatedUser)
     res.sendStatus(200)
   } catch (error) {
-    console.error(error)
     res.status(500).send('Something went wrong')
   }
 })
@@ -113,7 +108,6 @@ router.delete('/', checkJwt, async (req: JwtRequest, res) => {
     await db.deleteUser(user.id)
     res.sendStatus(200)
   } catch (error) {
-    console.error(error)
     res.status(500).send('Something went wrong')
   }
 })
@@ -128,7 +122,6 @@ router.get('/saved', checkJwt, async (req: JwtRequest, res) => {
     const events = await dbEvents.getFollowedEvents(user.id)
     res.json(events)
   } catch (error) {
-    console.error(error)
     res.status(500).send('Something went wrong')
   }
 })
@@ -143,7 +136,6 @@ router.post('/saved/:eventId', checkJwt, async (req: JwtRequest, res) => {
     await dbEvents.followEvent(user.id, eventId)
     res.sendStatus(201)
   } catch (error) {
-    console.error(error)
     res.status(500).send('Something went wrong')
   }
 })
@@ -158,7 +150,6 @@ router.delete('/saved/:eventId', checkJwt, async (req: JwtRequest, res) => {
     await dbEvents.unfollowEvent(user.id, eventId)
     res.sendStatus(200)
   } catch (error) {
-    console.error(error)
     res.status(500).send('Something went wrong')
   }
 })
@@ -173,7 +164,6 @@ router.get('/following', checkJwt, async (req: JwtRequest, res) => {
     const following = await db.getFollowing(user.id)
     res.json(following)
   } catch (error) {
-    console.error(error)
     res.status(500).send('Something went wrong')
   }
 })
@@ -188,7 +178,6 @@ router.post('/follow/:userId', checkJwt, async (req: JwtRequest, res) => {
     await db.followUser(user.id, followedId)
     res.sendStatus(201)
   } catch (error) {
-    console.error(error)
     res.status(500).send('Something went wrong')
   }
 })
@@ -203,7 +192,6 @@ router.delete('/follow/:userId', checkJwt, async (req: JwtRequest, res) => {
     await db.unfollowUser(user.id, followedId)
     res.sendStatus(200)
   } catch (error) {
-    console.error(error)
     res.status(500).send('Something went wrong')
   }
 })
@@ -218,7 +206,6 @@ router.get('/notifications', checkJwt, async (req: JwtRequest, res) => {
     const notifications = await dbNotif.getNotifications(user.id)
     res.json(notifications)
   } catch (error) {
-    console.error(error)
     res.status(500).send('Something went wrong')
   }
 })
@@ -229,7 +216,6 @@ router.patch('/notifications/:id', checkJwt, async (req: JwtRequest, res) => {
     await dbNotif.markAsRead(id)
     res.sendStatus(200)
   } catch (error) {
-    console.error(error)
     res.status(500).send('Something went wrong')
   }
 })
@@ -240,7 +226,6 @@ router.delete('/notifications/:id', checkJwt, async (req: JwtRequest, res) => {
     await dbNotif.deleteNotification(id)
     res.sendStatus(200)
   } catch (error) {
-    console.error(error)
     res.status(500).send('Something went wrong')
   }
 })

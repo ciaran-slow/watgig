@@ -18,8 +18,10 @@ export async function getEventsByUserId(userId: string | number): Promise<EventW
 }
 
 export async function addEvent(event: Event): Promise<EventWithId> {
-    const [id] = await db('event').insert(event)
-    return { ...event, id }
+    const [addedEvent] = await db('event')
+        .insert(event)
+        .returning('*')
+    return addedEvent
 }
 
 export async function deleteEvent(id: number): Promise<number> {

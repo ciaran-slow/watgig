@@ -8,12 +8,12 @@ export async function up(knex) {
     // Convert users.id to auto-incrementing SERIAL
     await knex.raw('CREATE SEQUENCE IF NOT EXISTS users_id_seq')
     await knex.raw('ALTER TABLE users ALTER COLUMN id SET DEFAULT nextval(\'users_id_seq\')')
-    await knex.raw('SELECT setval(\'users_id_seq\', (SELECT MAX(id) FROM users))')
+    await knex.raw('SELECT setval(\'users_id_seq\', COALESCE((SELECT MAX(id) FROM users), 1))')
 
     // Convert event.id to auto-incrementing SERIAL
     await knex.raw('CREATE SEQUENCE IF NOT EXISTS event_id_seq')
     await knex.raw('ALTER TABLE event ALTER COLUMN id SET DEFAULT nextval(\'event_id_seq\')')
-    await knex.raw('SELECT setval(\'event_id_seq\', (SELECT MAX(id) FROM event))')
+    await knex.raw('SELECT setval(\'event_id_seq\', COALESCE((SELECT MAX(id) FROM event), 1))')
   }
 }
 

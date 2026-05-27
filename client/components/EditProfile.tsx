@@ -150,7 +150,7 @@ function EditProfile() {
             setNameSuggestions(result.suggestions || [])
           }
         } catch (error) {
-          console.error('Error checking name:', error)
+          // Silent fail
         } finally {
           setIsCheckingName(false)
         }
@@ -171,7 +171,7 @@ function EditProfile() {
         await user.update.mutateAsync(formData)
         navigate(`/profile/${user.data?.id}`)
     } catch (err) {
-        console.error(err)
+        // Handled by react-query
     }
   }
 
@@ -196,7 +196,6 @@ function EditProfile() {
     const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
 
     if (!cloudName || !uploadPreset || cloudName === 'YOUR_CLOUD_NAME') {
-      console.warn('Cloudinary cloud name or upload preset is not configured.')
       return
     }
 

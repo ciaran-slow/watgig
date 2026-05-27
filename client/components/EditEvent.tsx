@@ -155,14 +155,14 @@ function EditEvent() {
       start_time: formData.time,
     }
 
-    // @ts-ignore
-    const { venue, time, ...cleanUpdatedEvent } = updatedEvent
+    // Remove the temporary form state fields that don't match the model
+    const { venue, time, ...cleanUpdatedEvent } = updatedEvent as any
     
     try {
       await updateEvent.mutateAsync({ id: Number(id), updatedEvent: cleanUpdatedEvent })
       navigate(`/event/${id}`)
     } catch (err) {
-      console.error('Failed to update event:', err)
+      // Handled by react-query
     }
   }
 
@@ -179,8 +179,7 @@ function EditEvent() {
   }
 
   const handleUpload = () => {
-    // @ts-ignore
-    const widget = window.cloudinary.createUploadWidget(
+    const widget = (window as any).cloudinary.createUploadWidget(
       {
         cloudName: import.meta.env.VITE_CLOUDINARY_CLOUD_NAME,
         uploadPreset: import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,

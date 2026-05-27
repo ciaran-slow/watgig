@@ -67,7 +67,7 @@ function Profile() {
                 await user.delete.mutateAsync()
                 logout({ logoutParams: { returnTo: window.location.origin } })
               } catch (err) {
-                console.error(err)
+                // Handled by react-query
               }
             }}
             className="bg-red-600 text-white px-6 py-2.5 rounded-xl hover:bg-red-800 transition text-xs font-black uppercase tracking-widest shadow-lg active:scale-95"
