@@ -169,13 +169,13 @@ function Nav() {
 
       {/* Fullscreen Mobile Menu Overlay */}
       <div
-        className={`fixed inset-0 bg-black transition-all duration-500 ease-in-out z-[100] flex flex-col items-center justify-between pt-24 pb-12 ${
+        className={`fixed inset-0 bg-black transition-all duration-500 ease-in-out z-[100] flex flex-col items-center pt-24 pb-8 ${
           isMenuOpen
             ? "opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none"
         }`}
       >
-        <div className="flex flex-col items-center gap-6 w-full px-8 overflow-y-auto">
+        <div className="flex flex-col items-center gap-4 w-full px-8 overflow-y-auto">
           {/* Mobile Location Selector */}
           <div className="flex flex-col items-center gap-2 w-full mb-2">
             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-purple-500">Select Location</span>
@@ -209,17 +209,17 @@ function Nav() {
               {dbUser.data && (
                 <button 
                   onClick={() => handleClick(`/profile/${dbUser.data.id}`)}
-                  className="flex flex-col items-center gap-2 group mb-2"
+                  className="flex flex-col items-center gap-2 group"
                 >
                   <div className="relative">
                     <img
                       src={dbUser.data.profile_image}
                       alt={dbUser.data.name}
-                      className="w-20 h-24 rounded-full object-cover border-4 border-purple-500 shadow-2xl group-hover:scale-105 transition-transform"
+                      className="w-16 h-16 rounded-full object-cover border-4 border-purple-500 shadow-2xl group-hover:scale-105 transition-transform"
                     />
                   </div>
                   <div className="flex flex-col items-center gap-1">
-                    <span className="text-2xl font-black uppercase tracking-widest text-white group-hover:text-purple-400 transition-colors">
+                    <span className="text-xl font-black uppercase tracking-widest text-white group-hover:text-purple-400 transition-colors">
                       {dbUser.data.name}
                     </span>
                     <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">View Profile</span>
@@ -249,12 +249,6 @@ function Nav() {
               </button>
             </>
           )}
-        </div>
-
-        {/* Mobile Menu Footer */}
-        <div className="flex items-center justify-center gap-3 w-full">
-          <img src={logo} alt="WatGig Logo" className="h-14" />
-          <p className="text-4xl font-black uppercase tracking-tighter text-white">WatGig</p>
         </div>
       </div>
     </>

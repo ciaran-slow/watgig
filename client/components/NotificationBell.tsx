@@ -77,7 +77,7 @@ function NotificationBell() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 rounded-xl bg-[#1a1a1a] border border-white/10 shadow-2xl z-[100] overflow-hidden">
+        <div className="fixed sm:absolute left-1/2 -translate-x-1/2 sm:left-auto sm:right-0 sm:translate-x-0 mt-2 w-[90vw] sm:w-80 rounded-xl bg-[#1a1a1a] border border-white/10 shadow-2xl z-[100] overflow-hidden">
           <div className="p-4 border-b border-white/10 flex justify-between items-center">
             <h3 className="font-bold text-sm uppercase tracking-widest text-white">Notifications</h3>
             <button 
