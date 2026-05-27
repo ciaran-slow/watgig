@@ -175,11 +175,11 @@ function Nav() {
             : "opacity-0 pointer-events-none"
         }`}
       >
-        <div className="flex flex-col items-center gap-10 w-full px-8">
+        <div className="flex flex-col items-center gap-6 w-full px-8 overflow-y-auto">
           {/* Mobile Location Selector */}
-          <div className="flex flex-col items-center gap-3 w-full mb-4">
+          <div className="flex flex-col items-center gap-2 w-full mb-2">
             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-purple-500">Select Location</span>
-            <div className="flex items-center bg-white/5 border border-white/10 rounded-2xl px-6 py-4 w-full justify-center">
+            <div className="flex items-center bg-white/5 border border-white/10 rounded-2xl px-6 py-3 w-full justify-center">
               <select 
                 value={selectedCity}
                 onChange={(e) => {
@@ -187,7 +187,7 @@ function Nav() {
                   setIsMenuOpen(false)
                   navigate('/')
                 }}
-                className="bg-transparent text-xl font-black uppercase tracking-[0.2em] text-white outline-none cursor-pointer text-center w-full"
+                className="bg-transparent text-lg font-black uppercase tracking-[0.2em] text-white outline-none cursor-pointer text-center w-full"
               >
                 <option value="All Cities" className="bg-[#0a0a0a]">All Locations</option>
                 {cities.map(city => (
@@ -199,7 +199,7 @@ function Nav() {
 
           {!authUser ? (
             <p
-              className="text-3xl font-black uppercase tracking-[0.2em] text-white hover:text-purple-500 transition cursor-pointer"
+              className="text-2xl font-black uppercase tracking-[0.2em] text-white hover:text-purple-500 transition cursor-pointer py-2"
               onClick={handleSignIn}
             >
               Login/Sign Up
@@ -209,17 +209,17 @@ function Nav() {
               {dbUser.data && (
                 <button 
                   onClick={() => handleClick(`/profile/${dbUser.data.id}`)}
-                  className="flex flex-col items-center gap-3 group"
+                  className="flex flex-col items-center gap-2 group mb-2"
                 >
                   <div className="relative">
                     <img
                       src={dbUser.data.profile_image}
                       alt={dbUser.data.name}
-                      className="w-24 h-24 rounded-full object-cover border-4 border-purple-500 shadow-2xl group-hover:scale-105 transition-transform"
+                      className="w-20 h-24 rounded-full object-cover border-4 border-purple-500 shadow-2xl group-hover:scale-105 transition-transform"
                     />
                   </div>
                   <div className="flex flex-col items-center gap-1">
-                    <span className="text-3xl font-black uppercase tracking-widest text-white group-hover:text-purple-400 transition-colors">
+                    <span className="text-2xl font-black uppercase tracking-widest text-white group-hover:text-purple-400 transition-colors">
                       {dbUser.data.name}
                     </span>
                     <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">View Profile</span>
@@ -228,21 +228,21 @@ function Nav() {
               )}
               
               <button
-                className="text-3xl font-black uppercase tracking-[0.2em] text-white hover:text-purple-400 transition"
+                className="text-2xl font-black uppercase tracking-[0.2em] text-white hover:text-purple-400 transition py-2"
                 onClick={() => handleClick('/')}
               >
                 Home
               </button>
 
               <button
-                className="text-3xl font-black uppercase tracking-[0.2em] text-purple-500 border-2 border-purple-500 px-8 py-3 rounded-full hover:bg-purple-500 hover:text-white transition shadow-lg shadow-purple-900/20"
+                className="text-2xl font-black uppercase tracking-[0.2em] text-purple-500 border-2 border-purple-500 px-8 py-3 rounded-full hover:bg-purple-500 hover:text-white transition shadow-lg shadow-purple-900/20 my-2"
                 onClick={() => handleClick('/add-event')}
               >
                 + Add Event
               </button>
 
               <button
-                className="text-xl font-black uppercase tracking-[0.2em] text-gray-500 hover:text-red-500 transition"
+                className="text-lg font-black uppercase tracking-[0.2em] text-gray-500 hover:text-red-500 transition py-2"
                 onClick={handleSignOut}
               >
                 Logout
