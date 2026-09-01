@@ -113,11 +113,13 @@ function FormField({
 
 function EditProfile() {
   const user = useUser()
+  const checkName = user.checkName
   const [formData, setFormData] = useState<FormState | null>(null)
   const [nameAvailable, setNameAvailable] = useState<boolean | null>(null)
   const [nameSuggestions, setNameSuggestions] = useState<string[]>([])
   const [isCheckingName, setIsCheckingName] = useState(false)
   const navigate = useNavigate()
+  const formName = formData?.name
 
   useEffect(() => {
     if (user.data && !formData) {
@@ -135,16 +137,16 @@ function EditProfile() {
 
   // Debounce name check only if name changed
   useEffect(() => {
-    if (!formData || formData.name === user.data?.name) {
+    if (!formName || formName === user.data?.name) {
         setNameAvailable(true)
         return
     }
 
     const timer = setTimeout(async () => {
-      if (formData.name.trim().length > 0) {
+      if (formName.trim().length > 0) {
         setIsCheckingName(true)
         try {
-          const result = await user.checkName(formData.name)
+          const result = await checkName(formName)
           if (result) {
             setNameAvailable(result.available)
             setNameSuggestions(result.suggestions || [])
@@ -161,7 +163,7 @@ function EditProfile() {
     }, 500)
 
     return () => clearTimeout(timer)
-  }, [formData?.name, user.data?.name])
+  }, [formName, user.data?.name, checkName])
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -330,9 +332,9 @@ function EditProfile() {
                 )}
 
                 <div className="flex flex-col gap-2">
-                  <label className="font-black text-xs uppercase tracking-widest text-gray-500 ml-1">
+                  <span className="font-black text-xs uppercase tracking-widest text-gray-500 ml-1">
                     Profile Image <span className="text-red-500">*</span>
-                  </label>
+                  </span>
                   <div className="flex flex-col gap-4">
                     {formData.profile_image ? (
                       <div className="relative w-40 h-40">
@@ -400,7 +402,7 @@ function EditProfile() {
                   </button>
                 </div>
                 {user.update.isError && (
-                  <p className="text-red-500 text-xs font-bold uppercase tracking-wider">Error updating profile: {user.update.error.message}</p>
+                  <p className="text-red-500 text-xs font-bold uppercase tracking-wider">Error updating profile: {user.update.error instanceof Error ? user.update.error.message : 'Something went wrong'}</p>
                 )}
               </form>
             </div>

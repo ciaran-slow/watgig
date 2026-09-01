@@ -125,6 +125,7 @@ function FormField({
 
 function Register() {
   const user = useUser()
+  const checkName = user.checkName
   const [formData, setFormData] = useState<FormState>(defaultFormState)
   const [nameAvailable, setNameAvailable] = useState<boolean | null>(null)
   const [nameSuggestions, setNameSuggestions] = useState<string[]>([])
@@ -141,7 +142,7 @@ function Register() {
       if (formData.name.trim().length > 0) {
         setIsCheckingName(true)
         try {
-          const result = await user.checkName(formData.name)
+          const result = await checkName(formData.name)
           if (result) {
             setNameAvailable(result.available)
             setNameSuggestions(result.suggestions || [])
@@ -158,7 +159,7 @@ function Register() {
     }, 500)
 
     return () => clearTimeout(timer)
-  }, [formData.name])
+  }, [formData.name, checkName])
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -354,9 +355,9 @@ function Register() {
                 )}
 
                 <div className="flex flex-col gap-2">
-                  <label className="font-black text-xs uppercase tracking-widest text-gray-500 ml-1">
+                  <span className="font-black text-xs uppercase tracking-widest text-gray-500 ml-1">
                     Profile Image <span className="text-red-500">*</span>
-                  </label>
+                  </span>
                   <div className="flex flex-col gap-4">
                     {formData.profile_image ? (
                       <div className="relative w-40 h-40">
@@ -395,7 +396,7 @@ function Register() {
                       {formData.profile_image ? 'Change Image' : 'Upload Image'}
                     </button>
                   </div>
-                  <p className="text-[10px] text-gray-600 uppercase tracking-wider font-bold">Images are securely stored on Cloudinary</p>
+                  <p className="text-[10px] text-gray-600 uppercase tracking-wider font-bold">Images are stored by Cloudinary</p>
                 </div>
 
                 <div className="flex flex-col gap-1">

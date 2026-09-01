@@ -38,7 +38,7 @@ function Profile() {
   if (userError || !profileUser) return <div className="p-12 text-center text-red-500">User not found.</div>
 
   const isOwnProfile = currentUser?.id === profileUser.id
-  const isFollowing = following?.some((u: any) => u.id === profileUser.id)
+  const isFollowing = following?.some((followedUser) => followedUser.id === profileUser.id)
 
   const showRoleTag = profileUser.role.toLowerCase() === 'band' || profileUser.role.toLowerCase() === 'venue'
 
@@ -56,7 +56,7 @@ function Profile() {
         <div className="flex flex-col gap-2">
           <p className="font-black text-red-600 uppercase tracking-tighter text-lg">Warning: Permanent Action</p>
           <p className="text-sm font-medium text-gray-700 leading-tight">
-            Deleting your account will permanently remove all your events, follows, and profile data. This cannot be undone.
+            Deleting your WatGig profile removes its events, follows, notifications, and profile data. Your Auth0 login and previously uploaded Cloudinary media are managed separately.
           </p>
         </div>
         <div className="flex gap-2 justify-end">
@@ -72,7 +72,7 @@ function Profile() {
             }}
             className="bg-red-600 text-white px-6 py-2.5 rounded-xl hover:bg-red-800 transition text-xs font-black uppercase tracking-widest shadow-lg active:scale-95"
           >
-            Delete Everything
+            Delete WatGig Profile
           </button>
           <button
             onClick={() => toast.dismiss(t.id)}
@@ -96,7 +96,7 @@ function Profile() {
   const handleDelete = (eventId: number, eventName: string) => {
     toast((t) => (
       <div className="flex flex-col gap-4">
-        <p className="font-semibold text-center text-gray-800 text-sm">Delete "{eventName}"?</p>
+        <p className="font-semibold text-center text-gray-800 text-sm">Delete “{eventName}”?</p>
         <div className="flex gap-2 justify-center">
           <button
             onClick={() => {
@@ -208,7 +208,7 @@ function Profile() {
             <div className="bg-white/[0.02] border border-white/5 p-8 rounded-3xl backdrop-blur-md">
               <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-purple-400 mb-4">Biography</h3>
               <p className="text-gray-400 leading-relaxed italic">
-                "{profileUser.bio || "No bio provided."}"
+                “{profileUser.bio || 'No bio provided.'}”
               </p>
             </div>
           </div>
@@ -379,7 +379,7 @@ function Profile() {
                       <div className="text-gray-500 italic">Loading following...</div>
                     ) : following && following.length > 0 ? (
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                        {following.map((user: any) => (
+                        {following.map((user) => (
                           <Link 
                             key={user.id} 
                             to={`/profile/${user.id}`}

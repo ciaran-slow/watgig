@@ -7,6 +7,11 @@ import * as api from '../apis/events'
 import React from 'react'
 
 vi.mock('../apis/events')
+vi.mock('@auth0/auth0-react', () => ({
+  useAuth0: () => ({
+    getAccessTokenSilently: vi.fn().mockResolvedValue('test-token'),
+  }),
+}))
 
 const createWrapper = () => {
   const queryClient = new QueryClient({
@@ -45,6 +50,6 @@ describe('useAddEvent', () => {
     })
 
     await result.current.mutateAsync(newEvent as any)
-    expect(api.addEvent).toHaveBeenCalledWith(newEvent)
+    expect(api.addEvent).toHaveBeenCalledWith(newEvent, 'test-token')
   })
 })

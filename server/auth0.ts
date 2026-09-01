@@ -4,6 +4,13 @@ import { ParamsDictionary } from 'express-serve-static-core'
 import { JwtPayload } from 'jsonwebtoken'
 import jwks from 'jwks-rsa'
 
+if (
+  process.env.NODE_ENV === 'production' &&
+  (!process.env.VITE_AUTH0_DOMAIN || !process.env.VITE_AUTH0_AUDIENCE)
+) {
+  throw new Error('VITE_AUTH0_DOMAIN and VITE_AUTH0_AUDIENCE are required in production')
+}
+
 let domain = process.env.VITE_AUTH0_DOMAIN || 'https://raumati-2026-ciaran.au.auth0.com'
 const audience = process.env.VITE_AUTH0_AUDIENCE || 'https://watgig/api'
 

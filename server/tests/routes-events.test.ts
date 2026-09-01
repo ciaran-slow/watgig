@@ -36,6 +36,16 @@ describe('GET /api/v1/events', () => {
     expect(response.body[0].name).toBe('Midnight Riot')
   })
 
+  it('returns events for a user without treating "user" as an event id', async () => {
+    const response = await request(server).get('/api/v1/events/user/1')
+
+    expect(response.status).toBe(200)
+    expect(response.body.length).toBeGreaterThan(0)
+    expect(response.body.every((event: { created_by: number }) => event.created_by === 1)).toBe(
+      true,
+    )
+  })
+
   it('handles database errors gracefully', async () => {
     // Mock getEvents to throw an error
     vi.spyOn(dbMethods, 'getEvents').mockRejectedValue(new Error('Database error'))
@@ -52,10 +62,14 @@ describe('POST /api/v1/events', () => {
       name: 'Test Event',
       description: 'Test Description',
       venue_name: 'Test Venue',
+      address: '1 Test Street, Wellington',
+      lat: -41.2865,
+      lng: 174.7762,
+      genre: 'rock',
       date: '2026-04-07',
       start_time: '12:00',
       artists: 'Test Artist',
-      image_url: 'http://example.com/image.jpg',
+      image_url: 'https://example.com/image.jpg',
       ticket_link: 'http://example.com/tickets',
       featured: false,
     }
@@ -77,11 +91,26 @@ describe('POST /api/v1/events', () => {
 
   it('handles database errors gracefully during creation', async () => {
     vi.spyOn(dbMethods, 'addEvent').mockRejectedValue(new Error('Database error'))
+    const validEvent = {
+      name: 'Test Event',
+      description: 'Test Description',
+      venue_name: 'Test Venue',
+      address: '1 Test Street, Wellington',
+      lat: -41.2865,
+      lng: 174.7762,
+      genre: 'rock',
+      date: '2026-04-07',
+      start_time: '12:00',
+      artists: 'Test Artist',
+      image_url: 'https://example.com/image.jpg',
+      ticket_link: 'https://example.com/tickets',
+      featured: false,
+    }
     
     const response = await request(server)
       .post('/api/v1/events')
       .set('Authorization', 'Bearer token')
-      .send({})
+      .send(validEvent)
 
     expect(response.status).toBe(500)
     expect(response.body.message).toBe('Something went wrong')

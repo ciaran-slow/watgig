@@ -1,17 +1,17 @@
 import connection from './connection.ts'
-import { User, UserData } from '../../models/users.ts'
+import { NewUser, PublicUser, User, UserData } from '../../models/users.ts'
 
 export async function getUserById(
   auth0Id: string,
   db = connection,
-): Promise<UserData> {
+): Promise<User | undefined> {
   return db('users').where('auth0Id', auth0Id).select().first()
 }
 
 export async function getUserDetailsById(
   id: number,
   db = connection,
-): Promise<UserData> {
+): Promise<(PublicUser & { follower_count?: number }) | undefined> {
   return db('users')
     .where('id', id)
     .select(
@@ -34,14 +34,14 @@ export async function getUserDetailsById(
 export async function getUserByName(
   name: string,
   db = connection,
-): Promise<UserData> {
+): Promise<User | undefined> {
   return db('users').where('name', name).select().first()
 }
 
 export async function addUser(
-  newUser: User,
+  newUser: NewUser,
   db = connection,
-): Promise<UserData> {
+): Promise<User> {
   const [addedUser] = await db('users')
     .insert(newUser)
     .returning('*')
@@ -57,11 +57,20 @@ export async function unfollowUser(followerId: number, followedId: number, db = 
   return db('user_following').where({ follower_id: followerId, followed_id: followedId }).delete()
 }
 
-export async function getFollowing(followerId: number, db = connection): Promise<UserData[]> {
+export async function getFollowing(followerId: number, db = connection): Promise<PublicUser[]> {
   return db('users')
     .join('user_following', 'users.id', 'user_following.followed_id')
     .where('user_following.follower_id', followerId)
-    .select('users.*')
+    .select(
+      'users.id',
+      'users.name',
+      'users.role',
+      'users.profile_image',
+      'users.bio',
+      'users.genre',
+      'users.members',
+      'users.address',
+    )
 }
 
 export async function getFollowers(followedId: number, db = connection): Promise<UserData[]> {

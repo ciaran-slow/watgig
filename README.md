@@ -39,13 +39,13 @@ WatGig is a full-stack platform for discovering, saving, and managing live music
 ### Backend
 - **Node.js & Express**
 - **Knex.js** for query building and migrations
-- **SQLite3** for lightweight, local data storage
+- **SQLite3** for lightweight local development and **PostgreSQL** in production
 - **Auth0** for identity management and API protection
 
 ## 📋 Prerequisites
 
 Before you begin, ensure you have:
-- **Node.js** (LTS version recommended)
+- **Node.js 22.12 or later in the Node 22 release line**
 - **npm**
 - An **Auth0** account and application credentials
 - A **Cloudinary** account for image uploads
@@ -74,6 +74,12 @@ Before you begin, ensure you have:
    # Cloudinary
    VITE_CLOUDINARY_CLOUD_NAME=your-cloud-name
    VITE_CLOUDINARY_UPLOAD_PRESET=your-preset
+
+   # Production database (Render supplies DATABASE_URL for managed PostgreSQL)
+   DATABASE_URL=postgresql://user:password@host:5432/database
+   # Leave certificate verification enabled. Only disable it for a database
+   # provider that explicitly requires an unverified TLS connection.
+   DB_SSL_REJECT_UNAUTHORIZED=true
    ```
 
 4. **Initialize the Database**
@@ -105,9 +111,22 @@ npm test
 
 - `npm run dev`: Starts the dev server for both client and server.
 - `npm run build`: Bundles the project for production.
+- `npm run typecheck`: Checks TypeScript types without generating files.
 - `npm start`: Runs the production server.
 - `npm run lint`: Checks for code style issues.
 - `npm run knex`: Helper for Knex CLI commands.
+
+## Render deployment
+
+Use Node 22 and configure the web service with these commands:
+
+```text
+Build command:      npm run render:build
+Pre-deploy command: npm run render:migrate
+Start command:      npm run render:start
+```
+
+The pre-deploy command applies database migrations before the new version starts serving traffic. Do not run production seeds automatically. Configure `VITE_AUTH0_DOMAIN`, `VITE_AUTH0_CLIENT_ID`, `VITE_AUTH0_AUDIENCE`, the Cloudinary variables, and `DATABASE_URL` in Render. Keep `DB_SSL_REJECT_UNAUTHORIZED=true` unless your database provider documents otherwise.
 
 ---
 Built with ❤️ for the live music community.

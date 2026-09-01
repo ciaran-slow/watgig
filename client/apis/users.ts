@@ -1,5 +1,6 @@
 import request from 'superagent'
-import { User, UserData } from '../../models/users.ts'
+import { NewUserData, NotificationData, PublicUser, UserData } from '../../models/users.ts'
+import { EventWithId } from '../../models/event.ts'
 
 const rootURL = '/api/v1'
 
@@ -8,14 +9,16 @@ interface GetUserFunction {
 }
 export async function getUser({
   token,
-}: GetUserFunction): Promise<User | null> {
-  return await request
-    .get(`${rootURL}/users`)
-    .set('Authorization', `Bearer ${token}`)
-    .then((res) => (res.body.user ? res.body.user : null))
-    .catch((error) => {
-      // Handled by react-query
-    })
+}: GetUserFunction): Promise<UserData | null> {
+  try {
+    const res = await request
+      .get(`${rootURL}/users`)
+      .set('Authorization', `Bearer ${token}`)
+    return res.body.user || null
+  } catch (error: unknown) {
+    if (isHttpStatus(error, 404)) return null
+    throw error
+  }
 }
 
 export async function getUserDetails(id: number): Promise<UserData> {
@@ -25,21 +28,18 @@ export async function getUserDetails(id: number): Promise<UserData> {
 }
 
 interface AddUserFunction {
-  newUser: UserData
+  newUser: NewUserData
   token: string
 }
 export async function addUser({
   newUser,
   token,
-}: AddUserFunction): Promise<User> {
-  return request
+}: AddUserFunction): Promise<UserData> {
+  const res = await request
     .post(`${rootURL}/users`)
     .set('Authorization', `Bearer ${token}`)
     .send(newUser)
-    .then((res) => res.body.user)
-    .catch((error) => {
-      // Handled by react-query
-    })
+  return res.body.user
 }
 
 export async function updateUser(updatedUser: Partial<UserData>, token: string) {
@@ -69,12 +69,18 @@ export async function checkName({
     .get(`${rootURL}/users/check-name/${name}`)
     .set('Authorization', `Bearer ${token}`)
     .then((res) => res.body)
-    .catch((error) => {
-      // Handled by react-query
-    })
 }
 
-export async function getSavedEvents(token: string) {
+function isHttpStatus(error: unknown, status: number) {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'status' in error &&
+    error.status === status
+  )
+}
+
+export async function getSavedEvents(token: string): Promise<EventWithId[]> {
   return request
     .get(`${rootURL}/users/saved`)
     .set('Authorization', `Bearer ${token}`)
@@ -95,7 +101,7 @@ export async function unsaveEvent(eventId: number, token: string) {
     .then((res) => res.body)
 }
 
-export async function getFollowing(token: string) {
+export async function getFollowing(token: string): Promise<PublicUser[]> {
   return request
     .get(`${rootURL}/users/following`)
     .set('Authorization', `Bearer ${token}`)
@@ -116,7 +122,7 @@ export async function unfollowUser(userId: number, token: string) {
     .then((res) => res.body)
 }
 
-export async function getNotifications(token: string) {
+export async function getNotifications(token: string): Promise<NotificationData[]> {
   return request
     .get(`${rootURL}/users/notifications`)
     .set('Authorization', `Bearer ${token}`)

@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import request from 'supertest'
 import server from '../server'
 import * as dbUsers from '../db/users'
-import * as dbEvents from '../db/events'
 
 vi.mock('../auth0', () => ({
   default: (req: any, res: any, next: any) => {
@@ -13,6 +12,10 @@ vi.mock('../auth0', () => ({
 
 vi.mock('../db/users')
 vi.mock('../db/events')
+
+beforeEach(() => {
+  vi.resetAllMocks()
+})
 
 describe('GET /api/v1/users', () => {
   it('returns the current user', async () => {
@@ -54,14 +57,25 @@ describe('GET /api/v1/users/details/:id', () => {
 
 describe('POST /api/v1/users', () => {
   it('adds a new user', async () => {
-    const newUser = { name: 'New User' }
+    const newUser = {
+      name: 'New User',
+      email: 'new@example.com',
+      role: 'user',
+      profile_image: 'https://example.com/profile.jpg',
+      bio: '',
+      genre: '',
+      members: '',
+      address: '',
+    }
+    vi.mocked(dbUsers.getUserById).mockResolvedValue(undefined)
+    vi.mocked(dbUsers.getUserByName).mockResolvedValue(undefined)
     vi.mocked(dbUsers.addUser).mockResolvedValue({ ...newUser, id: 2, auth0Id: 'auth0|123' } as any)
 
     const response = await request(server)
       .post('/api/v1/users')
       .send(newUser)
 
-    expect(response.status).toBe(200)
+    expect(response.status).toBe(201)
     expect(response.body.user.name).toBe('New User')
   })
 })

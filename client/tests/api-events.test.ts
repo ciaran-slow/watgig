@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import nock from 'nock'
 import * as api from '../apis/events'
 
@@ -39,7 +39,7 @@ describe('addEvent', () => {
       .post('/v1/events', newEvent)
       .reply(201, { ...newEvent, id: 3 })
 
-    const result = await api.addEvent(newEvent as any)
+    const result = await api.addEvent(newEvent as any, 'test-token')
     expect(result.id).toBe(3)
     expect(scope.isDone()).toBe(true)
   })

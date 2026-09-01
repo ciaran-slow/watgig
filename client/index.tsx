@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
       <QueryClientProvider client={queryClient}>
         <Toaster position="top-center" />
         <RouterProvider router={router} />
-        <ReactQueryDevtools />
+        {import.meta.env.DEV && <ReactQueryDevtools />}
       </QueryClientProvider>
     </Auth0Provider>,
   )

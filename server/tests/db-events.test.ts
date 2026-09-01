@@ -46,7 +46,7 @@ describe('addEvent', () => {
       image_url: 'http://example.com/image.jpg',
       ticket_link: 'http://example.com/tickets',
       featured: false,
-      created_by: '1',
+      created_by: 1,
     }
 
     const addedEventResult = await addEvent(newEvent)

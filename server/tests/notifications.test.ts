@@ -38,10 +38,14 @@ describe('Notification System Integration', () => {
       name: 'Notification Test Concert',
       description: 'A concert to test notifications',
       venue_name: 'Test Venue',
+      address: '1 Test Street, Wellington',
+      lat: -41.2865,
+      lng: 174.7762,
+      genre: 'rock',
       date: '2026-06-01',
       start_time: '20:00',
       artists: 'The Testers',
-      image_url: 'http://example.com/image.jpg',
+      image_url: 'https://example.com/image.jpg',
       ticket_link: 'http://example.com/tickets',
       featured: false,
       created_by: 'auth0|1', // Auth0Id of the creator
@@ -67,10 +71,18 @@ describe('Notification System Integration', () => {
       is_read: false
     })
 
+    await db('users').where({ id: 2 }).update({ auth0Id: 'auth0|jane' })
+
+    const unauthorizedResponse = await request(server)
+      .patch(`/api/v1/users/notifications/${notifId}`)
+
+    expect(unauthorizedResponse.status).toBe(404)
+
+    mockAuth.sub = 'auth0|jane'
     const response = await request(server)
       .patch(`/api/v1/users/notifications/${notifId}`)
 
-    expect(response.status).toBe(200)
+    expect(response.status).toBe(204)
 
     const updatedNotif = await db('notifications').where({ id: notifId }).first()
     expect(updatedNotif.is_read).toBe(1)

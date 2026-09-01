@@ -1,5 +1,5 @@
 import request from 'superagent'
-import { Event, EventWithId, DetailedEvent } from '../../models/event.ts'
+import { EditableEvent, EventWithId, DetailedEvent, NewEvent } from '../../models/event.ts'
 
 const rootURL = '/api/v1'
 
@@ -18,7 +18,7 @@ export async function getEventsByUser(userId: string): Promise<EventWithId[]> {
   return res.body
 }
 
-export async function addEvent(newEvent: Event, token: string): Promise<EventWithId> {
+export async function addEvent(newEvent: NewEvent, token: string): Promise<EventWithId> {
   const res = await request
     .post(`${rootURL}/events`)
     .set('Authorization', `Bearer ${token}`)
@@ -26,7 +26,7 @@ export async function addEvent(newEvent: Event, token: string): Promise<EventWit
   return res.body
 }
 
-export async function updateEvent(id: number, updatedEvent: Partial<Event>, token: string): Promise<void> {
+export async function updateEvent(id: number, updatedEvent: EditableEvent, token: string): Promise<void> {
   await request
     .patch(`${rootURL}/events/${id}`)
     .set('Authorization', `Bearer ${token}`)

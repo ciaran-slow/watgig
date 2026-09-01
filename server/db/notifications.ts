@@ -8,6 +8,13 @@ export async function createNotification(userId: number, eventId: number, db = c
   })
 }
 
+export async function createNotifications(userIds: number[], eventId: number, db = connection) {
+  if (userIds.length === 0) return []
+  return db('notifications').insert(
+    userIds.map((userId) => ({ user_id: userId, event_id: eventId, is_read: false })),
+  )
+}
+
 export async function getNotifications(userId: number, db = connection) {
   return db('notifications')
     .join('event', 'notifications.event_id', 'event.id')
@@ -21,10 +28,10 @@ export async function getNotifications(userId: number, db = connection) {
     .orderBy('notifications.created_at', 'desc')
 }
 
-export async function markAsRead(id: number, db = connection) {
-  return db('notifications').where({ id }).update({ is_read: true })
+export async function markAsRead(id: number, userId: number, db = connection) {
+  return db('notifications').where({ id, user_id: userId }).update({ is_read: true })
 }
 
-export async function deleteNotification(id: number, db = connection) {
-  return db('notifications').where({ id }).delete()
+export async function deleteNotification(id: number, userId: number, db = connection) {
+  return db('notifications').where({ id, user_id: userId }).delete()
 }

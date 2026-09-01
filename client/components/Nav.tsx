@@ -63,12 +63,13 @@ function Nav() {
       <nav className="p-6 flex justify-between items-center fixed top-0 left-0 right-0 z-[60] bg-[#0a0a0a] border-b border-white/5 transition-all duration-300">
         <div className="flex gap-2 items-center">
           <img src={logo} alt="WatGig Logo" className="h-14" />
-          <h2
+          <button
+            type="button"
             className="text-3xl md:text-4xl hover:text-purple-400 font-black tracking-tighter cursor-pointer uppercase text-white transition-colors"
             onClick={() => handleClick('/')}
           >
             WatGig
-          </h2>
+          </button>
         </div>
 
         {/* Location Selector */}
@@ -95,12 +96,13 @@ function Nav() {
         {/* Desktop Menu */}
         <div className="hidden lg:flex items-center gap-8">
           {!authUser ? (
-            <p
+            <button
+              type="button"
               className="font-bold text-sm uppercase tracking-widest text-gray-400 hover:text-purple-400 transition cursor-pointer"
               onClick={handleSignIn}
             >
               Login/Sign Up
-            </p>
+            </button>
           ) : (
             <>
               <button
@@ -113,9 +115,10 @@ function Nav() {
               {dbUser.data && (
                 <div className="flex items-center gap-6">
                   <NotificationBell />
-                  <div 
+                  <button
+                    type="button"
                     className="flex items-center gap-3 cursor-pointer group"
-                    onClick={() => handleClick(`/profile/${dbUser.data.id}`)}
+                    onClick={() => handleClick(`/profile/${dbUser.data?.id}`)}
                   >
                     <span className="font-bold text-sm uppercase tracking-wider text-gray-300 group-hover:text-purple-400 transition-colors">{dbUser.data.name}</span>
                     <img 
@@ -123,7 +126,7 @@ function Nav() {
                       alt={dbUser.data.name} 
                       className="w-12 h-12 rounded-full object-cover border-2 border-purple-500 shadow-sm group-hover:border-purple-400 transition-all group-hover:scale-105"
                     />
-                  </div>
+                  </button>
                 </div>
               )}
 
@@ -198,17 +201,18 @@ function Nav() {
           </div>
 
           {!authUser ? (
-            <p
+            <button
+              type="button"
               className="text-2xl font-black uppercase tracking-[0.2em] text-white hover:text-purple-500 transition cursor-pointer py-2"
               onClick={handleSignIn}
             >
               Login/Sign Up
-            </p>
+            </button>
           ) : (
             <>
               {dbUser.data && (
                 <button 
-                  onClick={() => handleClick(`/profile/${dbUser.data.id}`)}
+                  onClick={() => handleClick(`/profile/${dbUser.data?.id}`)}
                   className="flex flex-col items-center gap-2 group"
                 >
                   <div className="relative">

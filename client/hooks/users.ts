@@ -1,17 +1,22 @@
-import { MutationFunction, useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
+import { useCallback } from 'react'
 
 import * as API from '../apis/users.ts'
 import { useAuth0 } from '@auth0/auth0-react'
-import { UserData } from '../../models/users.ts' // Import UserData type
+import { NewUserData, UserData } from '../../models/users.ts'
+
+function errorMessage(error: unknown) {
+  return error instanceof Error ? error.message : 'Something went wrong'
+}
 
 export function useUser() {
   const { user, getAccessTokenSilently } = useAuth0()
   const queryClient = useQueryClient() // Get queryClient here
 
   const query = useQuery({
-    queryKey: ['user'],
+    queryKey: ['user', user?.sub],
     queryFn: async () => {
       const token = await getAccessTokenSilently()
       return API.getUser({ token })
@@ -21,10 +26,10 @@ export function useUser() {
 
   // Define the add user mutation directly within useUser hook
   const addUserMutation = useMutation({
-    mutationFn: async (newUser: Omit<UserData, 'email'>) => {
+    mutationFn: async (newUser: Omit<NewUserData, 'email'>) => {
       const token = await getAccessTokenSilently() // Get token here
       return API.addUser({ 
-        newUser: { ...newUser, email: user?.email as string } as UserData, 
+        newUser: { ...newUser, email: user?.email as string },
         token 
       })
     },
@@ -32,8 +37,8 @@ export function useUser() {
       toast.success('Profile added successfully!')
       queryClient.invalidateQueries({ queryKey: ['user'] }) // Invalidate 'user' query to refetch data
     },
-    onError: (err: any) => {
-      toast.error(`Error: ${err.message || 'Something went wrong'}`)
+    onError: (error: unknown) => {
+      toast.error(`Error: ${errorMessage(error)}`)
     },
   })
 
@@ -47,8 +52,8 @@ export function useUser() {
       toast.success('Profile updated successfully!')
       queryClient.invalidateQueries({ queryKey: ['user'] })
     },
-    onError: (err: any) => {
-      toast.error(`Error: ${err.message || 'Something went wrong'}`)
+    onError: (error: unknown) => {
+      toast.error(`Error: ${errorMessage(error)}`)
     },
   })
 
@@ -60,23 +65,28 @@ export function useUser() {
     },
     onSuccess: () => {
       toast.success('Account deleted successfully.')
-      queryClient.setQueryData(['user'], null)
+      queryClient.setQueriesData({ queryKey: ['user'] }, null)
       queryClient.invalidateQueries({ queryKey: ['events'] })
     },
-    onError: (err: any) => {
-      toast.error(`Error: ${err.message || 'Something went wrong'}`)
+    onError: (error: unknown) => {
+      toast.error(`Error: ${errorMessage(error)}`)
     },
   })
+
+  const checkName = useCallback(
+    async (name: string) => {
+      const token = await getAccessTokenSilently()
+      return API.checkName({ name, token })
+    },
+    [getAccessTokenSilently],
+  )
 
   return {
     ...query,
     add: addUserMutation, // Return the mutation
     update: updateUserMutation,
     delete: deleteUserMutation,
-    checkName: async (name: string) => {
-      const token = await getAccessTokenSilently()
-      return API.checkName({ name, token })
-    },
+    checkName,
   }
 }
 
@@ -89,9 +99,9 @@ export function useUserDetails(id: number) {
 }
 
 export function useSavedEvents() {
-  const { getAccessTokenSilently, isAuthenticated } = useAuth0()
+  const { getAccessTokenSilently, isAuthenticated, user } = useAuth0()
   return useQuery({
-    queryKey: ['saved-events'],
+    queryKey: ['saved-events', user?.sub],
     queryFn: async () => {
       const token = await getAccessTokenSilently()
       return API.getSavedEvents(token)
@@ -116,16 +126,16 @@ export function useToggleSaveEvent() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['saved-events'] })
     },
-    onError: (err: any) => {
-      toast.error(`Error: ${err.message || 'Something went wrong'}`)
+    onError: (error: unknown) => {
+      toast.error(`Error: ${errorMessage(error)}`)
     },
   })
 }
 
 export function useFollowing() {
-  const { getAccessTokenSilently, isAuthenticated } = useAuth0()
+  const { getAccessTokenSilently, isAuthenticated, user } = useAuth0()
   return useQuery({
-    queryKey: ['following'],
+    queryKey: ['following', user?.sub],
     queryFn: async () => {
       const token = await getAccessTokenSilently()
       return API.getFollowing(token)
@@ -150,18 +160,18 @@ export function useToggleFollowUser() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['following'] })
     },
-    onError: (err: any) => {
-      toast.error(`Error: ${err.message || 'Something went wrong'}`)
+    onError: (error: unknown) => {
+      toast.error(`Error: ${errorMessage(error)}`)
     },
   })
 }
 
 export function useNotifications() {
-  const { getAccessTokenSilently, isAuthenticated } = useAuth0()
+  const { getAccessTokenSilently, isAuthenticated, user } = useAuth0()
   const queryClient = useQueryClient()
 
   const query = useQuery({
-    queryKey: ['notifications'],
+    queryKey: ['notifications', user?.sub],
     queryFn: async () => {
       const token = await getAccessTokenSilently()
       return API.getNotifications(token)

@@ -19,14 +19,14 @@ describe('getUserById', () => {
     // Note: Seeded users don't have auth0Id yet, so we add one
     await db('users').where('id', 1).update({ auth0Id: 'auth0|123' })
     const user = await users.getUserById('auth0|123')
-    expect(user.name).toBe('Admin User')
+    expect(user?.name).toBe('Admin User')
   })
 })
 
 describe('getUserDetailsById', () => {
   it('returns user details including follower count', async () => {
     const user = await users.getUserDetailsById(1)
-    expect(user.name).toBe('Admin User')
+    expect(user?.name).toBe('Admin User')
     expect(user).toHaveProperty('follower_count')
   })
 })
@@ -34,7 +34,7 @@ describe('getUserDetailsById', () => {
 describe('getUserByName', () => {
   it('returns a user by name', async () => {
     const user = await users.getUserByName('Jane Doe')
-    expect(user.id).toBe(2)
+    expect(user?.id).toBe(2)
   })
 })
 
@@ -44,6 +44,7 @@ describe('addUser', () => {
       name: 'New User',
       email: 'new@example.com',
       role: 'user',
+      profile_image: 'https://example.com/profile.jpg',
       auth0Id: 'auth0|999',
     }
     const addedUser = await users.addUser(newUser)
@@ -59,6 +60,8 @@ describe('follow/unfollow', () => {
     await users.followUser(1, 2)
     let following = await users.getFollowing(1)
     expect(following.some(u => u.id === 2)).toBe(true)
+    expect(following[0]).not.toHaveProperty('email')
+    expect(following[0]).not.toHaveProperty('auth0Id')
 
     await users.unfollowUser(1, 2)
     following = await users.getFollowing(1)

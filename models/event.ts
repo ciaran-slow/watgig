@@ -11,9 +11,12 @@ export interface Event {
   start_time: string
   image_url: string
   ticket_link: string
-  created_by: string
+  created_by: number
   featured: boolean
 }
+
+export type NewEvent = Omit<Event, 'created_by'>
+export type EditableEvent = Partial<Omit<Event, 'created_by'>>
 
 // Event type that includes the auto-incremented ID
 export interface EventWithId extends Event {

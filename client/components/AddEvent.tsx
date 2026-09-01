@@ -157,15 +157,19 @@ function AddEvent() {
       return
     }
 
-    const newEvent = {
-      ...formData,
+    const eventData = {
+      name: formData.name,
+      description: formData.description,
       venue_name: formData.venue,
+      address: formData.address,
+      date: formData.date,
       start_time: formData.time,
-      created_by: currentUser?.auth0Id || '1', 
+      artists: formData.artists,
+      image_url: formData.image_url,
+      ticket_link: formData.ticket_link,
+      genre: formData.genre,
+      featured: formData.featured,
     }
-
-    // Remove the temporary form state fields that don't match the model
-    const { venue, time, ...eventData } = newEvent
     
     try {
       await addEvent.mutateAsync(eventData)
@@ -310,7 +314,7 @@ function AddEvent() {
             />
 
             <div className="flex flex-col gap-4">
-              <label className="font-black text-xs uppercase tracking-widest text-gray-500 ml-1">Event Image <span className="text-purple-500">(Required)</span></label>
+              <span className="font-black text-xs uppercase tracking-widest text-gray-500 ml-1">Event Image <span className="text-purple-500">(Required)</span></span>
               <div className="flex flex-col gap-4">
                 {formData.image_url ? (
                   <div className="relative w-full h-64 rounded-2xl overflow-hidden border-4 border-purple-500 shadow-xl">
@@ -349,7 +353,7 @@ function AddEvent() {
                   {formData.image_url ? 'Change Image' : 'Upload Image'}
                 </button>
               </div>
-              <p className="text-[10px] text-gray-600 uppercase tracking-wider font-bold">Images are securely stored on Cloudinary</p>
+              <p className="text-[10px] text-gray-600 uppercase tracking-wider font-bold">Images are stored by Cloudinary</p>
             </div>
 
             <FormField 
@@ -359,12 +363,14 @@ function AddEvent() {
               onChange={handleChange} 
             />
 
-            <FormCheckbox
-              label="Featured Event"
-              name="featured"
-              checked={formData.featured}
-              onChange={handleChange}
-            />
+            {currentUser?.role === 'admin' && (
+              <FormCheckbox
+                label="Featured Event"
+                name="featured"
+                checked={formData.featured}
+                onChange={handleChange}
+              />
+            )}
 
             <div className="flex flex-col sm:flex-row gap-4 pt-4 border-t border-white/5">
               <button

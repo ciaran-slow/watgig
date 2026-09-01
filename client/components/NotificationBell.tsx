@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { useNotifications } from '../hooks/users'
 import { useNavigate } from 'react-router'
 import { formatDistanceToNow, parseISO } from 'date-fns'
+import { NotificationData } from '../../models/users'
 
 function NotificationBell() {
   const [isOpen, setIsOpen] = useState(false)
@@ -9,7 +10,7 @@ function NotificationBell() {
   const navigate = useNavigate()
   const dropdownRef = useRef<HTMLDivElement>(null)
 
-  const unreadCount = notifications?.filter((n: any) => !n.is_read).length || 0
+  const unreadCount = notifications?.filter((notification) => !notification.is_read).length || 0
 
   const formatNotifDate = (dateStr: string) => {
     try {
@@ -35,7 +36,7 @@ function NotificationBell() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  const handleNotificationClick = async (notif: any) => {
+  const handleNotificationClick = async (notif: NotificationData) => {
     if (!notif.is_read) {
       await markAsRead.mutateAsync(notif.id)
     }
@@ -96,7 +97,7 @@ function NotificationBell() {
                 No notifications yet
               </div>
             ) : (
-              notifications.map((notif: any) => (
+              notifications.map((notif) => (
                 <div key={notif.id} className="relative group/item">
                   <button
                     onClick={() => handleNotificationClick(notif)}

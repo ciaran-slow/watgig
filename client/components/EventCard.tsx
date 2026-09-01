@@ -42,7 +42,7 @@ function EventCard({ event, showAdminActions = false }: Props) {
     
     toast((t) => (
       <div className="flex flex-col gap-4">
-        <p className="font-semibold text-center text-gray-800">Delete "{event.name}"?</p>
+        <p className="font-semibold text-center text-gray-800">Delete “{event.name}”?</p>
         <div className="flex gap-2 justify-center">
           <button
             onClick={() => {
@@ -76,6 +76,14 @@ function EventCard({ event, showAdminActions = false }: Props) {
       className="relative group h-[500px] md:h-[650px] w-full rounded-3xl overflow-hidden shadow-2xl transition-all duration-500 hover:scale-[1.02] cursor-pointer bg-black border border-gray-800 isolate"
       style={{ maskImage: 'linear-gradient(white, white)' }} // Fix for rounded corners overflow in some browsers
       onClick={handleCardClick}
+      onKeyDown={(keyboardEvent) => {
+        if (keyboardEvent.key === 'Enter' || keyboardEvent.key === ' ') {
+          keyboardEvent.preventDefault()
+          handleCardClick()
+        }
+      }}
+      role="button"
+      tabIndex={0}
     >
       {/* Background Image with Gradient */}
       <div 

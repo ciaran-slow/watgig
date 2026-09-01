@@ -9,7 +9,6 @@ import { useUser, useNotifications } from '../hooks/users'
 import { useEvents } from '../hooks/events'
 import { LocationProvider } from '../components/LocationContext'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import React from 'react'
 
 vi.mock('@auth0/auth0-react')
 vi.mock('../hooks/users')

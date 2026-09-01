@@ -3,6 +3,7 @@ import * as URL from 'node:url'
 
 const __filename = URL.fileURLToPath(import.meta.url)
 const __dirname = Path.dirname(__filename)
+const rejectUnauthorized = process.env.DB_SSL_REJECT_UNAUTHORIZED !== 'false'
 
 export default {
   development: {
@@ -38,15 +39,15 @@ export default {
     connection: process.env.DATABASE_URL
       ? {
           connectionString: process.env.DATABASE_URL,
-          ssl: { rejectUnauthorized: false },
+          ssl: { rejectUnauthorized },
         }
       : {
           host: process.env.DB_HOST,
-          port: process.env.DB_PORT || 5432,
+          port: Number(process.env.DB_PORT || 5432),
           database: process.env.DB_NAME,
           user: process.env.DB_USER,
           password: process.env.DB_PASSWORD,
-          ssl: { rejectUnauthorized: false },
+          ssl: { rejectUnauthorized },
         },
     pool: {
       min: 2,

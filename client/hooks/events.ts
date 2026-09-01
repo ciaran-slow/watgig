@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 import * as api from '../apis/events.ts'
-import { Event, EventWithId } from '../../models/event.ts'
+import { EditableEvent, EventWithId, NewEvent } from '../../models/event.ts'
 import { useAuth0 } from '@auth0/auth0-react'
 
 export function useEvents() {
@@ -32,7 +32,7 @@ export function useAddEvent() {
   const { getAccessTokenSilently } = useAuth0()
 
   return useMutation({
-    mutationFn: async (newEvent: Event) => {
+    mutationFn: async (newEvent: NewEvent) => {
       const token = await getAccessTokenSilently()
       return api.addEvent(newEvent, token)
     },
@@ -56,7 +56,7 @@ export function useUpdateEvent() {
   const { getAccessTokenSilently } = useAuth0()
 
   return useMutation({
-    mutationFn: async ({ id, updatedEvent }: { id: number, updatedEvent: Partial<Event> }) => {
+    mutationFn: async ({ id, updatedEvent }: { id: number, updatedEvent: EditableEvent }) => {
       const token = await getAccessTokenSilently()
       return api.updateEvent(id, updatedEvent, token)
     },
