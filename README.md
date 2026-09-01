@@ -128,5 +128,7 @@ Start command:      npm run render:start
 
 The pre-deploy command applies database migrations before the new version starts serving traffic. Do not run production seeds automatically. Configure `VITE_AUTH0_DOMAIN`, `VITE_AUTH0_CLIENT_ID`, `VITE_AUTH0_AUDIENCE`, the Cloudinary variables, and `DATABASE_URL` in Render. Keep `DB_SSL_REJECT_UNAUTHORIZED=true` unless your database provider documents otherwise.
 
+As a defence against accidental data loss, the Knex command wrapper refuses to run seeds when `NODE_ENV=production`. The Render start command also applies any pending migrations before starting the server, which provides a fallback for plans without pre-deploy commands.
+
 ---
 Built with ❤️ for the live music community.
