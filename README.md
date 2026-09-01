@@ -75,7 +75,7 @@ Before you begin, ensure you have:
    VITE_CLOUDINARY_CLOUD_NAME=your-cloud-name
    VITE_CLOUDINARY_UPLOAD_PRESET=your-preset
 
-   # Production database (Render supplies DATABASE_URL for managed PostgreSQL)
+   # Production database (use the Neon PostgreSQL connection string)
    DATABASE_URL=postgresql://user:password@host:5432/database
    # Leave certificate verification enabled. Only disable it for a database
    # provider that explicitly requires an unverified TLS connection.
@@ -129,6 +129,8 @@ Start command:      npm run render:start
 The pre-deploy command applies database migrations before the new version starts serving traffic. Do not run production seeds automatically. Configure `VITE_AUTH0_DOMAIN`, `VITE_AUTH0_CLIENT_ID`, `VITE_AUTH0_AUDIENCE`, the Cloudinary variables, and `DATABASE_URL` in Render. Keep `DB_SSL_REJECT_UNAUTHORIZED=true` unless your database provider documents otherwise.
 
 As a defence against accidental data loss, the Knex command wrapper refuses to run seeds when `NODE_ENV=production`. The Render start command also applies any pending migrations before starting the server, which provides a fallback for plans without pre-deploy commands.
+
+The production connection pool permits zero idle connections so serverless PostgreSQL providers such as Neon can suspend during inactive periods. Use an SSL-enabled Neon connection string for `DATABASE_URL`; never commit that value to the repository.
 
 ---
 Built with ❤️ for the live music community.

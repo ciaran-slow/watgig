@@ -50,8 +50,9 @@ export default {
           ssl: { rejectUnauthorized },
         },
     pool: {
-      min: 2,
-      max: 10,
+      // Allow serverless Postgres providers such as Neon to suspend while idle.
+      min: 0,
+      max: 5,
     },
   },
 }
