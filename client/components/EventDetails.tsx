@@ -152,16 +152,16 @@ function EventDetails() {
           <div className="lg:col-span-2 flex flex-col gap-8">
             <div className="bg-white/[0.02] border border-white/5 rounded-3xl overflow-hidden">
                 <div className="p-5 md:p-8 pb-4">
-                    <h2 className="text-4xl font-black text-white uppercase tracking-tighter border-l-4 border-purple-600 pl-6">
+                    <h2 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tight border-l-4 border-purple-600 pl-4 md:pl-6">
                         About the Event
                     </h2>
                 </div>
                 <div className="p-5 md:p-8 pt-4">
-                    <div className="flex items-center gap-3 text-2xl font-bold text-gray-400 italic mb-6">
+                    <div className="flex flex-wrap items-baseline gap-x-3 text-lg font-semibold text-gray-400 italic mb-5">
                         <span>Featuring:</span>
-                        <span className="text-white">{event.artists}</span>
+                        <span className="text-white not-italic">{event.artists}</span>
                     </div>
-                    <p className="text-xl text-gray-300 leading-relaxed font-medium">
+                    <p className="text-base text-gray-300 leading-7 font-normal whitespace-pre-line max-w-prose">
                         {event.description}
                     </p>
                 </div>
@@ -169,10 +169,10 @@ function EventDetails() {
 
             <div className="bg-white/[0.02] border border-white/5 rounded-3xl overflow-hidden">
                 <div className="p-5 md:p-8 pb-4 flex flex-col gap-2">
-                    <h2 className="text-4xl font-black text-white uppercase tracking-tighter border-l-4 border-red-500 pl-6">
+                    <h2 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tight border-l-4 border-red-500 pl-4 md:pl-6">
                         Location
                     </h2>
-                    <p className="text-sm text-gray-400 font-bold uppercase tracking-widest ml-10">{event.address}</p>
+                    <p className="text-xs text-gray-400 font-semibold uppercase tracking-widest ml-5 md:ml-7">{event.address}</p>
                 </div>
                 <div className="p-5 md:p-8 pt-4">
                     {event.venue_name && (event.address || (event.lat && event.lng)) && (

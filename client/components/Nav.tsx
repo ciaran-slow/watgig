@@ -71,7 +71,7 @@ function Nav() {
     <>
       <nav className={`px-4 py-3 md:p-6 flex justify-between items-center fixed top-0 left-0 right-0 z-[60] transition-colors duration-300 ${
         scrolled
-          ? 'bg-gradient-to-b from-[#0a0a0a] via-[#0a0a0a]/90 to-[#0a0a0a]/0'
+          ? 'bg-gradient-to-b from-[#0a0a0a] via-[#0a0a0a] via-70% to-[#0a0a0a]/0'
           : 'bg-gradient-to-b from-black/60 to-transparent'
       }`}>
         <div className="flex gap-2 items-center">
