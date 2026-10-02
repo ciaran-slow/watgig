@@ -27,13 +27,16 @@ server.use(
           "'self'",
           auth0Origin,
           'https://nominatim.openstreetmap.org',
+          'https://tiles.openfreemap.org',
           'https://*.cloudinary.com',
         ],
+        workerSrc: ["'self'", 'blob:'],
+        childSrc: ["'self'", 'blob:'],
         frameSrc: [auth0Origin, 'https://upload-widget.cloudinary.com', 'https://*.cloudinary.com'],
       },
     },
     crossOriginEmbedderPolicy: false,
-    // OpenStreetMap's tile policy blocks requests with no Referer; send the origin only
+    // Send the origin (not full URLs) to third parties such as tile and geocoding servers
     referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
   }),
 )
@@ -76,6 +79,14 @@ if (process.env.NODE_ENV === 'production') {
   server.use(
     '/assets',
     express.static(Path.resolve('./dist/assets'), { maxAge: '1y', immutable: true }),
+  )
+  // PWA files live in the dist root; serve only these, since dist also holds the server bundle
+  server.get(
+    ['/manifest.webmanifest', '/icon-192.png', '/icon-512.png', '/apple-touch-icon.png'],
+    (req, res) => {
+      res.set('Cache-Control', 'public, max-age=3600')
+      res.sendFile(Path.resolve('./dist', req.path.slice(1)))
+    },
   )
   server.get('*', (req, res) => {
     res.sendFile(Path.resolve('./dist/index.html'))

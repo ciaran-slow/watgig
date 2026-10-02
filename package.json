@@ -36,7 +36,10 @@
     ],
     "overrides": [
       {
-        "files": ["**/*.test.ts", "**/*.test.tsx"],
+        "files": [
+          "**/*.test.ts",
+          "**/*.test.tsx"
+        ],
         "rules": {
           "@typescript-eslint/no-explicit-any": "off",
           "react/display-name": "off"
@@ -46,7 +49,6 @@
   },
   "dependencies": {
     "@auth0/auth0-react": "^2.24.1",
-    "@types/leaflet": "^1.9.21",
     "date-fns": "^4.4.0",
     "express": "^4.22.2",
     "express-jwt": "^7.7.5",
@@ -56,10 +58,9 @@
     "jsonwebtoken": "^9.0.2",
     "jwks-rsa": "^2.1.5",
     "knex": "^2.5.1",
-    "leaflet": "^1.9.4",
+    "maplibre-gl": "^6.11.2",
     "pg": "^8.23.0",
     "react-hot-toast": "^2.6.0",
-    "react-leaflet": "^4.2.1",
     "superagent": "^10.2.2"
   },
   "devDependencies": {

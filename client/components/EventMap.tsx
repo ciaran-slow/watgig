@@ -1,22 +1,14 @@
-import { useState, useEffect } from 'react'
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
-import 'leaflet/dist/leaflet.css'
-import L from 'leaflet'
+import { useState, useEffect, useRef } from 'react'
+import * as maplibregl from 'maplibre-gl'
+import 'maplibre-gl/dist/maplibre-gl.css'
 
-const purpleIcon = L.divIcon({
-  html: `
-    <div class="relative">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8 text-purple-600 drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
-        <path fill-rule="evenodd" d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
-      </svg>
-      <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-1 bg-black/20 blur-[1px] rounded-full"></div>
-    </div>
-  `,
-  className: 'custom-div-icon',
-  iconSize: [32, 32],
-  iconAnchor: [16, 32],
-  popupAnchor: [0, -32],
-})
+// OpenFreeMap: free vector tiles, no API key. Its "dark" style suits the app.
+const MAP_STYLE = 'https://tiles.openfreemap.org/styles/dark'
+
+const PIN_SVG = `
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="36" height="36" style="color:#9333ea;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5))">
+    <path fill-rule="evenodd" d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
+  </svg>`
 
 interface Props {
   venueName: string
@@ -79,30 +71,59 @@ function EventMap({ venueName, address, lat, lng }: Props) {
     )
   }
 
+  return <MapView coords={coords} venueName={venueName} address={address} />
+}
+
+function MapView({
+  coords,
+  venueName,
+  address,
+}: {
+  coords: [number, number]
+  venueName: string
+  address?: string
+}) {
+  const container = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!container.current) return
+    const [lat, lng] = coords
+    const map = new maplibregl.Map({
+      container: container.current,
+      style: MAP_STYLE,
+      center: [lng, lat],
+      zoom: 15,
+      cooperativeGestures: true, // two-finger pan on touch, ctrl+scroll to zoom
+    })
+    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right')
+
+    const pin = document.createElement('div')
+    pin.innerHTML = PIN_SVG
+    pin.style.cursor = 'pointer'
+
+    const popupContent = document.createElement('div')
+    const title = document.createElement('strong')
+    title.textContent = venueName
+    title.style.display = 'block'
+    popupContent.appendChild(title)
+    if (address) {
+      const addr = document.createElement('span')
+      addr.textContent = address
+      addr.style.fontSize = '12px'
+      popupContent.appendChild(addr)
+    }
+
+    new maplibregl.Marker({ element: pin, anchor: 'bottom' })
+      .setLngLat([lng, lat])
+      .setPopup(new maplibregl.Popup({ offset: 32, closeButton: false }).setDOMContent(popupContent))
+      .addTo(map)
+
+    return () => map.remove()
+  }, [coords, venueName, address])
+
   return (
-    <div className="h-[300px] w-full rounded-3xl overflow-hidden border border-white/10 shadow-2xl isolate">
-      <MapContainer 
-        center={coords} 
-        zoom={15} 
-        scrollWheelZoom={false} 
-        style={{ height: '100%', width: '100%', background: '#1a1a1a' }}
-      >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-          className="osm-dark-tiles"
-          maxZoom={19}
-          referrerPolicy="strict-origin-when-cross-origin"
-        />
-        <Marker position={coords} icon={purpleIcon}>
-          <Popup>
-            <div className="text-gray-900 font-sans">
-              <strong className="block text-purple-700">{venueName}</strong>
-              {address && <span className="text-xs">{address}</span>}
-            </div>
-          </Popup>
-        </Marker>
-      </MapContainer>
+    <div className="h-[300px] w-full rounded-3xl overflow-hidden border border-white/10 shadow-2xl isolate bg-[#0c0c0c]">
+      <div ref={container} className="h-full w-full" />
     </div>
   )
 }

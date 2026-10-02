@@ -1,6 +1,6 @@
 function Footer() {
   return (
-    <footer className="bg-[#0a0a0a] text-white py-10 md:py-20 border-t border-white/5 px-4 md:px-12">
+    <footer className="bg-[#0a0a0a] text-white py-10 md:py-20 pb-[calc(2.5rem+env(safe-area-inset-bottom))] md:pb-20 border-t border-white/5 px-4 md:px-12">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12">
         <div className="flex flex-col items-center md:items-start gap-4">
           <h2 className="text-3xl font-black uppercase tracking-tighter text-white">WatGig</h2>

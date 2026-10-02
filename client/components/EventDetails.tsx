@@ -4,7 +4,10 @@ import { format, parseISO } from "date-fns"
 import toast from "react-hot-toast"
 import Hero from "./Hero"
 import eventbg from '../public/eventbg.webp'
-import EventMap from "./EventMap"
+import { lazy, Suspense } from "react"
+
+// Map library is large; only load it when an event page needs it
+const EventMap = lazy(() => import("./EventMap"))
 import RelatedEvents from "./RelatedEvents"
 
 function EventDetails() {
@@ -176,12 +179,14 @@ function EventDetails() {
                 </div>
                 <div className="p-5 md:p-8 pt-4">
                     {event.venue_name && (event.address || (event.lat && event.lng)) && (
-                        <EventMap 
+                        <Suspense fallback={<div className="h-[300px] w-full rounded-3xl bg-white/[0.02] border border-white/5 animate-pulse" />}>
+                          <EventMap 
                             lat={event.lat} 
                             lng={event.lng} 
                             venueName={event.venue_name} 
                             address={event.address} 
                         />
+                        </Suspense>
                     )}
                 </div>
             </div>
