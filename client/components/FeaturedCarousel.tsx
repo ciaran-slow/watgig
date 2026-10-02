@@ -14,7 +14,11 @@ const SLIDE_MS = 7000
 function FeaturedCarousel({ events }: Props) {
   const [active, setActive] = useState(0)
   const [paused, setPaused] = useState(false)
-  const touchStartX = useRef<number | null>(null)
+  const [dragX, setDragX] = useState(0)
+  const [dragging, setDragging] = useState(false)
+  const startX = useRef<number | null>(null)
+  const moved = useRef(false)
+  const trackRef = useRef<HTMLDivElement>(null)
   const count = events.length
   // Only fetch slide images once they're current, next, or already seen
   const [seen, setSeen] = useState<Set<number>>(new Set([0]))
@@ -42,32 +46,54 @@ function FeaturedCarousel({ events }: Props) {
     return () => clearInterval(timer)
   }, [count, paused, active])
 
-  const onTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX
+  // Drag/swipe with the finger or mouse; the slides follow the pointer
+  const onPointerDown = (e: React.PointerEvent) => {
+    if ((e.target as HTMLElement).closest('button, a')) return
+    startX.current = e.clientX
+    moved.current = false
+    setDragging(true)
+    ;(e.currentTarget as HTMLElement).setPointerCapture(e.pointerId)
   }
-  const onTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX.current === null) return
-    const dx = e.changedTouches[0].clientX - touchStartX.current
-    touchStartX.current = null
-    if (Math.abs(dx) > 50) go(active + (dx < 0 ? 1 : -1))
+  const onPointerMove = (e: React.PointerEvent) => {
+    if (startX.current === null) return
+    const dx = e.clientX - startX.current
+    if (Math.abs(dx) > 6) moved.current = true
+    setDragX(dx)
+  }
+  const endDrag = (e: React.PointerEvent) => {
+    if (startX.current === null) return
+    const width = trackRef.current?.offsetWidth ?? 1
+    const dx = e.clientX - startX.current
+    startX.current = null
+    setDragging(false)
+    setDragX(0)
+    if (Math.abs(dx) > Math.min(80, width * 0.15)) go(active + (dx < 0 ? 1 : -1))
   }
 
   return (
     <section
       aria-roledescription="carousel"
       aria-label="Featured events"
-      className="relative w-full h-[460px] md:h-[680px] overflow-hidden bg-[#0a0a0a]"
+      className="relative w-full h-[620px] md:h-[780px] overflow-hidden bg-[#0a0a0a] select-none"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
-      onTouchStart={onTouchStart}
-      onTouchEnd={onTouchEnd}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={endDrag}
+      onPointerCancel={endDrag}
+      style={{ touchAction: 'pan-y' }}
       onKeyDown={(e) => {
         if (e.key === 'ArrowRight') go(active + 1)
         if (e.key === 'ArrowLeft') go(active - 1)
       }}
     >
+      <div
+        ref={trackRef}
+        className={`flex h-full ${dragging ? '' : 'transition-transform duration-500 ease-out'}`}
+        style={{ transform: `translateX(calc(${-active * 100}% + ${dragX}px))` }}
+      >
       {events.map((event, i) => {
         const isActive = i === active
         return (
@@ -77,11 +103,16 @@ function FeaturedCarousel({ events }: Props) {
             aria-roledescription="slide"
             aria-label={`${i + 1} of ${count}: ${event.name}`}
             aria-hidden={!isActive}
-            className={`absolute inset-0 transition-opacity duration-[1200ms] ease-in-out ${
-              isActive ? 'opacity-100' : 'opacity-0 pointer-events-none'
-            }`}
+            className="relative h-full w-full shrink-0"
+            onClickCapture={(e) => {
+              if (moved.current) {
+                e.preventDefault()
+                e.stopPropagation()
+                moved.current = false
+              }
+            }}
           >
-            {(seen.has(i) || i === (active + 1) % count) && (
+            {(seen.has(i) || i === (active + 1) % count || i === (active - 1 + count) % count) && (
             <img
               src={optimisedImage(event.image_url, 1280) ?? event.image_url ?? herobg}
               srcSet={imageSrcSet(event.image_url, [640, 1024, 1600])}
@@ -91,6 +122,7 @@ function FeaturedCarousel({ events }: Props) {
               height={900}
               fetchPriority={i === 0 ? 'high' : 'auto'}
               decoding="async"
+              draggable={false}
               className="absolute inset-0 h-full w-full object-cover"
             />
             )}
@@ -150,6 +182,7 @@ function FeaturedCarousel({ events }: Props) {
           </div>
         )
       })}
+      </div>
 
       {count > 1 && (
         <>
