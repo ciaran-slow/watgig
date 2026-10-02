@@ -72,7 +72,7 @@ function FilterBar({ filter, setFilter }: Props) {
   return (
     <div className="bg-[#0a0a0a] sticky top-[60px] md:top-[104px] z-40 border-b border-white/5">
       {/* Mobile: one compact, swipeable row that never changes height */}
-      <div className="md:hidden flex gap-2 overflow-x-auto no-scrollbar px-4 py-3">
+      <div className="md:hidden flex gap-2 overflow-x-auto no-scrollbar px-4 py-3 w-full max-w-full min-w-0">
         {[...categories, ...genres.map((g) => ({ ...g, icon: null }))].map((item) => (
           <button
             key={item.id}
