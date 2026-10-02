@@ -31,7 +31,7 @@ function Hero({ title = "WatGig", subtitle = "Find your next gig!", tag = "Whate
           </h2>
         )}
         {tag && (
-          <h3 className='text-purple-400 text-[10px] md:text-sm font-black uppercase tracking-[0.3em] mt-6 bg-white/10 backdrop-blur-md px-6 py-2 rounded-full border border-white/10'>
+          <h3 className='text-purple-400 text-[11px] md:text-sm font-black uppercase tracking-[0.3em] mt-6 bg-white/10 backdrop-blur-md px-6 py-2 rounded-full border border-white/10'>
             {tag}
           </h3>
         )}

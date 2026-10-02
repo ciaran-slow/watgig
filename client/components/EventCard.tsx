@@ -73,7 +73,7 @@ function EventCard({ event, showAdminActions = false }: Props) {
 
   return (
     <div 
-      className="relative group h-[500px] md:h-[650px] w-full rounded-3xl overflow-hidden shadow-2xl transition-all duration-500 hover:scale-[1.02] cursor-pointer bg-black border border-gray-800 isolate"
+      className="relative group w-full rounded-3xl overflow-hidden shadow-2xl transition-all duration-500 hover:scale-[1.02] cursor-pointer bg-[#111] border border-gray-800 isolate flex flex-col"
       style={{ maskImage: 'linear-gradient(white, white)' }} // Fix for rounded corners overflow in some browsers
       onClick={handleCardClick}
       onKeyDown={(keyboardEvent) => {
@@ -85,15 +85,13 @@ function EventCard({ event, showAdminActions = false }: Props) {
       role="button"
       tabIndex={0}
     >
-      {/* Background Image with Gradient */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-        style={{ 
-          backgroundImage: backgroundImage,
-        }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
-      </div>
+      {/* Image panel: the artwork gets its own space so text never covers it */}
+      <div className="relative h-72 md:h-96 w-full shrink-0 overflow-hidden bg-black">
+        <div 
+          className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+          style={{ backgroundImage }}
+        />
+        <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/50 to-transparent" />
 
       {/* Badges & Actions */}
       <div className="absolute top-6 left-6 flex flex-col gap-2 z-20">
@@ -164,51 +162,53 @@ function EventCard({ event, showAdminActions = false }: Props) {
         )}
       </div>
 
+      </div>
+
       {/* Content Area */}
-      <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 z-20 flex flex-col gap-4">
+      <div className="flex flex-col gap-4 p-5 md:p-6 flex-1">
         {/* Date & Time Row */}
-        <div className="flex items-center gap-4 text-purple-400 font-bold text-[10px] md:text-sm">
-          <div className="flex items-center gap-1.5 bg-black/40 backdrop-blur-sm px-3 py-1 rounded-lg border border-white/10">
+        <div className="flex flex-wrap items-center gap-2 text-purple-400 font-bold text-xs md:text-sm">
+          <div className="flex items-center gap-1.5 bg-white/5 px-3 py-1 rounded-lg border border-white/10">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
             {formattedDate}
           </div>
-          <div className="flex items-center gap-1.5 bg-black/40 backdrop-blur-sm px-3 py-1 rounded-lg border border-white/10">
+          <div className="flex items-center gap-1.5 bg-white/5 px-3 py-1 rounded-lg border border-white/10">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            {event.start_time}
+            {event.start_time || 'Time TBC'}
           </div>
         </div>
 
         {/* Name and Artists */}
         <div className="flex flex-col gap-1">
-          <h2 className="text-3xl md:text-4xl font-black text-white leading-none tracking-tight group-hover:text-purple-400 transition-colors duration-300 uppercase">
+          <h2 className="text-2xl md:text-3xl font-black text-white leading-tight tracking-tight break-words group-hover:text-purple-400 transition-colors duration-300 uppercase">
             {event.name}
           </h2>
-          <p className="text-base md:text-lg font-medium text-gray-300 italic line-clamp-1">
+          <p className="text-sm md:text-base font-medium text-gray-300 italic line-clamp-2">
             {event.artists}
           </p>
         </div>
 
         {/* Venue Row */}
-        <div className="flex items-center gap-2 text-white/90">
-          <div className="p-1.5 bg-purple-600 rounded-lg shadow-inner">
+        <div className="flex items-start gap-2 text-white/90">
+          <div className="p-1.5 bg-purple-600 rounded-lg shadow-inner shrink-0">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
             </svg>
           </div>
-          <span className="font-bold tracking-wide">{event.venue_name}</span>
+          <span className="font-bold tracking-wide text-sm md:text-base leading-snug">{event.venue_name}</span>
         </div>
 
         {/* Description - Expanded on Hover in a modern way or just snippet */}
-        <p className="text-sm text-gray-400 line-clamp-2 leading-relaxed h-10 transition-all duration-300 group-hover:text-gray-200">
+        <p className="text-sm text-gray-400 line-clamp-3 leading-relaxed transition-all duration-300 group-hover:text-gray-200">
           {event.description}
         </p>
 
         {/* Actions Row */}
-        <div className="flex gap-4 mt-2">
+        <div className="flex gap-4 mt-auto pt-2">
           <Link 
             to={`/event/${event.id}`}
             className="flex-1 bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 rounded-xl transition duration-300 flex items-center justify-center gap-2 shadow-lg shadow-purple-900/20 active:scale-95"

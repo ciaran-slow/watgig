@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 type Props = {
   filter: string
@@ -7,6 +7,23 @@ type Props = {
 
 function FilterBar({ filter, setFilter }: Props) {
   const [isOpen, setIsOpen] = useState(true)
+  const lastToggle = useRef(0)
+
+  const setOpen = (open: boolean) => {
+    lastToggle.current = Date.now()
+    setIsOpen(open)
+  }
+
+  // Collapse the filters as soon as the user scrolls. Scrolls caused by the
+  // bar itself resizing (within 600ms of a toggle) are ignored.
+  useEffect(() => {
+    if (!isOpen) return
+    const handleScroll = () => {
+      if (Date.now() - lastToggle.current > 600) setOpen(false)
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [isOpen])
 
   const categories = [
     { id: 'featured', label: 'Featured', icon: (
@@ -48,22 +65,22 @@ function FilterBar({ filter, setFilter }: Props) {
   const handleFilterClick = (value: string) => {
     setFilter(value)
     if (window.innerWidth < 768) {
-      setIsOpen(false)
+      setOpen(false)
     }
   }
 
   return (
     <div className="bg-[#0a0a0a] sticky top-[104px] z-40 border-b border-white/5">
-      <div className="max-w-screen-2xl mx-auto px-6 md:px-12 py-6">
+      <div className="max-w-screen-2xl mx-auto px-4 md:px-12 py-4 md:py-6">
         <div className="flex flex-col gap-6">
           {/* Filters Header */}
           <div className="flex justify-between items-center">
             <h2 className="font-black text-2xl tracking-tight text-white uppercase">Filters</h2>
             <button
-              onClick={() => setIsOpen(!isOpen)}
+              onClick={() => setOpen(!isOpen)}
               className="p-2 bg-white/5 rounded-lg text-gray-400 flex items-center gap-2 hover:bg-white/10 transition-colors group"
             >
-              <span className="text-[10px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity hidden md:block">
+              <span className="text-[11px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity hidden md:block">
                 {isOpen ? 'Hide Filters' : 'Show Filters'}
               </span>
               <svg 
@@ -87,7 +104,7 @@ function FilterBar({ filter, setFilter }: Props) {
             
             {/* Top Row: Time & Status */}
             <div className="flex flex-col items-center gap-3">
-              <h2 className="font-black text-[9px] md:text-xs tracking-[0.3em] text-gray-500 uppercase">Time & Status</h2>
+              <h2 className="font-black text-[11px] md:text-xs tracking-[0.3em] text-gray-500 uppercase">Time & Status</h2>
               <div className="flex flex-wrap justify-center gap-2">
                 {categories.map((cat) => (
                   <button 
@@ -104,7 +121,7 @@ function FilterBar({ filter, setFilter }: Props) {
 
             {/* Bottom Row: Music Genres */}
             <div className="flex flex-col items-center gap-3 w-full">
-              <h2 className="font-black text-[9px] md:text-xs tracking-[0.3em] text-gray-500 uppercase">Music Genres</h2>
+              <h2 className="font-black text-[11px] md:text-xs tracking-[0.3em] text-gray-500 uppercase">Music Genres</h2>
               <div className="flex flex-wrap justify-center gap-2 max-w-4xl">
                 {genres.map((genre) => (
                   <button 

@@ -59,8 +59,8 @@ function FilteredEvents({ filter }: Props) {
     .sort((a, b) => b.id - a.id) // Sort by ID descending so latest shows first
 
   return (
-      <section className="p-6 md:p-12 w-full overflow-hidden">
-        <h2 className="text-4xl md:text-7xl font-black mb-8 md:mb-12 tracking-tighter uppercase leading-none text-white border-l-8 border-purple-600 pl-6 md:pl-8">{header}</h2>
+      <section className="px-4 py-6 md:p-12 w-full overflow-hidden">
+        <h2 className="text-4xl md:text-7xl font-black mb-8 md:mb-12 tracking-tighter uppercase leading-none text-white border-l-4 md:border-l-8 border-purple-600 pl-4 md:pl-8">{header}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 mb-20">
           {filteredEvents?.map(event => (
             <EventCard key={event.id} event={event} />

@@ -234,7 +234,7 @@ function AddEvent() {
 
   return (
     <>
-      <section className="p-6 md:p-12 pt-28 md:pt-44 flex bg-[#0a0a0a] min-h-screen">
+      <section className="px-4 py-6 md:p-12 pt-28 md:pt-44 flex bg-[#0a0a0a] min-h-screen">
         <div className="w-full">
           <h2 className="text-5xl md:text-7xl font-black mt-4 mb-8 md:mb-12 tracking-tighter uppercase leading-none text-white border-l-8 border-purple-600 pl-6 md:pl-8">Add Event</h2>
 
@@ -242,7 +242,7 @@ function AddEvent() {
             data-testid="form"
             onSubmit={handleSubmit}
             onReset={handleReset}
-            className="flex flex-col gap-8 bg-white/[0.02] p-6 md:p-10 rounded-3xl shadow-2xl border border-white/5 backdrop-blur-sm"
+            className="flex flex-col gap-8 bg-white/[0.02] p-4 md:p-10 rounded-3xl shadow-2xl border border-white/5 backdrop-blur-sm"
           >
             <FormField 
               label="Event Name" 
@@ -353,7 +353,7 @@ function AddEvent() {
                   {formData.image_url ? 'Change Image' : 'Upload Image'}
                 </button>
               </div>
-              <p className="text-[10px] text-gray-600 uppercase tracking-wider font-bold">Images are stored by Cloudinary</p>
+              <p className="text-[11px] text-gray-600 uppercase tracking-wider font-bold">Images are stored by Cloudinary</p>
             </div>
 
             <FormField 

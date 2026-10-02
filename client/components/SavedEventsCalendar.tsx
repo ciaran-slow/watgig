@@ -72,7 +72,7 @@ export default function SavedEventsCalendar({ events }: Props) {
       {/* Days Header */}
       <div className="grid grid-cols-7 gap-1 mb-2">
         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-          <div key={day} className="text-center text-[10px] font-black uppercase tracking-widest text-gray-500 py-2">
+          <div key={day} className="text-center text-[11px] font-black uppercase tracking-widest text-gray-500 py-2">
             {day}
           </div>
         ))}
@@ -121,7 +121,7 @@ export default function SavedEventsCalendar({ events }: Props) {
             </svg>
             {format(selectedDate, 'do MMMM yyyy')}
           </h4>
-          <span className="text-[10px] font-black uppercase tracking-widest text-purple-400 bg-purple-500/10 px-2 py-1 rounded-md border border-purple-500/20">
+          <span className="text-[11px] font-black uppercase tracking-widest text-purple-400 bg-purple-500/10 px-2 py-1 rounded-md border border-purple-500/20">
             {eventsOnSelectedDay.length} {eventsOnSelectedDay.length === 1 ? 'Event' : 'Events'}
           </span>
         </div>
@@ -137,13 +137,13 @@ export default function SavedEventsCalendar({ events }: Props) {
                 <div className="flex flex-col">
                   <span className="text-white font-bold group-hover:text-purple-400 transition-colors uppercase tracking-tight">{event.name}</span>
                   <div className="flex items-center gap-3 mt-1.5">
-                    <span className="text-[10px] text-gray-500 uppercase tracking-widest font-black flex items-center gap-1">
+                    <span className="text-[11px] text-gray-500 uppercase tracking-widest font-black flex items-center gap-1">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                       {event.start_time}
                     </span>
-                    <span className="text-[10px] text-gray-500 uppercase tracking-widest font-black flex items-center gap-1">
+                    <span className="text-[11px] text-gray-500 uppercase tracking-widest font-black flex items-center gap-1">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />

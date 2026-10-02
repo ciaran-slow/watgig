@@ -181,7 +181,7 @@ function Nav() {
         <div className="flex flex-col items-center gap-4 w-full px-8 overflow-y-auto">
           {/* Mobile Location Selector */}
           <div className="flex flex-col items-center gap-2 w-full mb-2">
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-purple-500">Select Location</span>
+            <span className="text-[11px] font-black uppercase tracking-[0.3em] text-purple-500">Select Location</span>
             <div className="flex items-center bg-white/5 border border-white/10 rounded-2xl px-6 py-3 w-full justify-center">
               <select 
                 value={selectedCity}
@@ -226,7 +226,7 @@ function Nav() {
                     <span className="text-xl font-black uppercase tracking-widest text-white group-hover:text-purple-400 transition-colors">
                       {dbUser.data.name}
                     </span>
-                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500">View Profile</span>
+                    <span className="text-[11px] font-black uppercase tracking-[0.3em] text-gray-500">View Profile</span>
                   </div>
                 </button>
               )}

@@ -130,7 +130,7 @@ function Profile() {
         tag={showRoleTag ? profileUser.role.toUpperCase() : ""}
       />
 
-      <section className="p-12 max-w-7xl mx-auto">
+      <section className="p-4 md:p-12 max-w-7xl mx-auto">
         <button 
           onClick={() => navigate(-1)}
           className="flex items-center gap-2 text-gray-400 hover:text-purple-400 transition-colors font-black text-xs uppercase tracking-[0.2em] mb-12 group"
@@ -186,19 +186,19 @@ function Profile() {
               <div className="flex flex-col gap-4 border-t border-white/5 pt-6">
                 {profileUser.address && (
                   <div>
-                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-1">Location</h3>
+                    <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-gray-500 mb-1">Location</h3>
                     <p className="text-gray-300 font-medium">{profileUser.address}</p>
                   </div>
                 )}
                 {profileUser.members && (
                   <div>
-                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-1">Members</h3>
+                    <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-gray-500 mb-1">Members</h3>
                     <p className="text-gray-300 font-medium italic">{profileUser.members}</p>
                   </div>
                 )}
                 {showRoleTag && (
                   <div>
-                    <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-purple-400 mb-1">Followers</h3>
+                    <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-purple-400 mb-1">Followers</h3>
                     <p className="text-2xl font-black text-white tracking-tighter">{profileUser.follower_count || 0}</p>
                   </div>
                 )}
@@ -206,7 +206,7 @@ function Profile() {
             </div>
 
             <div className="bg-white/[0.02] border border-white/5 p-8 rounded-3xl backdrop-blur-md">
-              <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-purple-400 mb-4">Biography</h3>
+              <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-purple-400 mb-4">Biography</h3>
               <p className="text-gray-400 leading-relaxed italic">
                 “{profileUser.bio || 'No bio provided.'}”
               </p>
@@ -283,11 +283,11 @@ function Profile() {
                         <table className="w-full text-left border-collapse min-w-[600px]">
                           <thead>
                             <tr className="border-b border-white/5">
-                              <th className="p-6 text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">Event</th>
-                              <th className="p-6 text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">Date</th>
-                              <th className="p-6 text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">Venue</th>
-                              <th className="p-6 text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">Genre</th>
-                              <th className="p-6 text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 text-right">Actions</th>
+                              <th className="p-6 text-[11px] font-black uppercase tracking-[0.2em] text-gray-500">Event</th>
+                              <th className="p-6 text-[11px] font-black uppercase tracking-[0.2em] text-gray-500">Date</th>
+                              <th className="p-6 text-[11px] font-black uppercase tracking-[0.2em] text-gray-500">Venue</th>
+                              <th className="p-6 text-[11px] font-black uppercase tracking-[0.2em] text-gray-500">Genre</th>
+                              <th className="p-6 text-[11px] font-black uppercase tracking-[0.2em] text-gray-500 text-right">Actions</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -303,7 +303,7 @@ function Profile() {
                                 </td>
                                 <td className="p-6 text-gray-400 text-sm font-medium">{event.venue_name}</td>
                                 <td className="p-6">
-                                  <span className="bg-white/5 px-3 py-1 rounded-full text-[10px] font-black uppercase text-gray-400 tracking-widest border border-white/5">
+                                  <span className="bg-white/5 px-3 py-1 rounded-full text-[11px] font-black uppercase text-gray-400 tracking-widest border border-white/5">
                                     {event.genre}
                                   </span>
                                 </td>

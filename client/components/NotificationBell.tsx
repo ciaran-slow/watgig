@@ -71,7 +71,7 @@ function NotificationBell() {
           />
         </svg>
         {unreadCount > 0 && (
-          <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+          <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[11px] font-bold text-white">
             {unreadCount}
           </span>
         )}
@@ -110,7 +110,7 @@ function NotificationBell() {
                       <p className="text-sm text-gray-200 leading-tight">
                         <span className="font-bold text-white">{notif.creator_name}</span> posted a new event: <span className="text-purple-400">{notif.event_name}</span>
                       </p>
-                      <span className="text-[10px] text-gray-500 uppercase font-bold tracking-wider">
+                      <span className="text-[11px] text-gray-500 uppercase font-bold tracking-wider">
                         {formatNotifDate(notif.created_at)}
                       </span>
                     </div>
