@@ -21,6 +21,7 @@ function FeaturedCarousel({ events }: Props) {
   const trackRef = useRef<HTMLDivElement>(null)
   const count = events.length
   // Only fetch slide images once they're current, next, or already seen
+  const [loaded, setLoaded] = useState<Set<number>>(new Set())
   const [seen, setSeen] = useState<Set<number>>(new Set([0]))
 
   const go = (index: number) => setActive((index + count) % count)
@@ -123,7 +124,10 @@ function FeaturedCarousel({ events }: Props) {
               fetchPriority={i === 0 ? 'high' : 'auto'}
               decoding="async"
               draggable={false}
-              className="absolute inset-0 h-full w-full object-cover"
+              onLoad={() => setLoaded((prev) => new Set(prev).add(i))}
+              className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
+                loaded.has(i) ? 'opacity-100' : 'opacity-0'
+              }`}
             />
             )}
             <div

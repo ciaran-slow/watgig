@@ -8,7 +8,7 @@ import FilteredEvents from "./FilteredEvents"
 
 function Home() {
   const [filter, setFilter] = useState('all')
-  const { data: events } = useEvents()
+  const { data: events, isLoading } = useEvents()
 
   // Upcoming featured events with posters, shuffled once per set of events
   const featuredKey = (events ?? [])
@@ -28,7 +28,14 @@ function Home() {
 
   return (
     <main className="bg-[#0a0a0a] min-h-screen min-w-0 w-full">
-      {featured.length > 0 ? <FeaturedCarousel events={featured} /> : <Hero />}
+      {isLoading ? (
+        // Same height as the carousel, so nothing flashes or jumps while events load
+        <div className="h-[620px] md:h-[780px] w-full bg-[#0a0a0a]" aria-hidden="true" />
+      ) : featured.length > 0 ? (
+        <FeaturedCarousel events={featured} />
+      ) : (
+        <Hero />
+      )}
       <FilterBar filter={filter} setFilter={setFilter}/>
 
       {filter === 'featured' ? <FeaturedEvents /> : <FilteredEvents filter={filter} />}
