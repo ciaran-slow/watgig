@@ -1,44 +1,44 @@
 {
  "Spark Arena": {
-  "address": "Mahuhu Crescent, Auckland CBD, Auckland 1010",
-  "lat": -36.845,
-  "lng": 174.77,
+  "address": "42 Māhuhu Crescent, Auckland CBD, Auckland 1010",
+  "lat": -36.84718,
+  "lng": 174.77698,
   "access": "Wheelchair spaces with companion seating are in Row V of the lower bowl, reached by the foyer lift. Accessible toilets are on both arena levels and 3 bariatric-rated seats (250kg) are available. Wheelchairs and mobility aids are not permitted in general admission standing zones. FM hearing headsets are available with pre-booking, as is limited free mobility parking (info@sparkarena.co.nz, 09 358 1250). Book accessible seats through Ticketmaster."
  },
  "St James Theatre": {
   "address": "77-87 Courtenay Place, Te Aro, Wellington 6011",
-  "lat": -41.2937,
-  "lng": 174.7827,
+  "lat": -41.2933,
+  "lng": 174.77976,
   "access": "The ground floor has step-free entry and a lift. Eight accessible spaces and eight companion seats are in the stalls. An audio loop covers all levels, and infrared receivers and headphones are available. Guide dogs are welcome. Book accessible seats through Ticketmaster (09 970 9711, customer.service@ticketmaster.co.nz) or email guestexperience@wellingtonnz.com."
  },
  "Meow Nui": {
   "address": "9 Edward Street, Te Aro, Wellington 6011",
-  "lat": -41.2946,
-  "lng": 174.7766,
+  "lat": -41.29065,
+  "lng": 174.77484,
   "access": ""
  },
  "Shed 6": {
-  "address": "4 Queens Wharf, Jervois Quay, Wellington 6011",
-  "lat": -41.2839,
-  "lng": 174.7787,
+  "address": "Queens Wharf, Jervois Quay, Wellington 6011",
+  "lat": -41.28559,
+  "lng": 174.7793,
   "access": "Ground-floor wheelchair access with ramps inside the venue; wheelchairs are available with advance notice. Accessible seat locations vary by event. Guide dogs are welcome. The venue has no audio loop and offers no sign-language-interpreted performances. Book through Ticketmaster (09 970 9711, customer.service@ticketmaster.co.nz)."
  },
  "Michael Fowler Centre": {
   "address": "111 Wakefield Street, Te Aro, Wellington 6011",
-  "lat": -41.2891,
-  "lng": 174.7794,
+  "lat": -41.28953,
+  "lng": 174.77802,
   "access": "A lift serves the ground floor. Eight accessible spaces and eight companion seats are in the stalls; the Gallery is not wheelchair accessible. An audio loop is installed, best in Stalls rows O to V and Gallery rows A to D. Guide dogs are welcome. Book through Ticketmaster (09 970 9711, customer.service@ticketmaster.co.nz)."
  },
  "TSB Bank Arena": {
   "address": "4 Queens Wharf, Jervois Quay, Wellington 6011",
-  "lat": -41.2839,
-  "lng": 174.7787,
+  "lat": -41.28567,
+  "lng": 174.7788,
   "access": "Ground-floor wheelchair access; wheelchairs are provided with advance notice. An audio loop is available for patrons seated in Block 8. Guide dogs are welcome. Accessible seat locations vary by event. Book through Ticketmaster (09 970 9711, customer.service@ticketmaster.co.nz)."
  },
  "Isaac Theatre Royal": {
   "address": "145 Gloucester Street, Christchurch Central, Christchurch 8011",
-  "lat": -43.5322,
-  "lng": 172.634,
+  "lat": -43.52957,
+  "lng": 172.63817,
   "access": "A lift serves all levels. Wheelchair spaces are in the Stalls (4 spaces plus 4 transfer seats) and Dress Circle (2 spaces), with companion seating adjacent. A hearing loop is available (not in the Gloucester Room) and Auracast receivers can be borrowed. Accessible toilets are on every level and guide dogs are welcome (advance notice requested). Book through Ticketek (03 260 5260, online@ticketek.co.nz) or theatre management (03 366 6326, admin@itr.co.nz)."
  }
 }

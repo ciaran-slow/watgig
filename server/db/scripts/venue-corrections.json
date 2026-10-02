@@ -1,0 +1,44 @@
+{
+ "Spark Arena": {
+  "old_address": "Mahuhu Crescent, Auckland CBD, Auckland 1010",
+  "address": "42 Māhuhu Crescent, Auckland CBD, Auckland 1010",
+  "lat": -36.84718,
+  "lng": 174.77698
+ },
+ "St James Theatre": {
+  "old_address": "77-87 Courtenay Place, Te Aro, Wellington 6011",
+  "address": "77-87 Courtenay Place, Te Aro, Wellington 6011",
+  "lat": -41.2933,
+  "lng": 174.77976
+ },
+ "Meow Nui": {
+  "old_address": "9 Edward Street, Te Aro, Wellington 6011",
+  "address": "9 Edward Street, Te Aro, Wellington 6011",
+  "lat": -41.29065,
+  "lng": 174.77484
+ },
+ "Shed 6": {
+  "old_address": "4 Queens Wharf, Jervois Quay, Wellington 6011",
+  "address": "Queens Wharf, Jervois Quay, Wellington 6011",
+  "lat": -41.28559,
+  "lng": 174.7793
+ },
+ "Michael Fowler Centre": {
+  "old_address": "111 Wakefield Street, Te Aro, Wellington 6011",
+  "address": "111 Wakefield Street, Te Aro, Wellington 6011",
+  "lat": -41.28953,
+  "lng": 174.77802
+ },
+ "TSB Bank Arena": {
+  "old_address": "4 Queens Wharf, Jervois Quay, Wellington 6011",
+  "address": "4 Queens Wharf, Jervois Quay, Wellington 6011",
+  "lat": -41.28567,
+  "lng": 174.7788
+ },
+ "Isaac Theatre Royal": {
+  "old_address": "145 Gloucester Street, Christchurch Central, Christchurch 8011",
+  "address": "145 Gloucester Street, Christchurch Central, Christchurch 8011",
+  "lat": -43.52957,
+  "lng": 172.63817
+ }
+}
