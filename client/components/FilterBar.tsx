@@ -70,8 +70,23 @@ function FilterBar({ filter, setFilter }: Props) {
   }
 
   return (
-    <div className="bg-[#0a0a0a] sticky top-[104px] z-40 border-b border-white/5">
-      <div className="max-w-screen-2xl mx-auto px-4 md:px-12 py-4 md:py-6">
+    <div className="bg-[#0a0a0a] sticky top-[60px] md:top-[104px] z-40 border-b border-white/5">
+      {/* Mobile: one compact, swipeable row that never changes height */}
+      <div className="md:hidden flex gap-2 overflow-x-auto no-scrollbar px-4 py-3">
+        {[...categories, ...genres.map((g) => ({ ...g, icon: null }))].map((item) => (
+          <button
+            key={item.id}
+            onClick={() => setFilter(item.id)}
+            className={`${getButtonClass(item.id)} !py-2 !px-4 shrink-0`}
+          >
+            {item.icon}
+            {item.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Desktop: full panel that tucks away on scroll */}
+      <div className="hidden md:block max-w-screen-2xl mx-auto px-12 py-6">
         <div className="flex flex-col gap-6">
           {/* Filters Header */}
           <div className="flex justify-between items-center">

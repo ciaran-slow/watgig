@@ -13,16 +13,16 @@ function Hero({ title = "WatGig", subtitle = "Find your next gig!", tag = "Whate
   
   return (
     <div 
-      className="h-[500px] md:h-[700px] flex justify-center items-center relative overflow-hidden w-full transition-all duration-500"
+      className="h-[280px] md:h-[700px] flex justify-center items-center relative overflow-hidden w-full transition-all duration-500"
       style={{
         backgroundImage: `linear-gradient(to bottom, #0a0a0a 0%, rgba(0,0,0,0.6) 15%, rgba(0,0,0,0.6) 85%, #0a0a0a 100%), ${backgroundImage}`,
         backgroundSize: "cover",
         backgroundPosition: 'center'
       }}
     >
-      <div className='flex flex-col items-center relative z-10 text-center px-4 pt-16'>
-        {title === "WatGig" && <img src={logo} alt="WatGig Logo" className="h-40 md:h-60 mb-2 transition-all"/>}
-        <h1 className='text-white font-black text-4xl sm:text-6xl md:text-8xl tracking-tighter uppercase leading-none max-w-5xl'>
+      <div className='flex flex-col items-center relative z-10 text-center px-4 pt-14 md:pt-16'>
+        {title === "WatGig" && <img src={logo} alt="WatGig Logo" className="hidden md:block md:h-60 mb-2 transition-all"/>}
+        <h1 className='text-white font-black text-5xl sm:text-6xl md:text-8xl tracking-tighter uppercase leading-none max-w-5xl'>
           {title}
         </h1>
         {subtitle && (
@@ -31,7 +31,7 @@ function Hero({ title = "WatGig", subtitle = "Find your next gig!", tag = "Whate
           </h2>
         )}
         {tag && (
-          <h3 className='text-purple-400 text-[11px] md:text-sm font-black uppercase tracking-[0.3em] mt-6 bg-white/10 backdrop-blur-md px-6 py-2 rounded-full border border-white/10'>
+          <h3 className='text-purple-400 text-[11px] md:text-sm font-black uppercase tracking-[0.3em] mt-4 md:mt-6 bg-white/10 backdrop-blur-md px-6 py-2 rounded-full border border-white/10'>
             {tag}
           </h3>
         )}

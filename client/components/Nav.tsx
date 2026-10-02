@@ -60,12 +60,12 @@ function Nav() {
 
   return (
     <>
-      <nav className="p-6 flex justify-between items-center fixed top-0 left-0 right-0 z-[60] bg-[#0a0a0a] border-b border-white/5 transition-all duration-300">
+      <nav className="px-4 py-3 md:p-6 flex justify-between items-center fixed top-0 left-0 right-0 z-[60] bg-[#0a0a0a] border-b border-white/5 transition-all duration-300">
         <div className="flex gap-2 items-center">
-          <img src={logo} alt="WatGig Logo" className="h-14" />
+          <img src={logo} alt="WatGig Logo" className="h-9 md:h-14" />
           <button
             type="button"
-            className="text-3xl md:text-4xl hover:text-purple-400 font-black tracking-tighter cursor-pointer uppercase text-white transition-colors"
+            className="text-2xl md:text-4xl hover:text-purple-400 font-black tracking-tighter cursor-pointer uppercase text-white transition-colors"
             onClick={() => handleClick('/')}
           >
             WatGig
@@ -143,29 +143,29 @@ function Nav() {
         {/* Mobile Notification and Hamburger Icon Placeholder */}
         <div className="lg:hidden flex items-center gap-4">
           {authUser && <NotificationBell />}
-          <div className="w-10 h-10" />
+          <div className="w-10 h-10 md:w-12 md:h-12" />
         </div>
       </nav>
 
       {/* Actual Hamburger Button - Absolute positioned to stay on top of everything */}
       <button
         onClick={toggleMenu}
-        className="lg:hidden fixed top-7 right-6 flex flex-col justify-center items-center w-12 h-12 gap-1.5 focus:outline-none z-[110] bg-purple-600 rounded-full shadow-2xl border border-purple-500/50"
+        className="lg:hidden fixed top-[10px] right-4 md:top-7 md:right-6 flex flex-col justify-center items-center w-10 h-10 md:w-12 md:h-12 gap-1 md:gap-1.5 focus:outline-none z-[110] bg-purple-600 rounded-full shadow-2xl border border-purple-500/50"
         aria-label="Toggle Menu"
       >
         <span
-          className={`h-0.5 w-6 bg-white transition-all duration-300 transform origin-center ${
-            isMenuOpen ? "rotate-45 translate-y-2" : ""
+          className={`h-0.5 w-5 md:w-6 bg-white transition-all duration-300 transform origin-center ${
+            isMenuOpen ? "rotate-45 translate-y-1.5 md:translate-y-2" : ""
           }`}
         />
         <span
-          className={`h-0.5 w-6 bg-white transition-all duration-300 ${
+          className={`h-0.5 w-5 md:w-6 bg-white transition-all duration-300 ${
             isMenuOpen ? "opacity-0" : "opacity-100"
           }`}
         />
         <span
-          className={`h-0.5 w-6 bg-white transition-all duration-300 transform origin-center ${
-            isMenuOpen ? "-rotate-45 -translate-y-2" : ""
+          className={`h-0.5 w-5 md:w-6 bg-white transition-all duration-300 transform origin-center ${
+            isMenuOpen ? "-rotate-45 -translate-y-1.5 md:-translate-y-2" : ""
           }`}
         />
       </button>

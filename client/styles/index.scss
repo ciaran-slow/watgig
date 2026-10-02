@@ -49,3 +49,12 @@
   grid-template-rows: auto 1fr auto;
   @apply bg-[#0a0a0a];
 }
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}

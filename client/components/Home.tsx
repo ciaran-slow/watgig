@@ -5,7 +5,7 @@ import Hero from "./Hero"
 import FilteredEvents from "./FilteredEvents"
 
 function Home() {
-  const [filter, setFilter] = useState('featured')
+  const [filter, setFilter] = useState('all')
   return (
     <main className="bg-[#0a0a0a] min-h-screen">
       <Hero/>
