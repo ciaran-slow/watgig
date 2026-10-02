@@ -75,7 +75,7 @@ function FeaturedCarousel({ events }: Props) {
     <section
       aria-roledescription="carousel"
       aria-label="Featured events"
-      className="relative w-full h-[620px] md:h-[780px] overflow-hidden bg-[#0a0a0a] select-none"
+      className="relative w-full h-[max(700px,85svh)] md:h-[780px] overflow-hidden bg-[#0a0a0a] select-none"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}

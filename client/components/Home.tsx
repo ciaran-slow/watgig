@@ -30,7 +30,7 @@ function Home() {
     <main className="bg-[#0a0a0a] min-h-screen min-w-0 w-full">
       {isLoading ? (
         // Same height as the carousel, so nothing flashes or jumps while events load
-        <div className="h-[620px] md:h-[780px] w-full bg-[#0a0a0a]" aria-hidden="true" />
+        <div className="h-[max(700px,85svh)] md:h-[780px] w-full bg-[#0a0a0a]" aria-hidden="true" />
       ) : featured.length > 0 ? (
         <FeaturedCarousel events={featured} />
       ) : (
