@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router'
 import { useUser } from '../hooks/users'
 import { IfAuthenticated } from './Authenticated'
 import { FormSkeleton } from "./Skeleton"
+import { uploadWidgetOptions } from '../utils/uploadWidget'
 
 // Type for Cloudinary widget
 declare global {
@@ -204,6 +205,7 @@ function EditProfile() {
 
     const widget = window.cloudinary.createUploadWidget(
       {
+        ...uploadWidgetOptions,
         cloudName: cloudName,
         uploadPreset: uploadPreset,
       },

@@ -1,6 +1,10 @@
 import { useState, useEffect, useRef } from 'react'
 import * as maplibregl from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
+// Bundle the worker ourselves so it is served from /assets (the default URL isn't emitted by the build)
+import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
+
+maplibregl.setWorkerUrl(workerUrl)
 
 // OpenFreeMap: free vector tiles, no API key. Its "dark" style suits the app.
 const MAP_STYLE = 'https://tiles.openfreemap.org/styles/dark'

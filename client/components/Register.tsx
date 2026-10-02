@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router'
 // import { useAuth0 } from '@auth0/auth0-react'
 import { useUser } from '../hooks/users'
 import { IfAuthenticated } from './Authenticated'
+import { uploadWidgetOptions } from '../utils/uploadWidget'
 
 // Type for Cloudinary widget
 declare global {
@@ -223,6 +224,7 @@ function Register() {
 
     const widget = window.cloudinary.createUploadWidget(
       {
+        ...uploadWidgetOptions,
         cloudName: cloudName,
         uploadPreset: uploadPreset,
       },

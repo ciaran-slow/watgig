@@ -2,6 +2,7 @@ import { useState } from "react"
 import { useNavigate } from "react-router"
 import { useAddEvent } from "../hooks/events"
 import { useUser } from "../hooks/users"
+import { uploadWidgetOptions } from '../utils/uploadWidget'
 
 // Type for Cloudinary widget
 declare global {
@@ -206,6 +207,7 @@ function AddEvent() {
 
     const widget = window.cloudinary.createUploadWidget(
       {
+        ...uploadWidgetOptions,
         cloudName: cloudName,
         uploadPreset: uploadPreset,
       },

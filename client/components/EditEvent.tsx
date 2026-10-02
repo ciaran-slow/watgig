@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router"
 import { useEvent, useUpdateEvent } from "../hooks/events"
 import { useUser } from "../hooks/users"
 import { FormSkeleton } from "./Skeleton"
+import { uploadWidgetOptions } from '../utils/uploadWidget'
 
 interface FormState {
   name: string
@@ -189,6 +190,7 @@ function EditEvent() {
   const handleUpload = () => {
     const widget = window.cloudinary.createUploadWidget(
       {
+        ...uploadWidgetOptions,
         cloudName: import.meta.env.VITE_CLOUDINARY_CLOUD_NAME,
         uploadPreset: import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
       },
