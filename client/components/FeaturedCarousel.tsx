@@ -3,6 +3,7 @@ import { Link } from 'react-router'
 import { format, parseISO } from 'date-fns'
 import { EventWithId } from '../../models/event'
 import herobg from '../public/hero.webp'
+import { optimisedImage, imageSrcSet } from '../utils/image'
 
 interface Props {
   events: EventWithId[]
@@ -15,13 +16,24 @@ function FeaturedCarousel({ events }: Props) {
   const [paused, setPaused] = useState(false)
   const touchStartX = useRef<number | null>(null)
   const count = events.length
+  // Only fetch slide images once they're current, next, or already seen
+  const [seen, setSeen] = useState<Set<number>>(new Set([0]))
 
   const go = (index: number) => setActive((index + count) % count)
 
   // Auto-advance, unless paused or the user prefers reduced motion
   useEffect(() => {
     setActive(0)
+    setSeen(new Set([0]))
   }, [count])
+
+  useEffect(() => {
+    setSeen((prev) => {
+      const next = new Set(prev)
+      next.add(active)
+      return next
+    })
+  }, [active])
 
   useEffect(() => {
     if (count < 2 || paused) return
@@ -69,10 +81,19 @@ function FeaturedCarousel({ events }: Props) {
               isActive ? 'opacity-100' : 'opacity-0 pointer-events-none'
             }`}
           >
-            <div
-              className="absolute inset-0 bg-cover bg-center"
-              style={{ backgroundImage: `url(${event.image_url || herobg})` }}
+            {(seen.has(i) || i === (active + 1) % count) && (
+            <img
+              src={optimisedImage(event.image_url, 1280) ?? event.image_url ?? herobg}
+              srcSet={imageSrcSet(event.image_url, [640, 1024, 1600])}
+              sizes="100vw"
+              alt=""
+              width={1600}
+              height={900}
+              fetchPriority={i === 0 ? 'high' : 'auto'}
+              decoding="async"
+              className="absolute inset-0 h-full w-full object-cover"
             />
+            )}
             <div
               className="absolute inset-0"
               style={{

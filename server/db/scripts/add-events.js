@@ -4,6 +4,7 @@
 import { readFileSync } from 'node:fs'
 import knex from 'knex'
 import config from '../knexfile.js'
+import { uploadToCloudinary } from './optimise-event-images.js'
 
 const GENRES = new Set(['rock', 'pop', 'electronic', 'hiphop', 'acoustic', 'jazz', 'metal', 'other'])
 const file = process.argv[2]
@@ -47,7 +48,12 @@ try {
     if (bad.length) { console.log(`SKIP  ${e.name || '(no name)'} ${e.date || ''}: ${bad.join('; ')}`); continue }
     const { source_url, ...row } = e
     console.log(`${apply ? 'ADD  ' : 'WOULD'} ${e.name} ${e.date} @ ${e.venue_name} (${source_url})`)
-    if (apply) await db('event').insert({ ...row, created_by: user.id, featured: false })
+    if (apply) {
+      if (row.image_url && !/^https:\/\/res\.cloudinary\.com\//.test(row.image_url)) {
+        try { row.image_url = await uploadToCloudinary(row.image_url) } catch (err) { console.log(`  image not re-hosted (${err.message}); keeping original URL`) }
+      }
+      await db('event').insert({ ...row, created_by: user.id, featured: false })
+    }
     seenName.add(`${e.date}|${norm(e.name)}`)
     added++
   }

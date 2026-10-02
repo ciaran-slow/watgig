@@ -5,6 +5,8 @@ import toast from "react-hot-toast"
 import { format, parseISO } from "date-fns"
 import { useNavigate, Link } from "react-router"
 import { useUser, useSavedEvents, useToggleSaveEvent } from "../hooks/users"
+import { useState } from "react"
+import { optimisedImage, imageSrcSet } from "../utils/image"
 
 interface Props {
   event: EventWithId
@@ -18,7 +20,8 @@ function EventCard({ event, showAdminActions = false }: Props) {
   const { data: savedEvents } = useSavedEvents()
   const toggleSave = useToggleSaveEvent()
   
-  const backgroundImage = event.image_url ? `url(${event.image_url})` : `url(${eventbg})`
+  const posterUrl = event.image_url || eventbg
+  const [imgLoaded, setImgLoaded] = useState(false)
 
   // Format date using date-fns
   const formattedDate = event.date ? format(parseISO(event.date), 'EEE d MMM') : ''
@@ -87,9 +90,20 @@ function EventCard({ event, showAdminActions = false }: Props) {
     >
       {/* Image panel: the artwork gets its own space so text never covers it */}
       <div className="relative h-72 md:h-96 w-full shrink-0 overflow-hidden bg-black">
-        <div 
-          className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-          style={{ backgroundImage }}
+        <div className="absolute inset-0 bg-white/5 animate-pulse" aria-hidden="true" />
+        <img
+          src={optimisedImage(posterUrl, 800) ?? posterUrl}
+          srcSet={imageSrcSet(posterUrl, [480, 800, 1200])}
+          sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+          alt=""
+          width={800}
+          height={600}
+          loading="lazy"
+          decoding="async"
+          onLoad={() => setImgLoaded(true)}
+          className={`absolute inset-0 h-full w-full object-cover transition-all duration-700 group-hover:scale-105 ${
+            imgLoaded ? 'opacity-100' : 'opacity-0'
+          }`}
         />
         <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/50 to-transparent" />
 
