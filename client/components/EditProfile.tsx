@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useUser } from '../hooks/users'
 import { IfAuthenticated } from './Authenticated'
+import { FormSkeleton } from "./Skeleton"
 
 // Type for Cloudinary widget
 declare global {
@@ -236,7 +237,7 @@ function EditProfile() {
     { value: 'other', label: 'Other' },
   ]
 
-  if (!formData) return <div className="p-12 text-center text-white">Loading...</div>
+  if (!formData) return <FormSkeleton label="Loading profile" />
 
   return (
     <div>

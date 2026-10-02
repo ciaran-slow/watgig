@@ -9,13 +9,14 @@ import { lazy, Suspense } from "react"
 // Map library is large; only load it when an event page needs it
 const EventMap = lazy(() => import("./EventMap"))
 import RelatedEvents from "./RelatedEvents"
+import { PageSkeleton } from "./Skeleton"
 
 function EventDetails() {
   const { id } = useParams()
   const navigate = useNavigate()
   const { data: event, isLoading, isError, error } = useEvent(Number(id))
 
-  if (isLoading) return <div className="p-12 text-center text-white">Loading event...</div>
+  if (isLoading) return <PageSkeleton label="Loading event" />
   if (isError) return <div className="p-12 text-center text-red-500">Error: {(error as Error).message}</div>
   if (!event) return <div className="p-12 text-center text-white">Event not found.</div>
 

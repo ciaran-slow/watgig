@@ -8,6 +8,7 @@ import SavedEventsCalendar from "./SavedEventsCalendar"
 import toast from "react-hot-toast"
 import { useState } from "react"
 import { useAuth0 } from "@auth0/auth0-react"
+import { PageSkeleton, Skeleton } from "./Skeleton"
 
 function Profile() {
   const { id } = useParams()
@@ -34,7 +35,7 @@ function Profile() {
   // Use the integer ID from the URL to fetch events
   const { data: events, isLoading: eventsLoading } = useUserEvents(id || '')
 
-  if (userLoading) return <div className="p-12 text-center text-white">Loading profile...</div>
+  if (userLoading) return <PageSkeleton label="Loading profile" />
   if (userError || !profileUser) return <div className="p-12 text-center text-red-500">User not found.</div>
 
   const isOwnProfile = currentUser?.id === profileUser.id
@@ -237,7 +238,7 @@ function Profile() {
                 {sections.saved && (
                   <div className="p-8 pt-0">
                     {savedLoading ? (
-                      <div className="text-gray-500 italic">Loading saved events...</div>
+                      <div role="status" aria-busy="true" className="flex flex-col gap-3"><span className="sr-only">Loading saved events</span><Skeleton className="h-16 w-full" /><Skeleton className="h-16 w-full" /></div>
                     ) : (
                       <SavedEventsCalendar events={savedEvents || []} />
                     )}
@@ -275,7 +276,7 @@ function Profile() {
               {(sections.events || !isOwnProfile) && (
                 <div className="p-8 pt-0">
                   {eventsLoading ? (
-                    <div className="text-gray-500 italic">Loading events...</div>
+                    <div role="status" aria-busy="true" className="flex flex-col gap-3"><span className="sr-only">Loading events</span><Skeleton className="h-14 w-full" /><Skeleton className="h-14 w-full" /><Skeleton className="h-14 w-full" /></div>
                   ) : events && events.length > 0 ? (
                     isOwnProfile ? (
                       /* Table view for own profile */

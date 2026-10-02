@@ -2,12 +2,13 @@ import EventCard from "./EventCard"
 import { useEvents } from "../hooks/events"
 import { useLocationContext } from "./LocationContext"
 import { extractCity } from "../utils/eventHelpers"
+import { EventListSkeleton } from "./Skeleton"
 
 function FeaturedEvents() {
   const { data: events, isLoading, isError, error } = useEvents()
   const { selectedCity } = useLocationContext()
 
-  if (isLoading) return <p className="p-12">Loading events...</p>
+  if (isLoading) return <EventListSkeleton count={3} />
   if (isError) return <p className="p-12 text-red-500">Error loading events: {error.message}</p>
 
   const now = new Date()
@@ -28,8 +29,8 @@ function FeaturedEvents() {
     <section className="px-4 py-6 md:p-12 w-full overflow-hidden">
       <h2 className="text-4xl md:text-7xl font-black mb-8 md:mb-12 tracking-tighter uppercase leading-none text-white border-l-4 md:border-l-8 border-purple-600 pl-4 md:pl-8">Featured Events</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-20">
-        {featuredEvents?.map(event => (
-          <EventCard key={event.id} event={event} />
+        {featuredEvents?.map((event, i) => (
+          <EventCard key={event.id} event={event} index={i} />
         ))}
         {featuredEvents?.length === 0 && <p className="col-span-full text-xl italic text-gray-500 text-center">No featured events found.</p>}
       </div>

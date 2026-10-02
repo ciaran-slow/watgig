@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { useNavigate, useParams } from "react-router"
 import { useEvent, useUpdateEvent } from "../hooks/events"
 import { useUser } from "../hooks/users"
+import { FormSkeleton } from "./Skeleton"
 
 interface FormState {
   name: string
@@ -214,7 +215,7 @@ function EditEvent() {
     { value: 'other', label: 'Other' },
   ]
 
-  if (isLoading) return <div className="p-12 text-center text-white">Loading event...</div>
+  if (isLoading) return <FormSkeleton label="Loading event" />
   if (isError || !event) return <div className="p-12 text-center text-red-500">Event not found.</div>
   if (!formData) return null
 

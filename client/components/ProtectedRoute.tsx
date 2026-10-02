@@ -1,3 +1,4 @@
+import { FormSkeleton } from './Skeleton'
 import { useAuth0 } from '@auth0/auth0-react'
 import { ReactNode, useEffect } from 'react'
 import { useLocation } from 'react-router'
@@ -20,9 +21,7 @@ export function ProtectedRoute({ children }: Props) {
 
   if (isLoading || !isAuthenticated) {
     return (
-      <div className="p-12 text-white font-black uppercase tracking-widest text-center">
-        Redirecting you to login...
-      </div>
+      <FormSkeleton label="Redirecting you to login" />
     )
   }
 

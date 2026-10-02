@@ -7,13 +7,15 @@ import { useNavigate, Link } from "react-router"
 import { useUser, useSavedEvents, useToggleSaveEvent } from "../hooks/users"
 import { useState } from "react"
 import { optimisedImage, imageSrcSet } from "../utils/image"
+import Reveal from "./Reveal"
 
 interface Props {
   event: EventWithId
   showAdminActions?: boolean
+  index?: number
 }
 
-function EventCard({ event, showAdminActions = false }: Props) {
+function EventCard({ event, showAdminActions = false, index = 0 }: Props) {
   const deleteEvent = useDeleteEvent()
   const navigate = useNavigate()
   const dbUser = useUser()
@@ -75,6 +77,7 @@ function EventCard({ event, showAdminActions = false }: Props) {
   }
 
   return (
+    <Reveal index={index}>
     <div 
       className="relative group w-full rounded-3xl overflow-hidden shadow-2xl transition-all duration-500 hover:scale-[1.02] cursor-pointer bg-[#111] border border-gray-800 isolate flex flex-col"
       style={{ maskImage: 'linear-gradient(white, white)' }} // Fix for rounded corners overflow in some browsers
@@ -240,6 +243,7 @@ function EventCard({ event, showAdminActions = false }: Props) {
       {/* Decorative Overlay for depth */}
       <div className="absolute inset-0 border-[1px] border-white/5 rounded-3xl pointer-events-none z-30" />
     </div>
+    </Reveal>
   )
 }
 

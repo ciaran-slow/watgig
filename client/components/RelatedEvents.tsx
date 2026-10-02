@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from "react"
 import { useEvents } from "../hooks/events"
 import EventCard from "./EventCard"
+import { EventCardSkeleton } from "./Skeleton"
 import { EventWithId } from "../../models/event"
 
 interface Props {
@@ -38,7 +39,18 @@ function RelatedEvents({ currentEventId, genre }: Props) {
     }
   }, [events])
 
-  if (isLoading) return null
+  if (isLoading) {
+    return (
+      <div role="status" aria-busy="true" className="px-4 md:px-12 pb-16 flex gap-6 overflow-hidden">
+        <span className="sr-only">Loading related events</span>
+        {Array.from({ length: 3 }).map((_, i) => (
+          <div key={i} className="shrink-0 w-[85vw] sm:w-[22rem]">
+            <EventCardSkeleton />
+          </div>
+        ))}
+      </div>
+    )
+  }
   if (isError) return null
 
   const now = new Date()
