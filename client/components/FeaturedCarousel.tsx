@@ -81,9 +81,11 @@ function FeaturedCarousel({ events }: Props) {
               }}
             />
 
-            <div className="absolute inset-x-0 bottom-0 px-4 md:px-12 pb-16 md:pb-20 max-w-screen-2xl mx-auto left-0 right-0">
-              <div className="flex flex-col gap-3 md:gap-4 max-w-3xl">
-                <div className="flex flex-wrap items-center gap-2">
+            <div className="absolute inset-0 hidden md:block bg-gradient-to-l from-black/60 via-black/20 to-transparent" />
+
+            <div className="absolute inset-x-0 bottom-0 px-4 md:px-24 pb-16 md:pb-20 max-w-screen-2xl mx-auto left-0 right-0 flex justify-end">
+              <div className="flex flex-col items-end text-right gap-3 md:gap-4 max-w-3xl">
+                <div className="flex flex-wrap items-center justify-end gap-2">
                   <span className="bg-purple-600 px-3 py-1 rounded-full text-[11px] font-bold text-white uppercase tracking-wider">
                     Featured
                   </span>
@@ -102,7 +104,7 @@ function FeaturedCarousel({ events }: Props) {
                   <p className="text-sm md:text-lg italic text-gray-200 line-clamp-1">{event.artists}</p>
                 )}
 
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm md:text-base font-semibold text-white/90">
+                <div className="flex flex-wrap items-center justify-end gap-x-4 gap-y-1 text-sm md:text-base font-semibold text-white/90">
                   <span className="text-purple-300">
                     {event.date ? format(parseISO(event.date), 'EEE d MMM') : ''}
                     {event.start_time ? ` · ${event.start_time}` : ''}
