@@ -7,6 +7,19 @@
     @apply bg-[#0a0a0a] text-gray-100;
     font-family: 'Inter', sans-serif;
     color-scheme: dark;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: 'Bricolage Grotesque', 'Inter', sans-serif;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  p, li {
+    text-wrap: pretty;
   }
 
   /* Customizing the native date/time picker icon color */
