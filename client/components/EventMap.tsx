@@ -92,6 +92,7 @@ function EventMap({ venueName, address, lat, lng }: Props) {
           url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
           className="osm-dark-tiles"
           maxZoom={19}
+          referrerPolicy="strict-origin-when-cross-origin"
         />
         <Marker position={coords} icon={purpleIcon}>
           <Popup>

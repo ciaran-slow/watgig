@@ -33,6 +33,8 @@ server.use(
       },
     },
     crossOriginEmbedderPolicy: false,
+    // OpenStreetMap's tile policy blocks requests with no Referer; send the origin only
+    referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
   }),
 )
 
