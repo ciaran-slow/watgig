@@ -91,7 +91,7 @@ export default function SavedEventsCalendar({ events }: Props) {
               key={idx}
               onClick={() => setSelectedDate(day)}
               className={`
-                relative aspect-square flex flex-col items-center justify-center rounded-2xl transition-all duration-300 border
+                relative aspect-square flex flex-col items-center justify-center rounded-2xl transition-all duration-base border
                 ${!isCurrentMonth ? 'text-gray-800 border-transparent opacity-20' : 'text-gray-300 border-transparent'}
                 ${isSelected 
                   ? 'bg-purple-600 text-white border-purple-500 shadow-lg shadow-purple-900/40 scale-105 z-10' 

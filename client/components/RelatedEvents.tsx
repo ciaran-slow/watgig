@@ -95,7 +95,7 @@ function RelatedEvents({ currentEventId, genre }: Props) {
         <button 
           onClick={() => scroll('left')}
           disabled={!canScrollLeft}
-          className={`absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-10 p-3 md:p-4 rounded-full bg-purple-600 border border-purple-500/50 text-white transition-all active:scale-95 opacity-100 md:opacity-0 md:group-hover:opacity-100 disabled:opacity-20 disabled:cursor-not-allowed block backdrop-blur-sm shadow-lg shadow-purple-900/20`}
+          className={`absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-10 p-3 md:p-4 rounded-full bg-purple-600 border border-purple-500/50 text-white transition-all active:scale-[0.97] opacity-100 md:opacity-0 md:group-hover:opacity-100 disabled:opacity-20 disabled:cursor-not-allowed block backdrop-blur-sm shadow-lg shadow-purple-900/20`}
           aria-label="Previous events"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 md:h-8 md:w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -106,7 +106,7 @@ function RelatedEvents({ currentEventId, genre }: Props) {
         <button 
           onClick={() => scroll('right')}
           disabled={!canScrollRight}
-          className={`absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-10 p-3 md:p-4 rounded-full bg-purple-600 border border-purple-500/50 text-white transition-all active:scale-95 opacity-100 md:opacity-0 md:group-hover:opacity-100 disabled:opacity-20 disabled:cursor-not-allowed block backdrop-blur-sm shadow-lg shadow-purple-900/20`}
+          className={`absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-10 p-3 md:p-4 rounded-full bg-purple-600 border border-purple-500/50 text-white transition-all active:scale-[0.97] opacity-100 md:opacity-0 md:group-hover:opacity-100 disabled:opacity-20 disabled:cursor-not-allowed block backdrop-blur-sm shadow-lg shadow-purple-900/20`}
           aria-label="Next events"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 md:h-8 md:w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">

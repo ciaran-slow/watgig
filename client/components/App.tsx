@@ -15,12 +15,14 @@ function ScrollToTop() {
 }
 
 function App() {
+  const { pathname } = useLocation()
   return (
     <LocationProvider>
       <div className="min-h-screen flex flex-col">
         <ScrollToTop />
         <Nav/>
-        <div className="flex-1">
+        {/* Keyed by path so each page eases in on navigation */}
+        <div key={pathname} className="flex-1 animate-fade-in">
           <Outlet/>
         </div>
         <Footer/>

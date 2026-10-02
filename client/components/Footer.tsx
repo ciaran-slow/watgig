@@ -16,7 +16,7 @@ function Footer() {
               href="https://www.facebook.com/profile.php?id=61583645578816" 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="p-3 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-purple-600 hover:border-purple-600 transition-all active:scale-90 group"
+              className="p-3 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-purple-600 hover:border-purple-600 transition-all active:scale-[0.97] group"
               aria-label="Follow us on Facebook"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
@@ -27,7 +27,7 @@ function Footer() {
               href="https://instagram.com/watgignz" 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="p-3 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-purple-600 hover:border-purple-600 transition-all active:scale-90 group"
+              className="p-3 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-purple-600 hover:border-purple-600 transition-all active:scale-[0.97] group"
               aria-label="Follow us on Instagram"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">

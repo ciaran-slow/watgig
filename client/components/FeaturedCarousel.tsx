@@ -92,7 +92,7 @@ function FeaturedCarousel({ events }: Props) {
     >
       <div
         ref={trackRef}
-        className={`flex h-full ${dragging ? '' : 'transition-transform duration-500 ease-out'}`}
+        className={`flex h-full ${dragging ? '' : 'transition-transform duration-slow ease-smooth'}`}
         style={{ transform: `translateX(calc(${-active * 100}% + ${dragX}px))` }}
       >
       {events.map((event, i) => {
@@ -125,7 +125,7 @@ function FeaturedCarousel({ events }: Props) {
               decoding="async"
               draggable={false}
               onLoad={() => setLoaded((prev) => new Set(prev).add(i))}
-              className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
+              className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-long ${
                 loaded.has(i) ? 'opacity-100' : 'opacity-0'
               }`}
             />
@@ -141,7 +141,11 @@ function FeaturedCarousel({ events }: Props) {
             <div className="absolute inset-0 hidden md:block bg-gradient-to-l from-black/60 via-black/20 to-transparent" />
 
             <div className="absolute inset-x-0 bottom-0 px-4 md:px-24 pb-16 md:pb-20 max-w-screen-2xl mx-auto left-0 right-0 flex justify-end">
-              <div className="flex flex-col items-end text-right gap-3 md:gap-4 max-w-3xl">
+              <div
+                className={`flex flex-col items-end text-right gap-3 md:gap-4 max-w-3xl transition-[opacity,transform] duration-long ease-smooth ${
+                  isActive ? 'opacity-100 translate-y-0 delay-150' : 'opacity-0 translate-y-4'
+                }`}
+              >
                 <div className="flex flex-wrap items-center justify-end gap-2">
                   <span className="bg-purple-600 px-3 py-1 rounded-full text-[11px] font-bold text-white uppercase tracking-wider">
                     Featured
@@ -173,7 +177,7 @@ function FeaturedCarousel({ events }: Props) {
                   <Link
                     to={`/event/${event.id}`}
                     tabIndex={isActive ? 0 : -1}
-                    className="inline-flex items-center gap-2 bg-purple-600 hover:bg-purple-500 text-white font-bold px-6 py-3 rounded-xl transition shadow-lg shadow-purple-900/30 active:scale-95"
+                    className="inline-flex items-center gap-2 bg-purple-600 hover:bg-purple-500 text-white font-bold px-6 py-3 rounded-xl transition shadow-lg shadow-purple-900/30 active:scale-[0.97]"
                   >
                     See event
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -215,7 +219,7 @@ function FeaturedCarousel({ events }: Props) {
                 aria-label={`Go to ${event.name}`}
                 aria-current={i === active}
                 onClick={() => go(i)}
-                className={`h-2 rounded-full transition-all duration-300 ${
+                className={`h-2 rounded-full transition-all duration-base ${
                   i === active ? 'w-8 bg-purple-500' : 'w-2 bg-white/40 hover:bg-white/70'
                 }`}
               />

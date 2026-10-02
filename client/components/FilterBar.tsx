@@ -50,7 +50,7 @@ function FilterBar({ filter, setFilter }: Props) {
   const activeGenre = genres.find((g) => g.id === filter && g.id !== 'all')
 
   const getButtonClass = (value: string) =>
-    `flex items-center gap-2 py-2.5 px-5 rounded-full text-sm font-bold transition-all duration-300 border-2 active:scale-95 whitespace-nowrap ${
+    `flex items-center gap-2 py-2.5 px-5 rounded-full text-sm font-bold transition-all duration-base border-2 active:scale-[0.97] whitespace-nowrap ${
       filter === value 
         ? 'bg-purple-600 border-purple-600 text-white shadow-lg shadow-purple-900/40' 
         : 'bg-white/5 border-white/5 text-gray-400 hover:border-purple-500/50 hover:text-white hover:bg-white/10'
@@ -141,7 +141,7 @@ function FilterBar({ filter, setFilter }: Props) {
             }`}
           >
             {activeGenre ? activeGenre.label : 'Genre'}
-            <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 transition-transform duration-200 ${genreOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 transition-transform duration-fast ${genreOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
             </svg>
           </button>
@@ -149,7 +149,7 @@ function FilterBar({ filter, setFilter }: Props) {
           {/* Always mounted so it can animate in and out (also when scroll closes it) */}
           <div
             aria-hidden={!genreOpen}
-            className={`absolute right-0 top-full mt-3 w-[26rem] bg-[#141414] border border-white/10 rounded-2xl shadow-2xl shadow-black/60 p-4 z-50 origin-top-right transition-[opacity,transform,visibility] duration-300 ease-out ${
+            className={`absolute right-0 top-full mt-3 w-[26rem] bg-[#141414] border border-white/10 rounded-2xl shadow-2xl shadow-black/60 p-4 z-50 origin-top-right transition-[opacity,transform,visibility] duration-base ease-smooth ${
               genreOpen
                 ? 'opacity-100 visible translate-y-0 scale-100'
                 : 'opacity-0 invisible -translate-y-2 scale-95 pointer-events-none'

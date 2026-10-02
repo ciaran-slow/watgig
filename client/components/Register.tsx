@@ -71,7 +71,7 @@ function FormField({
   required,
 }: FormFieldProps) {
   const commonClasses =
-    'border border-white/10 rounded-lg px-4 py-3 bg-white/5 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300 placeholder:text-gray-600'
+    'border border-white/10 rounded-lg px-4 py-3 bg-white/5 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-base placeholder:text-gray-600'
 
   return (
     <div className="flex flex-col gap-2">
@@ -391,7 +391,7 @@ function Register() {
                     <button
                       type="button"
                       onClick={handleUpload}
-                      className="bg-purple-600 text-white px-8 py-3 rounded-xl hover:bg-purple-500 transition shadow-lg shadow-purple-900/20 w-fit font-black text-xs uppercase tracking-widest active:scale-95"
+                      className="bg-purple-600 text-white px-8 py-3 rounded-xl hover:bg-purple-500 transition shadow-lg shadow-purple-900/20 w-fit font-black text-xs uppercase tracking-widest active:scale-[0.97]"
                     >
                       {formData.profile_image ? 'Change Image' : 'Upload Image'}
                     </button>
@@ -422,13 +422,13 @@ function Register() {
                     type="submit"
                     data-testid="submit"
                     value="Submit Profile"
-                    className="bg-purple-600 text-white font-black text-xs uppercase tracking-[0.2em] px-6 md:px-10 py-4 rounded-xl hover:bg-purple-500 transition cursor-pointer shadow-lg shadow-purple-900/20 active:scale-95 flex-1 sm:flex-none"
+                    className="bg-purple-600 text-white font-black text-xs uppercase tracking-[0.2em] px-6 md:px-10 py-4 rounded-xl hover:bg-purple-500 transition cursor-pointer shadow-lg shadow-purple-900/20 active:scale-[0.97] flex-1 sm:flex-none"
                   />
 
                   <button
                     type="reset"
                     data-testid="reset"
-                    className="border border-white/10 text-gray-400 px-6 md:px-10 py-4 rounded-xl hover:bg-white/5 transition font-black text-xs uppercase tracking-[0.2em] active:scale-95 flex-1 sm:flex-none"
+                    className="border border-white/10 text-gray-400 px-6 md:px-10 py-4 rounded-xl hover:bg-white/5 transition font-black text-xs uppercase tracking-[0.2em] active:scale-[0.97] flex-1 sm:flex-none"
                   >
                     Reset
                   </button>

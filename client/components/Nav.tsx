@@ -70,7 +70,7 @@ function Nav() {
 
   return (
     <>
-      <nav className={`px-4 py-3 md:p-6 flex justify-between items-center fixed top-0 left-0 right-0 z-[60] transition-colors duration-300 ${
+      <nav className={`px-4 py-3 md:p-6 flex justify-between items-center fixed top-0 left-0 right-0 z-[60] transition-colors duration-base ${
         scrolled
           ? 'bg-[#0a0a0a]'
           : 'bg-gradient-to-b from-black/60 to-transparent'
@@ -124,7 +124,7 @@ function Nav() {
           ) : (
             <>
               <button
-                className="font-black text-sm uppercase tracking-widest px-6 py-3 bg-purple-600 hover:bg-purple-500 transition rounded-full text-white focus:outline-none focus:ring-4 focus:ring-purple-500 shadow-lg active:scale-95"
+                className="font-black text-sm uppercase tracking-widest px-6 py-3 bg-purple-600 hover:bg-purple-500 transition rounded-full text-white focus:outline-none focus:ring-4 focus:ring-purple-500 shadow-lg active:scale-[0.97]"
                 onClick={() => handleClick('/add-event')}
               >
                 + Event
@@ -172,17 +172,17 @@ function Nav() {
         aria-label="Toggle Menu"
       >
         <span
-          className={`h-0.5 w-5 md:w-6 bg-white transition-all duration-300 transform origin-center ${
+          className={`h-0.5 w-5 md:w-6 bg-white transition-all duration-base transform origin-center ${
             isMenuOpen ? "rotate-45 translate-y-1.5 md:translate-y-2" : ""
           }`}
         />
         <span
-          className={`h-0.5 w-5 md:w-6 bg-white transition-all duration-300 ${
+          className={`h-0.5 w-5 md:w-6 bg-white transition-all duration-base ${
             isMenuOpen ? "opacity-0" : "opacity-100"
           }`}
         />
         <span
-          className={`h-0.5 w-5 md:w-6 bg-white transition-all duration-300 transform origin-center ${
+          className={`h-0.5 w-5 md:w-6 bg-white transition-all duration-base transform origin-center ${
             isMenuOpen ? "-rotate-45 -translate-y-1.5 md:-translate-y-2" : ""
           }`}
         />
@@ -190,7 +190,7 @@ function Nav() {
 
       {/* Fullscreen Mobile Menu Overlay */}
       <div
-        className={`fixed inset-0 bg-black transition-all duration-500 ease-in-out z-[100] flex flex-col items-center pt-24 pb-8 ${
+        className={`fixed inset-0 bg-black transition-all duration-slow ease-smooth z-[100] flex flex-col items-center pt-24 pb-8 ${
           isMenuOpen
             ? "opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none"

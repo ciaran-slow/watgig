@@ -71,13 +71,13 @@ function Profile() {
                 // Handled by react-query
               }
             }}
-            className="bg-red-600 text-white px-6 py-2.5 rounded-xl hover:bg-red-800 transition text-xs font-black uppercase tracking-widest shadow-lg active:scale-95"
+            className="bg-red-600 text-white px-6 py-2.5 rounded-xl hover:bg-red-800 transition text-xs font-black uppercase tracking-widest shadow-lg active:scale-[0.97]"
           >
             Delete WatGig Profile
           </button>
           <button
             onClick={() => toast.dismiss(t.id)}
-            className="bg-gray-100 text-gray-500 px-6 py-2.5 rounded-xl hover:bg-gray-200 transition text-xs font-black uppercase tracking-widest active:scale-95"
+            className="bg-gray-100 text-gray-500 px-6 py-2.5 rounded-xl hover:bg-gray-200 transition text-xs font-black uppercase tracking-widest active:scale-[0.97]"
           >
             Cancel
           </button>
@@ -144,7 +144,7 @@ function Profile() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Sidebar: User Details */}
-          <div className="lg:col-span-1 flex flex-col gap-8">
+          <div className="lg:col-span-1 flex flex-col gap-8 animate-fade-up">
             <div className="bg-white/[0.02] border border-white/5 p-8 rounded-3xl backdrop-blur-md shadow-2xl">
               <img 
                 src={profileUser.profile_image} 
@@ -157,7 +157,7 @@ function Profile() {
               {!isOwnProfile && currentUser && (
                 <button
                   onClick={handleFollowToggle}
-                  className={`w-full py-4 rounded-xl font-black text-xs uppercase tracking-[0.2em] mb-6 transition-all active:scale-95 ${
+                  className={`w-full py-4 rounded-xl font-black text-xs uppercase tracking-[0.2em] mb-6 transition-all active:scale-[0.97] ${
                     isFollowing 
                       ? 'bg-white/5 border border-white/10 text-white hover:bg-red-500/10 hover:border-red-500/50 hover:text-red-500' 
                       : 'bg-purple-600 text-white hover:bg-purple-500 shadow-lg shadow-purple-900/20'
@@ -171,13 +171,13 @@ function Profile() {
                 <div className="flex flex-col gap-3 mb-8">
                   <Link
                     to="/profile/edit"
-                    className="w-full py-4 rounded-xl font-black text-xs uppercase tracking-[0.2em] bg-white/5 border border-white/10 text-white hover:bg-white/10 text-center transition-all active:scale-95"
+                    className="w-full py-4 rounded-xl font-black text-xs uppercase tracking-[0.2em] bg-white/5 border border-white/10 text-white hover:bg-white/10 text-center transition-all active:scale-[0.97]"
                   >
                     Edit Profile
                   </Link>
                   <button
                     onClick={handleDeleteProfile}
-                    className="w-full py-4 rounded-xl font-black text-xs uppercase tracking-[0.2em] bg-red-600/10 border border-red-500/20 text-red-500 hover:bg-red-600 hover:text-white transition-all active:scale-95"
+                    className="w-full py-4 rounded-xl font-black text-xs uppercase tracking-[0.2em] bg-red-600/10 border border-red-500/20 text-red-500 hover:bg-red-600 hover:text-white transition-all active:scale-[0.97]"
                   >
                     Delete Account
                   </button>
@@ -215,7 +215,7 @@ function Profile() {
           </div>
 
           {/* Main: User Events */}
-          <div className="lg:col-span-2 flex flex-col gap-8">
+          <div className="lg:col-span-2 flex flex-col gap-8 animate-fade-up" style={{ animationDelay: '100ms' }}>
             {/* Saved Events Section */}
             {isOwnProfile && (
               <div className="bg-white/[0.02] border border-white/5 rounded-3xl overflow-hidden">
@@ -228,7 +228,7 @@ function Profile() {
                   </h2>
                   <svg 
                     xmlns="http://www.w3.org/2000/svg" 
-                    className={`h-8 w-8 text-gray-500 transition-transform duration-300 ${sections.saved ? 'rotate-180' : ''}`} 
+                    className={`h-8 w-8 text-gray-500 transition-transform duration-base ${sections.saved ? 'rotate-180' : ''}`} 
                     fill="none" viewBox="0 0 24 24" stroke="currentColor"
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -259,7 +259,7 @@ function Profile() {
                   </h2>
                   <svg 
                       xmlns="http://www.w3.org/2000/svg" 
-                      className={`h-8 w-8 text-gray-500 transition-transform duration-300 ${sections.events ? 'rotate-180' : ''}`} 
+                      className={`h-8 w-8 text-gray-500 transition-transform duration-base ${sections.events ? 'rotate-180' : ''}`} 
                       fill="none" viewBox="0 0 24 24" stroke="currentColor"
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -367,7 +367,7 @@ function Profile() {
                   </h2>
                   <svg 
                     xmlns="http://www.w3.org/2000/svg" 
-                    className={`h-8 w-8 text-gray-500 transition-transform duration-300 ${sections.following ? 'rotate-180' : ''}`} 
+                    className={`h-8 w-8 text-gray-500 transition-transform duration-base ${sections.following ? 'rotate-180' : ''}`} 
                     fill="none" viewBox="0 0 24 24" stroke="currentColor"
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />

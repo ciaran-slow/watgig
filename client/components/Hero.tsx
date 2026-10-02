@@ -32,7 +32,7 @@ function Hero({ title = "WatGig", subtitle = "Find your next gig!", tag = "Whate
         <div
           key={src}
           aria-hidden="true"
-          className={`absolute inset-0 bg-cover bg-center transition-opacity duration-[1500ms] ease-in-out ${
+          className={`absolute inset-0 bg-cover bg-center transition-opacity duration-long ease-smooth ${
             i === active ? 'opacity-100' : 'opacity-0'
           }`}
           style={{ backgroundImage: `url(${optimisedImage(src, 1600) ?? src})` }}

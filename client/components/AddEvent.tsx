@@ -59,7 +59,7 @@ interface FormFieldProps {
 }
 
 function FormField({ label, name, type = 'text', value, onChange, rows, required = false }: FormFieldProps) {
-  const commonClasses = "border border-white/10 rounded-lg px-4 py-3 bg-white/5 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300 w-full placeholder:text-gray-600"
+  const commonClasses = "border border-white/10 rounded-lg px-4 py-3 bg-white/5 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-base w-full placeholder:text-gray-600"
 
   return (
     <div className="flex flex-col gap-2">
@@ -93,7 +93,7 @@ function FormField({ label, name, type = 'text', value, onChange, rows, required
 }
 
 function FormSelect({ label, name, value, onChange, options, required = false }: FormFieldProps & { options: { value: string, label: string }[] }) {
-  const commonClasses = "border border-white/10 rounded-lg px-4 py-3 bg-white/5 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300 w-full"
+  const commonClasses = "border border-white/10 rounded-lg px-4 py-3 bg-white/5 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-base w-full"
 
   return (
     <div className="flex flex-col gap-2">
@@ -348,7 +348,7 @@ function AddEvent() {
                 <button
                   type="button"
                   onClick={handleUpload}
-                  className="bg-purple-600 text-white px-8 py-3 rounded-xl hover:bg-purple-500 transition shadow-lg shadow-purple-900/20 w-fit font-black text-xs uppercase tracking-widest active:scale-95"
+                  className="bg-purple-600 text-white px-8 py-3 rounded-xl hover:bg-purple-500 transition shadow-lg shadow-purple-900/20 w-fit font-black text-xs uppercase tracking-widest active:scale-[0.97]"
                 >
                   {formData.image_url ? 'Change Image' : 'Upload Image'}
                 </button>
@@ -376,14 +376,14 @@ function AddEvent() {
               <button
                 type="submit"
                 disabled={addEvent.isPending}
-                className="bg-purple-600 text-white font-black text-xs uppercase tracking-[0.2em] px-6 md:px-10 py-4 rounded-xl hover:bg-purple-500 transition cursor-pointer shadow-lg shadow-purple-900/20 active:scale-95 disabled:bg-gray-800 disabled:text-gray-500 flex-1 sm:flex-none"
+                className="bg-purple-600 text-white font-black text-xs uppercase tracking-[0.2em] px-6 md:px-10 py-4 rounded-xl hover:bg-purple-500 transition cursor-pointer shadow-lg shadow-purple-900/20 active:scale-[0.97] disabled:bg-gray-800 disabled:text-gray-500 flex-1 sm:flex-none"
               >
                 {addEvent.isPending ? 'Submitting...' : 'Submit Event'}
               </button>
 
               <button
                 type="reset"
-                className="border border-white/10 text-gray-400 px-6 md:px-10 py-4 rounded-xl hover:bg-white/5 transition font-black text-xs uppercase tracking-[0.2em] active:scale-95 flex-1 sm:flex-none"
+                className="border border-white/10 text-gray-400 px-6 md:px-10 py-4 rounded-xl hover:bg-white/5 transition font-black text-xs uppercase tracking-[0.2em] active:scale-[0.97] flex-1 sm:flex-none"
               >
                 Reset
               </button>

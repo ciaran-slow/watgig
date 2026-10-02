@@ -79,7 +79,7 @@ function EventCard({ event, showAdminActions = false, index = 0 }: Props) {
   return (
     <Reveal index={index}>
     <div 
-      className="relative group w-full rounded-3xl overflow-hidden shadow-2xl transition-all duration-500 hover:scale-[1.02] cursor-pointer bg-[#111] border border-gray-800 isolate flex flex-col"
+      className="relative group w-full rounded-3xl overflow-hidden shadow-2xl transition-all duration-slow hover:scale-[1.02] cursor-pointer bg-[#111] border border-gray-800 isolate flex flex-col"
       style={{ maskImage: 'linear-gradient(white, white)' }} // Fix for rounded corners overflow in some browsers
       onClick={handleCardClick}
       onKeyDown={(keyboardEvent) => {
@@ -104,7 +104,7 @@ function EventCard({ event, showAdminActions = false, index = 0 }: Props) {
           loading="lazy"
           decoding="async"
           onLoad={() => setImgLoaded(true)}
-          className={`absolute inset-0 h-full w-full object-cover transition-all duration-700 group-hover:scale-105 ${
+          className={`absolute inset-0 h-full w-full object-cover transition-all duration-long group-hover:scale-105 ${
             imgLoaded ? 'opacity-100' : 'opacity-0'
           }`}
         />
@@ -138,7 +138,7 @@ function EventCard({ event, showAdminActions = false, index = 0 }: Props) {
         {!isOwner && (
           <button
             onClick={handleSaveToggle}
-            className={`backdrop-blur-md border p-2 rounded-full shadow-lg transition duration-300 ${
+            className={`backdrop-blur-md border p-2 rounded-full shadow-lg transition duration-base ${
               isSaved 
                 ? 'bg-red-500 border-red-500 text-white' 
                 : 'bg-white/10 border-white/20 text-white hover:bg-red-500/20 hover:border-red-500/50'
@@ -157,7 +157,7 @@ function EventCard({ event, showAdminActions = false, index = 0 }: Props) {
             <Link
               to={`/event/${event.id}/edit`}
               onClick={(e) => e.stopPropagation()}
-              className="bg-purple-600/20 backdrop-blur-md border border-purple-500/50 hover:bg-purple-600 text-white p-2 rounded-full shadow-lg transition duration-300 group/edit"
+              className="bg-purple-600/20 backdrop-blur-md border border-purple-500/50 hover:bg-purple-600 text-white p-2 rounded-full shadow-lg transition duration-base group/edit"
               title="Edit Event"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -168,7 +168,7 @@ function EventCard({ event, showAdminActions = false, index = 0 }: Props) {
             <button
               onClick={handleDelete}
               disabled={deleteEvent.isPending}
-              className="bg-red-600/20 backdrop-blur-md border border-red-500/50 hover:bg-red-600 text-white p-2 rounded-full shadow-lg transition duration-300 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50 group/delete"
+              className="bg-red-600/20 backdrop-blur-md border border-red-500/50 hover:bg-red-600 text-white p-2 rounded-full shadow-lg transition duration-base focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50 group/delete"
               title="Delete Event"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -201,7 +201,7 @@ function EventCard({ event, showAdminActions = false, index = 0 }: Props) {
 
         {/* Name and Artists */}
         <div className="flex flex-col gap-1">
-          <h2 className="text-2xl md:text-3xl font-black text-white leading-tight tracking-tight break-words group-hover:text-purple-400 transition-colors duration-300 uppercase">
+          <h2 className="text-2xl md:text-3xl font-black text-white leading-tight tracking-tight break-words group-hover:text-purple-400 transition-colors duration-base uppercase">
             {event.name}
           </h2>
           <p className="text-sm md:text-base font-medium text-gray-300 italic line-clamp-2">
@@ -220,7 +220,7 @@ function EventCard({ event, showAdminActions = false, index = 0 }: Props) {
         </div>
 
         {/* Description - Expanded on Hover in a modern way or just snippet */}
-        <p className="text-sm text-gray-400 line-clamp-3 leading-relaxed transition-all duration-300 group-hover:text-gray-200">
+        <p className="text-sm text-gray-400 line-clamp-3 leading-relaxed transition-all duration-base group-hover:text-gray-200">
           {event.description}
         </p>
 
@@ -228,7 +228,7 @@ function EventCard({ event, showAdminActions = false, index = 0 }: Props) {
         <div className="flex gap-4 mt-auto pt-2">
           <Link 
             to={`/event/${event.id}`}
-            className="flex-1 bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 rounded-xl transition duration-300 flex items-center justify-center gap-2 shadow-lg shadow-purple-900/20 active:scale-95"
+            className="flex-1 bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 rounded-xl transition duration-base flex items-center justify-center gap-2 shadow-lg shadow-purple-900/20 active:scale-[0.97]"
             onClick={(e) => e.stopPropagation()}
           >
             See More
