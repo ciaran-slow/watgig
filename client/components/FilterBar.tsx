@@ -77,7 +77,7 @@ function FilterBar({ filter, setFilter }: Props) {
   }
 
   return (
-    <div className="bg-[#0a0a0a]/80 backdrop-blur-xl sticky top-[60px] md:top-[104px] z-40">
+    <div className="bg-[#0a0a0a] sticky top-[60px] md:top-[104px] z-40">
       {/* Mobile: one compact, swipeable row that never changes height */}
       <div ref={stripRef} className="md:hidden flex gap-2 overflow-x-auto no-scrollbar px-4 py-3 w-full max-w-full min-w-0">
         {[{ ...genres[0], icon: null }, ...categories, ...genres.slice(1).map((g) => ({ ...g, icon: null }))].map((item) => (
@@ -94,7 +94,7 @@ function FilterBar({ filter, setFilter }: Props) {
       </div>
 
       {/* Soft fade instead of a hard bottom edge */}
-      <div className="absolute inset-x-0 top-full h-6 bg-gradient-to-b from-[#0a0a0a]/80 to-transparent pointer-events-none" />
+      <div className="absolute inset-x-0 top-full h-6 bg-gradient-to-b from-[#0a0a0a] to-transparent pointer-events-none" />
 
       {/* Desktop: full panel that tucks away on scroll */}
       <div className="hidden md:block max-w-screen-2xl mx-auto px-12 py-6">

@@ -1,5 +1,5 @@
 import { useAuth0 } from "@auth0/auth0-react"
-import { useNavigate } from "react-router"
+import { useNavigate, useLocation } from "react-router"
 import { useState, useEffect } from "react"
 import logo from '../public/logo.webp'
 import { useUser } from "../hooks/users"
@@ -10,6 +10,7 @@ import { getUniqueCities } from "../utils/eventHelpers"
 
 function Nav() {
   const navigate = useNavigate()
+  const isHome = useLocation().pathname === '/'
   const auth = useAuth0()
   const dbUser = useUser()
   const { data: events } = useEvents()
@@ -71,9 +72,13 @@ function Nav() {
     <>
       <nav className={`px-4 py-3 md:p-6 flex justify-between items-center fixed top-0 left-0 right-0 z-[60] transition-colors duration-300 ${
         scrolled
-          ? 'bg-[#0a0a0a]/80 backdrop-blur-xl'
+          ? 'bg-[#0a0a0a]'
           : 'bg-gradient-to-b from-black/60 to-transparent'
       }`}>
+        {/* Soft lower edge on pages with no filter bar docked underneath */}
+        {scrolled && !isHome && (
+          <div className="absolute inset-x-0 top-full h-6 bg-gradient-to-b from-[#0a0a0a] to-transparent pointer-events-none" />
+        )}
         <div className="flex gap-2 items-center">
           <img src={logo} alt="WatGig Logo" className="h-9 md:h-14" />
           <button
