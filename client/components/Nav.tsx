@@ -18,6 +18,15 @@ function Nav() {
   const logout = auth.logout
   const loginWithRedirect = auth.loginWithRedirect
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+
+  // Transparent over the hero, solid once content scrolls underneath
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   const cities = getUniqueCities(events)
 
@@ -60,7 +69,11 @@ function Nav() {
 
   return (
     <>
-      <nav className="px-4 py-3 md:p-6 flex justify-between items-center fixed top-0 left-0 right-0 z-[60] bg-[#0a0a0a] border-b border-white/5 transition-all duration-300">
+      <nav className={`px-4 py-3 md:p-6 flex justify-between items-center fixed top-0 left-0 right-0 z-[60] transition-colors duration-300 ${
+        scrolled
+          ? 'bg-[#0a0a0a]/90 backdrop-blur-md border-b border-white/5'
+          : 'bg-gradient-to-b from-black/60 to-transparent border-b border-transparent'
+      }`}>
         <div className="flex gap-2 items-center">
           <img src={logo} alt="WatGig Logo" className="h-9 md:h-14" />
           <button
