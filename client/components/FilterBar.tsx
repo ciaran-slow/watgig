@@ -6,31 +6,9 @@ type Props = {
 }
 
 function FilterBar({ filter, setFilter }: Props) {
-  const [isOpen, setIsOpen] = useState(true)
-  const lastToggle = useRef(0)
+  const [genreOpen, setGenreOpen] = useState(false)
   const stripRef = useRef<HTMLDivElement>(null)
-
-  const setOpen = (open: boolean) => {
-    lastToggle.current = Date.now()
-    setIsOpen(open)
-  }
-
-  // Keep the active chip visible in the mobile row
-  useEffect(() => {
-    const active = stripRef.current?.querySelector<HTMLElement>('[aria-pressed="true"]')
-    active?.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' })
-  }, [filter])
-
-  // Collapse the filters as soon as the user scrolls. Scrolls caused by the
-  // bar itself resizing (within 600ms of a toggle) are ignored.
-  useEffect(() => {
-    if (!isOpen) return
-    const handleScroll = () => {
-      if (Date.now() - lastToggle.current > 600) setOpen(false)
-    }
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [isOpen])
+  const popoverRef = useRef<HTMLDivElement>(null)
 
   const categories = [
     { id: 'featured', label: 'Featured', icon: (
@@ -62,6 +40,15 @@ function FilterBar({ filter, setFilter }: Props) {
     { id: 'other', label: 'Other' },
   ]
 
+  const timeOptions = [
+    { id: 'all', label: 'All' },
+    { id: 'featured', label: 'Featured' },
+    { id: 'week', label: 'This Week' },
+    { id: 'month', label: 'This Month' },
+  ]
+
+  const activeGenre = genres.find((g) => g.id === filter && g.id !== 'all')
+
   const getButtonClass = (value: string) =>
     `flex items-center gap-2 py-2.5 px-5 rounded-full text-sm font-bold transition-all duration-300 border-2 active:scale-95 whitespace-nowrap ${
       filter === value 
@@ -69,12 +56,31 @@ function FilterBar({ filter, setFilter }: Props) {
         : 'bg-white/5 border-white/5 text-gray-400 hover:border-purple-500/50 hover:text-white hover:bg-white/10'
     }`
 
-  const handleFilterClick = (value: string) => {
-    setFilter(value)
-    if (window.innerWidth < 768) {
-      setOpen(false)
+  // Keep the active chip visible in the mobile row
+  useEffect(() => {
+    const active = stripRef.current?.querySelector<HTMLElement>('[aria-pressed="true"]')
+    active?.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' })
+  }, [filter])
+
+  // Close the genre popover on outside click, Escape or scroll
+  useEffect(() => {
+    if (!genreOpen) return
+    const close = () => setGenreOpen(false)
+    const onDown = (e: MouseEvent) => {
+      if (!popoverRef.current?.contains(e.target as Node)) close()
     }
-  }
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') close()
+    }
+    document.addEventListener('mousedown', onDown)
+    document.addEventListener('keydown', onKey)
+    window.addEventListener('scroll', close, { passive: true })
+    return () => {
+      document.removeEventListener('mousedown', onDown)
+      document.removeEventListener('keydown', onKey)
+      window.removeEventListener('scroll', close)
+    }
+  }, [genreOpen])
 
   return (
     <div className="bg-[#0a0a0a] sticky top-[60px] md:top-[104px] z-40">
@@ -96,70 +102,79 @@ function FilterBar({ filter, setFilter }: Props) {
       {/* Soft fade instead of a hard bottom edge */}
       <div className="absolute inset-x-0 top-full h-6 bg-gradient-to-b from-[#0a0a0a] to-transparent pointer-events-none" />
 
-      {/* Desktop: full panel that tucks away on scroll */}
-      <div className="hidden md:block max-w-screen-2xl mx-auto px-12 py-6">
-        <div className="flex flex-col gap-6">
-          {/* Filters Header */}
-          <div className="flex justify-between items-center">
-            <h2 className="font-black text-2xl tracking-tight text-white uppercase">Filters</h2>
+      {/* Desktop: one toolbar row. Time on the left, genre popover on the right. */}
+      <div className="hidden md:flex max-w-screen-2xl mx-auto px-12 py-4 items-center justify-between gap-6">
+        <div role="group" aria-label="When" className="flex items-center gap-1 bg-white/5 rounded-full p-1">
+          {timeOptions.map((opt) => (
             <button
-              onClick={() => setOpen(!isOpen)}
-              className="p-2 bg-white/5 rounded-lg text-gray-400 flex items-center gap-2 hover:bg-white/10 transition-colors group"
+              key={opt.id}
+              onClick={() => setFilter(opt.id)}
+              aria-pressed={filter === opt.id}
+              className={`px-5 py-2 rounded-full text-sm font-bold transition-colors ${
+                filter === opt.id
+                  ? 'bg-purple-600 text-white shadow-lg shadow-purple-900/40'
+                  : 'text-gray-400 hover:text-white'
+              }`}
             >
-              <span className="text-[11px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity hidden md:block">
-                {isOpen ? 'Hide Filters' : 'Show Filters'}
-              </span>
-              <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                className={`h-6 w-6 transform transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} 
-                fill="none" 
-                viewBox="0 0 24 24" 
-                stroke="currentColor"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
+              {opt.label}
             </button>
-          </div>
+          ))}
+        </div>
 
-          {/* Filters Content */}
-          <div className={`
-            flex-col gap-8
-            ${isOpen ? 'flex' : 'hidden'} 
-            md:items-center
-          `}>
-            
-            {/* Top Row: Time & Status */}
-            <div className="flex flex-col items-center gap-3">
-              <h2 className="font-black text-[11px] md:text-xs tracking-[0.3em] text-gray-500 uppercase">Time & Status</h2>
-              <div className="flex flex-wrap justify-center gap-2">
-                {categories.map((cat) => (
-                  <button 
-                    key={cat.id}
-                    onClick={() => handleFilterClick(cat.id)} 
-                    className={getButtonClass(cat.id)}
-                  >
-                    {cat.icon}
-                    {cat.label}
-                  </button>
-                ))}
-              </div>
-            </div>
+        <div ref={popoverRef} className="relative flex items-center gap-3">
+          {activeGenre && (
+            <button
+              onClick={() => setFilter('all')}
+              className="text-xs font-bold uppercase tracking-widest text-gray-500 hover:text-white transition-colors"
+            >
+              Clear
+            </button>
+          )}
+          <button
+            onClick={() => setGenreOpen((o) => !o)}
+            aria-expanded={genreOpen}
+            aria-haspopup="true"
+            className={`flex items-center gap-2 pl-5 pr-4 py-2.5 rounded-full text-sm font-bold border-2 transition-colors ${
+              activeGenre
+                ? 'bg-purple-600 border-purple-600 text-white'
+                : 'bg-white/5 border-white/5 text-gray-300 hover:border-purple-500/50 hover:text-white'
+            }`}
+          >
+            {activeGenre ? activeGenre.label : 'Genre'}
+            <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 transition-transform duration-200 ${genreOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
 
-            {/* Bottom Row: Music Genres */}
-            <div className="flex flex-col items-center gap-3 w-full">
-              <h2 className="font-black text-[11px] md:text-xs tracking-[0.3em] text-gray-500 uppercase">Music Genres</h2>
-              <div className="flex flex-wrap justify-center gap-2 max-w-4xl">
+          {/* Always mounted so it can animate in and out (also when scroll closes it) */}
+          <div
+            aria-hidden={!genreOpen}
+            className={`absolute right-0 top-full mt-3 w-[26rem] bg-[#141414] border border-white/10 rounded-2xl shadow-2xl shadow-black/60 p-4 z-50 origin-top-right transition-[opacity,transform,visibility] duration-300 ease-out ${
+              genreOpen
+                ? 'opacity-100 visible translate-y-0 scale-100'
+                : 'opacity-0 invisible -translate-y-2 scale-95 pointer-events-none'
+            }`}
+          >
+              <p className="text-[11px] font-black uppercase tracking-[0.25em] text-gray-500 mb-3">Music genre</p>
+              <div className="grid grid-cols-2 gap-2">
                 {genres.map((genre) => (
-                  <button 
+                  <button
                     key={genre.id}
-                    onClick={() => handleFilterClick(genre.id)} 
-                    className={getButtonClass(genre.id)}
+                    onClick={() => {
+                      setFilter(genre.id)
+                      setGenreOpen(false)
+                    }}
+                    aria-pressed={filter === genre.id}
+                    className={`text-left px-4 py-2.5 rounded-xl text-sm font-bold transition-colors ${
+                      filter === genre.id
+                        ? 'bg-purple-600 text-white'
+                        : 'bg-white/5 text-gray-300 hover:bg-white/10 hover:text-white'
+                    }`}
                   >
                     {genre.label}
                   </button>
                 ))}
               </div>
-            </div>
           </div>
         </div>
       </div>
