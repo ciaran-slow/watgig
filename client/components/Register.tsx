@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router'
 import { useUser } from '../hooks/users'
 import { IfAuthenticated } from './Authenticated'
 import { uploadWidgetOptions } from '../utils/uploadWidget'
+import { FormSkeleton } from './Skeleton'
 
 // Type for Cloudinary widget
 declare global {
@@ -134,7 +135,7 @@ function Register() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (user.data) navigate('/')
+    if (user.data) navigate('/', { replace: true })
   }, [user.data, navigate])
 
   // Debounce name check
@@ -257,6 +258,9 @@ function Register() {
     { value: 'metal', label: 'Metal / Punk' },
     { value: 'other', label: 'Other' },
   ]
+
+  // Don't flash the sign-up form: returning users are checked (and redirected) first
+  if (user.isPending || user.data) return <FormSkeleton label="Checking your profile" />
 
   return (
     <div>
