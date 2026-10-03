@@ -5,6 +5,8 @@ import helmet from 'helmet'
 
 import eventRoutes from './routes/events.ts'
 import userRoutes from './routes/users.ts'
+import { getEventById } from './db/events.ts'
+import { defaultPage, pageForEvent, renderIndex } from './seo.ts'
 
 const server = express()
 
@@ -82,14 +84,35 @@ if (process.env.NODE_ENV === 'production') {
   )
   // PWA files live in the dist root; serve only these, since dist also holds the server bundle
   server.get(
-    ['/manifest.webmanifest', '/icon-192.png', '/icon-512.png', '/apple-touch-icon.png'],
+    ['/manifest.webmanifest', '/icon-192.png', '/icon-512.png', '/apple-touch-icon.png', '/og-default.png', '/sw.js', '/offline.html', '/screenshot-home.jpg'],
     (req, res) => {
-      res.set('Cache-Control', 'public, max-age=3600')
+      // The service worker must always be re-checked so updates roll out promptly
+      res.set('Cache-Control', req.path === '/sw.js' ? 'no-cache' : 'public, max-age=3600')
+      if (req.path === '/sw.js') res.set('Service-Worker-Allowed', '/')
       res.sendFile(Path.resolve('./dist', req.path.slice(1)))
     },
   )
-  server.get('*', (req, res) => {
-    res.sendFile(Path.resolve('./dist/index.html'))
+  const originOf = (req: express.Request) => `${req.protocol}://${req.get('host')}`
+
+  // Event pages: put the event's own title, description and poster into the share tags
+  server.get('/event/:id', async (req, res, next) => {
+    try {
+      const id = Number(req.params.id)
+      const event = Number.isInteger(id) ? await getEventById(id) : undefined
+      if (!event) return next()
+      res.set('Cache-Control', 'public, max-age=300')
+      res.type('html').send(await renderIndex(pageForEvent(event, originOf(req))))
+    } catch (err) {
+      next()
+    }
+  })
+
+  server.get('*', async (req, res) => {
+    try {
+      res.type('html').send(await renderIndex(defaultPage(originOf(req), req.path)))
+    } catch {
+      res.sendFile(Path.resolve('./dist/index.html'))
+    }
   })
 }
 

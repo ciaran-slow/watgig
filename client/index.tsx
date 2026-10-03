@@ -28,3 +28,12 @@ document.addEventListener('DOMContentLoaded', () => {
     </Auth0Provider>,
   )
 })
+
+// Installable PWA: register the service worker in production only
+if ('serviceWorker' in navigator && import.meta.env.PROD) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {
+      // Not critical: the site works without it
+    })
+  })
+}

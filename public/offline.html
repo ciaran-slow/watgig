@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0a0a0a" />
+    <title>WatGig – Offline</title>
+    <style>
+      html, body { height: 100%; margin: 0; background: #0a0a0a; color: #f3f4f6; font-family: Inter, system-ui, sans-serif; }
+      main { min-height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 24px; text-align: center; }
+      img { width: 96px; height: 96px; border-radius: 22px; }
+      h1 { margin: 0; font-size: 28px; letter-spacing: -0.02em; }
+      p { margin: 0; color: #9ca3af; max-width: 28rem; line-height: 1.6; }
+      button { margin-top: 8px; background: #9333ea; color: #fff; border: 0; border-radius: 12px; padding: 14px 28px; font-weight: 700; font-size: 16px; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <img src="/icon-192.png" alt="" />
+      <h1>You're offline</h1>
+      <p>WatGig needs a connection to load the latest gigs. Check your signal and try again.</p>
+      <button onclick="location.reload()">Try again</button>
+    </main>
+  </body>
+</html>

@@ -14,11 +14,18 @@ const SLIDE_MS = 7000
 function FeaturedCarousel({ events }: Props) {
   const [active, setActive] = useState(0)
   const [paused, setPaused] = useState(false)
-  const [dragX, setDragX] = useState(0)
-  const [dragging, setDragging] = useState(false)
-  const startX = useRef<number | null>(null)
   const moved = useRef(false)
   const trackRef = useRef<HTMLDivElement>(null)
+  const sectionRef = useRef<HTMLElement>(null)
+  const frame = useRef(0)
+  const drag = useRef<{
+    x: number
+    y: number
+    lastX: number
+    lastT: number
+    v: number
+    locked: boolean
+  } | null>(null)
   const count = events.length
   // Only fetch slide images once they're current, next, or already seen
   const [loaded, setLoaded] = useState<Set<number>>(new Set())
@@ -47,35 +54,77 @@ function FeaturedCarousel({ events }: Props) {
     return () => clearInterval(timer)
   }, [count, paused, active])
 
-  // Drag/swipe with the finger or mouse; the slides follow the pointer
+  // Position the track straight on the DOM while dragging, so a swipe never waits on a React render
+  const setTrack = (dx: number, animate: boolean, index: number) => {
+    const el = trackRef.current
+    if (!el) return
+    el.style.transition = animate ? '' : 'none'
+    el.style.transform = `translate3d(calc(${-index * 100}% + ${dx}px), 0, 0)`
+  }
+
+  useEffect(() => () => cancelAnimationFrame(frame.current), [])
+
   const onPointerDown = (e: React.PointerEvent) => {
     if ((e.target as HTMLElement).closest('button, a')) return
-    startX.current = e.clientX
+    drag.current = { x: e.clientX, y: e.clientY, lastX: e.clientX, lastT: performance.now(), v: 0, locked: false }
     moved.current = false
-    setDragging(true)
-    ;(e.currentTarget as HTMLElement).setPointerCapture(e.pointerId)
   }
+
   const onPointerMove = (e: React.PointerEvent) => {
-    if (startX.current === null) return
-    const dx = e.clientX - startX.current
-    if (Math.abs(dx) > 6) moved.current = true
-    setDragX(dx)
+    const d = drag.current
+    if (!d) return
+    const dx = e.clientX - d.x
+    const dy = e.clientY - d.y
+
+    if (!d.locked) {
+      // Wait to see which way the gesture goes: sideways drags the slides, vertical is left to the page
+      if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) {
+        d.locked = true
+        moved.current = true
+        setPaused(true)
+        sectionRef.current?.setAttribute('data-dragging', 'true')
+        ;(e.currentTarget as HTMLElement).setPointerCapture(e.pointerId)
+      } else if (Math.abs(dy) > 8) {
+        drag.current = null
+      }
+      return
+    }
+
+    const now = performance.now()
+    const dt = now - d.lastT
+    if (dt > 0) d.v = 0.8 * d.v + 0.2 * ((e.clientX - d.lastX) / dt) // smoothed px/ms
+    d.lastX = e.clientX
+    d.lastT = now
+
+    cancelAnimationFrame(frame.current)
+    frame.current = requestAnimationFrame(() => setTrack(dx, false, active))
   }
+
   const endDrag = (e: React.PointerEvent) => {
-    if (startX.current === null) return
+    const d = drag.current
+    drag.current = null
+    if (!d || !d.locked) return
+    cancelAnimationFrame(frame.current)
+    sectionRef.current?.removeAttribute('data-dragging')
+
+    const dx = e.clientX - d.x
     const width = trackRef.current?.offsetWidth ?? 1
-    const dx = e.clientX - startX.current
-    startX.current = null
-    setDragging(false)
-    setDragX(0)
-    if (Math.abs(dx) > Math.min(80, width * 0.15)) go(active + (dx < 0 ? 1 : -1))
+    const flicked = Math.abs(d.v) > 0.35 && Math.abs(dx) > 20
+    const commit = Math.abs(dx) > width * 0.2 || flicked
+    const target = commit ? (active + (dx < 0 ? 1 : -1) + count) % count : active
+
+    setTrack(0, true, target) // ease from where the finger let go
+    setActive(target)
+    setPaused(false)
+    setTimeout(() => (moved.current = false), 60) // swallow the click that ends a drag
   }
 
   return (
     <section
+      ref={sectionRef}
       aria-roledescription="carousel"
       aria-label="Featured events"
-      className="relative w-full h-[max(700px,85svh)] md:h-[780px] overflow-hidden bg-[#0a0a0a] select-none"
+      className="relative w-full h-[max(700px,85svh)] md:h-[780px] overflow-hidden bg-[#0a0a0a] select-none group"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
@@ -92,8 +141,8 @@ function FeaturedCarousel({ events }: Props) {
     >
       <div
         ref={trackRef}
-        className={`flex h-full ${dragging ? '' : 'transition-transform duration-slow ease-smooth'}`}
-        style={{ transform: `translateX(calc(${-active * 100}% + ${dragX}px))` }}
+        className="flex h-full will-change-transform transition-transform duration-slow ease-smooth"
+        style={{ transform: `translate3d(${-active * 100}%, 0, 0)` }}
       >
       {events.map((event, i) => {
         const isActive = i === active
@@ -143,7 +192,7 @@ function FeaturedCarousel({ events }: Props) {
             <div className="absolute inset-x-0 bottom-0 px-4 md:px-24 pb-16 md:pb-20 max-w-screen-2xl mx-auto left-0 right-0 flex justify-end">
               <div
                 className={`flex flex-col items-end text-right gap-3 md:gap-4 max-w-3xl transition-[opacity,transform] duration-long ease-smooth ${
-                  isActive ? 'opacity-100 translate-y-0 delay-150' : 'opacity-0 translate-y-4'
+                  isActive ? 'opacity-100 translate-y-0 delay-150' : 'opacity-0 translate-y-4 group-data-[dragging=true]:opacity-100 group-data-[dragging=true]:translate-y-0 group-data-[dragging=true]:delay-0'
                 }`}
               >
                 <div className="flex flex-wrap items-center justify-end gap-2">

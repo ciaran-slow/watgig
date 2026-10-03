@@ -1,15 +1,70 @@
 {
+  "id": "/",
   "name": "WatGig",
   "short_name": "WatGig",
   "description": "Find your next gig. Live music events across New Zealand.",
+  "lang": "en-NZ",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
+  "display_override": [
+    "standalone"
+  ],
   "orientation": "portrait",
   "background_color": "#0a0a0a",
   "theme_color": "#0a0a0a",
+  "categories": [
+    "music",
+    "entertainment",
+    "events"
+  ],
   "icons": [
-    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Browse gigs",
+      "short_name": "Gigs",
+      "url": "/",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Add an event",
+      "short_name": "Add event",
+      "url": "/add-event",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot-home.jpg",
+      "sizes": "750x1624",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "Featured gigs on the WatGig home screen"
+    }
   ]
 }
