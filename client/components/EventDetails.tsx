@@ -10,11 +10,17 @@ import { lazy, Suspense } from "react"
 const EventMap = lazy(() => import("./EventMap"))
 import RelatedEvents from "./RelatedEvents"
 import { PageSkeleton } from "./Skeleton"
+import { useUser, useSavedEvents, useToggleSaveEvent, useFollowing, useToggleFollowUser } from "../hooks/users"
 
 function EventDetails() {
   const { id } = useParams()
   const navigate = useNavigate()
   const { data: event, isLoading, isError, error } = useEvent(Number(id))
+  const dbUser = useUser()
+  const { data: savedEvents } = useSavedEvents()
+  const toggleSave = useToggleSaveEvent()
+  const { data: following } = useFollowing()
+  const toggleFollow = useToggleFollowUser()
 
   if (isLoading) return <PageSkeleton label="Loading event" />
   if (isError) return <div className="p-12 text-center text-red-500">Error: {(error as Error).message}</div>
@@ -23,6 +29,18 @@ function EventDetails() {
   const backgroundImage = event.image_url ? `url(${event.image_url})` : `url(${eventbg})`
   const formattedDate = event.date ? format(parseISO(event.date), 'EEEE d MMMM yyyy') : ''
   const isHistorical = event.date ? new Date(event.date) < new Date(new Date().setHours(0, 0, 0, 0)) : false
+  const isSaved = !!savedEvents?.some((e) => e.id === event.id)
+  const isOwnEvent = dbUser.data?.id === event.created_by
+  const isFollowingCreator = !!following?.some((u) => u.id === event.created_by)
+
+  const handleSave = () => {
+    if (!dbUser.data) return void toast.error('Please log in to save events')
+    toggleSave.mutate({ eventId: event.id, isSaved })
+  }
+  const handleFollow = () => {
+    if (!dbUser.data) return void toast.error('Please log in to follow')
+    toggleFollow.mutate({ userId: event.created_by, isFollowing: isFollowingCreator })
+  }
   const createdAt = event.created_at ? format(parseISO(event.created_at), 'd MMM yyyy') : ''
 
   return (
@@ -94,6 +112,23 @@ function EventDetails() {
                 </a>
               )}
 
+              <button
+                type="button"
+                onClick={handleSave}
+                disabled={toggleSave.isPending}
+                aria-pressed={isSaved}
+                className={`w-full font-black text-[11px] uppercase tracking-[0.2em] py-4 rounded-xl transition-all duration-base flex items-center justify-center gap-2 mt-4 active:scale-[0.97] border disabled:opacity-60 ${
+                  isSaved
+                    ? 'bg-red-500 border-red-500 text-white'
+                    : 'bg-white/5 border-white/10 text-white hover:bg-red-500/10 hover:border-red-500/50'
+                }`}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 ${isSaved ? 'fill-current' : 'fill-none'}`} viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+                {isSaved ? 'Saved' : 'Save Event'}
+              </button>
+
               <button 
                 onClick={async () => {
                   const url = window.location.href
@@ -145,6 +180,21 @@ function EventDetails() {
                     {event.creator_name || "Unknown"}
                 </span>
               </Link>
+              {!isOwnEvent && (
+                <button
+                  type="button"
+                  onClick={handleFollow}
+                  disabled={toggleFollow.isPending}
+                  aria-pressed={isFollowingCreator}
+                  className={`w-full mt-4 py-3 rounded-xl font-black text-[11px] uppercase tracking-[0.2em] transition-all duration-base active:scale-[0.97] disabled:opacity-60 ${
+                    isFollowingCreator
+                      ? 'bg-white/5 border border-white/10 text-white hover:bg-red-500/10 hover:border-red-500/50 hover:text-red-500'
+                      : 'bg-purple-600 text-white hover:bg-purple-500 shadow-lg shadow-purple-900/20'
+                  }`}
+                >
+                  {isFollowingCreator ? 'Unfollow' : `Follow ${event.creator_name || 'organiser'}`}
+                </button>
+              )}
               <p className="text-[11px] font-black text-gray-600 uppercase tracking-widest mt-6 text-center">
                 Published on {createdAt}
               </p>

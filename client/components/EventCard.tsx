@@ -134,8 +134,8 @@ function EventCard({ event, showAdminActions = false, index = 0 }: Props) {
       </div>
 
       <div className="absolute top-6 right-6 flex gap-2 z-30">
-        {/* Save/Unsave Button - Only show if not owner */}
-        {!isOwner && (
+        {/* Save/Unsave button, for everyone including the event's owner */}
+        {(
           <button
             onClick={handleSaveToggle}
             className={`backdrop-blur-md border p-2 rounded-full shadow-lg transition duration-base ${
