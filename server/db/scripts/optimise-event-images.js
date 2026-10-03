@@ -19,15 +19,27 @@ const cloud = process.env.VITE_CLOUDINARY_CLOUD_NAME
 const preset = process.env.VITE_CLOUDINARY_UPLOAD_PRESET
 if (!cloud || !preset) throw new Error('Cloudinary cloud name / upload preset not configured')
 
-export async function uploadToCloudinary(url) {
+async function post(file) {
   const body = new FormData()
-  body.set('file', url)
+  body.set('file', file)
   body.set('upload_preset', preset)
   body.set('folder', 'watgig/events')
   const res = await fetch(`https://api.cloudinary.com/v1_1/${cloud}/image/upload`, { method: 'POST', body })
   const data = await res.json()
   if (!res.ok || !data.secure_url) throw new Error(data.error?.message || `upload failed (${res.status})`)
   return data.secure_url
+}
+
+// Cloudinary fetches the URL itself; some sites block that (403), so fall back to downloading it here
+export async function uploadToCloudinary(url) {
+  try {
+    return await post(url)
+  } catch (firstError) {
+    const res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' } })
+    const type = res.headers.get('content-type') || ''
+    if (!res.ok || !type.startsWith('image/')) throw firstError
+    return post(new Blob([await res.arrayBuffer()], { type }))
+  }
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
