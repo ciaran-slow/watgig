@@ -58,7 +58,7 @@ function Nav() {
   const handleSignIn = () => {
     loginWithRedirect({
       authorizationParams: {
-        redirectUri: `${window.location.origin}/register`,
+        redirect_uri: `${window.location.origin}/register`,
       },
     })
     setIsMenuOpen(false)

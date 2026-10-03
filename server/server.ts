@@ -14,7 +14,7 @@ server.set('trust proxy', 1)
 
 const auth0Origin = process.env.VITE_AUTH0_DOMAIN
   ? `https://${process.env.VITE_AUTH0_DOMAIN.replace(/^https?:\/\//, '').replace(/\/$/, '')}`
-  : 'https://raumati-2026-ciaran.au.auth0.com'
+  : 'https://nevohteeb.au.auth0.com'
 
 server.use(
   helmet({

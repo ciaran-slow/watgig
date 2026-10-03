@@ -11,7 +11,7 @@ if (
   throw new Error('VITE_AUTH0_DOMAIN and VITE_AUTH0_AUDIENCE are required in production')
 }
 
-let domain = process.env.VITE_AUTH0_DOMAIN || 'https://raumati-2026-ciaran.au.auth0.com'
+let domain = process.env.VITE_AUTH0_DOMAIN || 'https://nevohteeb.au.auth0.com'
 const audience = process.env.VITE_AUTH0_AUDIENCE || 'https://watgig/api'
 
 // Ensure domain starts with https:// and doesn't end with a slash
