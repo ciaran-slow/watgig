@@ -1,5 +1,5 @@
 import { EventWithId } from "../../models/event"
-import eventbg from '../public/eventbg.webp'
+import eventbg from '../public/event-placeholder.jpg'
 import { useDeleteEvent } from "../hooks/events"
 import toast from "react-hot-toast"
 import { format, parseISO } from "date-fns"

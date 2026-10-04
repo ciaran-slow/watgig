@@ -3,7 +3,7 @@ import { useEvent } from "../hooks/events"
 import { format, parseISO } from "date-fns"
 import toast from "react-hot-toast"
 import Hero from "./Hero"
-import eventbg from '../public/eventbg.webp'
+import eventbg from '../public/event-placeholder.jpg'
 import { lazy, Suspense } from "react"
 
 // Map library is large; only load it when an event page needs it

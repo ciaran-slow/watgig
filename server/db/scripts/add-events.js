@@ -1,7 +1,9 @@
 // Validated, de-duplicated event insert used by the hourly gig-finder task.
 // Usage: node server/db/scripts/add-events.js candidates.json [--apply]
 // Without --apply nothing is written. Prints one line per candidate.
-import { readFileSync } from 'node:fs'
+import { readFileSync, writeFileSync, rmSync, existsSync, statSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import knex from 'knex'
 import config from '../knexfile.js'
 import { uploadToCloudinary } from './optimise-event-images.js'
@@ -9,6 +11,16 @@ import { uploadToCloudinary } from './optimise-event-images.js'
 const GENRES = new Set(['rock', 'pop', 'electronic', 'hiphop', 'acoustic', 'jazz', 'metal', 'other'])
 const file = process.argv[2]
 const apply = process.argv.includes('--apply')
+const maxArg = process.argv.indexOf('--max')
+const MAX_PER_RUN = maxArg > -1 ? Number(process.argv[maxArg + 1]) : 10 // hard cap, however many candidates are passed
+
+// Only one inserting run at a time, so overlapping hourly runs can't double-insert
+const lockFile = join(tmpdir(), 'watgig-add-events.lock')
+if (apply && existsSync(lockFile) && Date.now() - statSync(lockFile).mtimeMs < 20 * 60 * 1000) {
+  console.log('STOP: another add-events run is in progress (lock file is under 20 minutes old). Do not retry this hour.')
+  process.exit(2)
+}
+if (apply) writeFileSync(lockFile, String(process.pid))
 const env = process.env.NODE_ENV || 'development'
 const db = knex(config[env])
 const day = (d) => (d instanceof Date ? d.toLocaleDateString('en-CA') : String(d).slice(0, 10))
@@ -45,6 +57,7 @@ try {
     const bad = problems(e, today)
     const key = `${e.date}|${norm(e.artists || e.name)}`
     if (!bad.length && (seenName.has(`${e.date}|${norm(e.name)}`) || seen.includes(key))) bad.push('duplicate of an existing event')
+    if (!bad.length && added >= MAX_PER_RUN) bad.push(`over the per-run cap of ${MAX_PER_RUN}; try again next hour`)
     if (bad.length) { console.log(`SKIP  ${e.name || '(no name)'} ${e.date || ''}: ${bad.join('; ')}`); continue }
     const { source_url, ...row } = e
     console.log(`${apply ? 'ADD  ' : 'WOULD'} ${e.name} ${e.date} @ ${e.venue_name} (${source_url})`)
@@ -59,5 +72,6 @@ try {
   }
   console.log(`${apply ? 'Added' : 'Would add'} ${added} of ${candidates.length}`)
 } finally {
+  if (apply) rmSync(lockFile, { force: true })
   await db.destroy()
 }
