@@ -45,7 +45,7 @@ WatGig is a full-stack platform for discovering, saving, and managing live music
 ## 📋 Prerequisites
 
 Before you begin, ensure you have:
-- **Node.js 22.12 or later in the Node 22 release line**
+- **Node.js 24.22.1 or later in the Node 24 release line** (see `.nvmrc`; 24.22.1 includes the October 2026 security fixes)
 - **npm**
 - An **Auth0** account and application credentials
 - A **Cloudinary** account for image uploads
@@ -118,7 +118,7 @@ npm test
 
 ## Render deployment
 
-Use Node 22 and configure the web service with these commands:
+Use Node 24 (set `NODE_VERSION=24.22.1` in Render) and configure the web service with these commands:
 
 ```text
 Build command:      npm run render:build
