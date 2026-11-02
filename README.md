@@ -6,6 +6,8 @@
 
 WatGig is a full-stack platform for discovering, saving, and managing live music events. It features a modern, cinematic interface with a focus on visual impact and user-centric features like a personal event calendar.
 
+**Live demo:** https://watgig.onrender.com/
+
 ## 🚀 Features
 
 ### Event Discovery
