@@ -25,3 +25,8 @@ promptkit
 .auth0-mcp-state.json
 
 .auth0-mcp-writes.log
+
+# Generated styles (built from client/styles/index.scss by Vite)
+client/styles/index.css
+client/styles/index.css.map
+client/styles/output.css
